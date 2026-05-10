@@ -219,22 +219,22 @@ class _SearchState extends State<SearchScreen>
               SizedBox(height: 20.h,),
                Branches_Card(),
               SizedBox(height: 20.h,),
-              MonthlyPackageWidget(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => MonthlyPackageScreen()),
-                  );
-                },
-              ),
-               SizedBox(height: 20.h,),
-
                Image.asset(
-                "assets/images/main-card.png",
-                width: 78.w,
-                height: 50.h,
-                fit: BoxFit.fill,
-              ),
+                 "assets/images/main-card.png",
+                 width: 78.w,
+                 height: 50.h,
+                 fit: BoxFit.fill,
+               ),
+
+               SizedBox(height: 20.h,),
+               MonthlyPackageWidget(
+                 onTap: () {
+                   Navigator.push(
+                     context,
+                     MaterialPageRoute(builder: (_) => MonthlyPackageScreen()),
+                   );
+                 },
+               ),
                SizedBox(height: 20.h,),
 
                OffersSectionWidget(

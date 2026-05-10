@@ -251,7 +251,7 @@ class _BottomNavBar extends StatelessWidget {
         height: 50.h,
         decoration: isSelected
             ? BoxDecoration(
-          gradient: linear(context),
+          gradient: gradient2(context),
           shape: BoxShape.circle,
         )
             : null,

@@ -167,8 +167,8 @@ Alignment _figmaToFlutter(double x, double y) {
   return Alignment((x * 2) - 1, (y * 2) - 1);
 }
 LinearGradient gradient1(BuildContext context) => LinearGradient(
-  begin: _figmaToFlutter(0.00, 0.90),
-  end: _figmaToFlutter(0.60, 0.50),
+  begin: _figmaToFlutter(0.00, 0.50),
+  end: _figmaToFlutter(1.00, 0.50),
   colors: [
     const Color(0xFF0156B2),
     const Color(0xFF3EA361),
@@ -176,13 +176,13 @@ LinearGradient gradient1(BuildContext context) => LinearGradient(
   stops: const [0.0, 1.0],
 );
 
-LinearGradient linear(BuildContext context) => LinearGradient(
-  begin: _figmaToFlutter(0.00, 0.00),
-  end: _figmaToFlutter(0.60, 0.30),
+LinearGradient gradient2(BuildContext context) => LinearGradient(
+  begin: _figmaToFlutter(1.00, 0.31),
+  end: _figmaToFlutter(0.09, 0.66),
   colors: const [
-    Color(0xFF8BBA2E),
-    Color(0xFF009966),
     Color(0xFF0156B2),
+    Color(0xFF009966),
+    Color(0xFF8BBA2E),
   ],
   stops: const [0.0, 0.5, 1.0],
 );

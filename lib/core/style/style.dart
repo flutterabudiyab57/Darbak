@@ -130,6 +130,12 @@ class AppTypography {
   // ===========================
   // Heading Styles
   // ===========================
+  static TextStyle headingColor36(BuildContext context) => TextStyle(
+        fontFamily: 'IBMPlexSansArabic',
+        fontSize: 36.sp,
+        fontWeight: FontWeight.bold,
+        color: headingColor(context),
+      );
   static TextStyle headingColor26(BuildContext context) => TextStyle(
         fontFamily: 'IBMPlexSansArabic',
         fontSize: 26.sp,

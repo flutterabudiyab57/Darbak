@@ -43,7 +43,7 @@ class IdentityTypeSelector extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.r),
             color: isSelected
-                ? buttonPrimaryBgColor(context)
+                ? iconDefaultColor(context)
                 : backgroundColor(context),
             border:isSelected?null: Border.all(
               color:strokeGrayColor(context),

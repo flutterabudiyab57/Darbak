@@ -61,7 +61,6 @@ class CarsRemoteDataSource {
 
   Future<Cars> getCarsByFilter({
     required int pageNumber,
-    // int? branchId,
     List<String>? categoryIds,
     List<String>? manufactoryIds,
     List<String>? model,

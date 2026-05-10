@@ -60,6 +60,14 @@ MultiBlocProvider CreateBlocProviders(BuildContext context) {
                 theme: lightTheme(),
                 darkTheme: darkTheme(),
                 themeMode: themeMode,
+                builder: (context, child) {
+                  return MediaQuery(
+                    data: MediaQuery.of(context).copyWith(
+                      textScaler: TextScaler.noScaling,
+                    ),
+                    child: child!,
+                  );
+                },
                 home: SplashScreenOld(),
               ),
             );

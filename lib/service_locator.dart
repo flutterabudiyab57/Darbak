@@ -43,8 +43,6 @@ import 'modules/home/payment/data/repositories/coupon_repository.dart';
 import 'modules/home/payment/data/repositories/invoice_repository.dart';
 import 'modules/home/payment/data/repositories/payment_repository.dart';
 import 'modules/home/profile/blocs/profile_cubit/profile_cubit.dart';
-import 'modules/home/profile/page/all_member_ship/bloc/all_member_ship_cubit.dart';
-import 'modules/home/profile/page/all_member_ship/data/all_member_ship_remot.dart';
 import 'modules/home/profile/page/edit_profile/datasources/remote/edit_remote_dataSource.dart';
 import 'modules/home/profile/page/edit_profile/presentaion/bloc/edit_profile_cubit.dart';
 import 'modules/home/profile/page/reset_password/datasources/remote/reset_password_datasources.dart';
@@ -57,7 +55,6 @@ import 'modules/home/search_screen/data/datasources/remote/regions_remote_dataso
 GetIt sl = GetIt.instance;
 
 Future<void> setup() async {
-  // ✅ Prevent duplicate registration
   if (sl.isRegistered<AuthBloc>()) {
     print('⚠️ Service Locator already initialized, skipping...');
     return;
@@ -86,7 +83,6 @@ Future<void> setup() async {
   sl.registerFactory(() => AllBranchCubit(sl<BranchRepository>()));
 
   sl.registerFactory(() => BookingFromCarsCubit(sl()));
-  sl.registerFactory(() => AllMemberCubit(sl()));
   sl.registerFactory(() => AllCarsCubit(sl()));
 
   // ==================== Repositories ====================
@@ -132,8 +128,6 @@ Future<void> setup() async {
   sl.registerLazySingleton(() => BookingFromCarsRemoteDataSource());
   sl.registerLazySingleton(() => CancelBookingDataSources(sl(), sl()));
   sl.registerLazySingleton(() => CouponRemoteDatasource(sl()));
-
-  sl.registerLazySingleton(() => AllMemberShipRemoteDataSource());
   sl.registerLazySingleton(() => AreasRemoteDatasource(sl()));
 
   // ✅ NEW: Branch Local DataSource

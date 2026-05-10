@@ -4,7 +4,6 @@ import 'package:darbak/core/style/style.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../auth/signin/presentation/pages/signin_screen.dart';
@@ -86,10 +85,9 @@ class ErrorImage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(
-              "assets/error.svg",
-              height: size.height * 0.6,
-              width: size.width,
+            SizedBox(
+              width: size.width * 0.7,
+              child: Lottie.asset("assets/anim/error.json"),
             ),
             IconButton(
               onPressed: refresh,

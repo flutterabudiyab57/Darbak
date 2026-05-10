@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../core/constants/assets/app_colors.dart';
 import '../../core/helpers/SharedPreference/pereferences.dart';
 import '../home/profile/blocs/profile_cubit/profile_cubit.dart';
 import '../home/selectLanguage/selectLanguage.dart';
@@ -11,31 +12,18 @@ class SplashScreenOld extends StatefulWidget {
   _SplashScreenOldState createState() => _SplashScreenOldState();
 }
 
-class _SplashScreenOldState extends State<SplashScreenOld>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
+class _SplashScreenOldState extends State<SplashScreenOld> {
+  int _currentScreen = 0;
 
   @override
   void initState() {
     super.initState();
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    );
-
-    _scaleAnimation = Tween<double>(
-      begin: 0.3,
-      end: 1.0,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOutBack,
-      ),
-    );
-
-    _controller.forward();
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      if (mounted) {
+        setState(() => _currentScreen = 1);
+      }
+    });
 
     BlocProvider.of<ProfileCubit>(context).getProfile();
 
@@ -49,15 +37,12 @@ class _SplashScreenOldState extends State<SplashScreenOld>
 
     bool isLanguageSelected = isLanguageSelectedStr == "true";
 
-    // print("Token:****************** $token");
-    // print("isLanguageSelected: $isLanguageSelected");
-
     Widget startWidget;
 
     if (!isLanguageSelected) {
       startWidget = SelectLanguage(true);
     } else {
-      startWidget = ComposeUi() ;
+      startWidget = ComposeUi();
     }
 
     await Future.delayed(const Duration(seconds: 4));
@@ -70,45 +55,43 @@ class _SplashScreenOldState extends State<SplashScreenOld>
     }
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  Widget _buildScreen({required bool gradient, required Key key}) {
+    return Container(
+      key: key,
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: gradient ? gradient1(context) : null,
+        color: gradient ? null : Colors.white,
+      ),
+      child: Center(
+        child: Image.asset(
+          "assets/images/Darbak_logo.png",
+          width: 180.w,
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Colors.white,
-        child: Center(
-          child: ScaleTransition(
-            scale: _scaleAnimation,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  "assets/images/Darbak_logo.png",
-                  width: 180.w,
-                ),
-                // SizedBox(
-                //   height: 10.h,
-                // ),
-                // Text(
-                //   "دركسون",
-                //   style: TextStyle(
-                //       fontSize: 35.sp,
-                //       fontWeight: FontWeight.w600,
-                //       fontFamily: "IBMPlexSansArabic",
-                //       color: Color(0xFF00323A)),
-                // )
-              ],
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 800),
+        switchInCurve: Curves.easeInOut,
+        switchOutCurve: Curves.easeInOut,
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: ScaleTransition(
+              scale: Tween<double>(begin: 0.92, end: 1.0).animate(animation),
+              child: child,
             ),
-          ),
-        ),
+          );
+        },
+        child: _currentScreen == 0
+            ? _buildScreen(gradient: true, key: const ValueKey('screen1'))
+            : _buildScreen(gradient: false, key: const ValueKey('screen2')),
       ),
     );
   }
