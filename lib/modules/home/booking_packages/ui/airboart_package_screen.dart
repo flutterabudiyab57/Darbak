@@ -47,7 +47,7 @@ class _AirportPackagesState extends State<AirportPackageScreen> {
     return Scaffold(
       backgroundColor: backgroundColor(context),
       appBar: CustomAppBar(
-        title: locale!.isDirectionRTL(context) ? "المطارات" : "Airports",
+        title: locale!.airportsTitle,
         showBackButton: true,
         // showThemeToggle: true,
       ),

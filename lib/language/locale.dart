@@ -157,6 +157,104 @@ class AppLocalizations {
 
   String? get goHome => _localizedValues[locale.languageCode]!['goHome'];
 
+  String get goToBookings =>
+      _localizedValues[locale.languageCode]!['goToBookings']!;
+
+  String get bookingNotAvailable =>
+      _localizedValues[locale.languageCode]!['bookingNotAvailable']!;
+
+  String get bookingSuccessMessage =>
+      _localizedValues[locale.languageCode]!['bookingSuccessMessage']!;
+
+  String get success => _localizedValues[locale.languageCode]!['success']!;
+  String get cancelBooking =>
+      _localizedValues[locale.languageCode]!['cancelBooking']!;
+  String get pleaseEnterIdNumber =>
+      _localizedValues[locale.languageCode]!['pleaseEnterIdNumber']!;
+  String get idMustBe10Digits =>
+      _localizedValues[locale.languageCode]!['idMustBe10Digits']!;
+  String get pleaseEnterValidPhone =>
+      _localizedValues[locale.languageCode]!['pleaseEnterValidPhone']!;
+  String get pleaseEnterExpireYear =>
+      _localizedValues[locale.languageCode]!['pleaseEnterExpireYear']!;
+  String get pleaseEnterValidYear =>
+      _localizedValues[locale.languageCode]!['pleaseEnterValidYear']!;
+  String get cardIsExpired =>
+      _localizedValues[locale.languageCode]!['cardIsExpired']!;
+  String get month => _localizedValues[locale.languageCode]!['month']!;
+  String get months => _localizedValues[locale.languageCode]!['months']!;
+  String get paymentTypeLabel =>
+      _localizedValues[locale.languageCode]!['paymentTypeLabel']!;
+  String get deliveryAndPickup =>
+      _localizedValues[locale.languageCode]!['deliveryAndPickup']!;
+  String get pickUpFromBranch =>
+      _localizedValues[locale.languageCode]!['pickUpFromBranch']!;
+  String get pickupFromTheBranch =>
+      _localizedValues[locale.languageCode]!['pickupFromTheBranch']!;
+  String get airportsTitle =>
+      _localizedValues[locale.languageCode]!['airportsTitle']!;
+  String get orderCancelledSuccessfully =>
+      _localizedValues[locale.languageCode]!['orderCancelledSuccessfully']!;
+  String get orderDeletedSuccessfully =>
+      _localizedValues[locale.languageCode]!['orderDeletedSuccessfully']!;
+  String get totalAmountLabel =>
+      _localizedValues[locale.languageCode]!['totalAmountLabel']!;
+  String get dontDelete =>
+      _localizedValues[locale.languageCode]!['dontDelete']!;
+  String get cancelOrder =>
+      _localizedValues[locale.languageCode]!['cancelOrder']!;
+  String get dateLabel => _localizedValues[locale.languageCode]!['dateLabel']!;
+  String get otpVerification =>
+      _localizedValues[locale.languageCode]!['otpVerification']!;
+  String get otpCode => _localizedValues[locale.languageCode]!['otpCode']!;
+  String get enterSixDigitCodeSent =>
+      _localizedValues[locale.languageCode]!['enterSixDigitCodeSent']!;
+  String get verifyNow => _localizedValues[locale.languageCode]!['verifyNow']!;
+  String get otpResentSuccessfully =>
+      _localizedValues[locale.languageCode]!['otpResentSuccessfully']!;
+  String get otpResendFailed =>
+      _localizedValues[locale.languageCode]!['otpResendFailed']!;
+  String get checkInternetError =>
+      _localizedValues[locale.languageCode]!['checkInternetError']!;
+  String get didntReceiveCode =>
+      _localizedValues[locale.languageCode]!['didntReceiveCode']!;
+  String get resend => _localizedValues[locale.languageCode]!['resend']!;
+  String get cashback => _localizedValues[locale.languageCode]!['cashback']!;
+  String get pleaseEnterYourPoints =>
+      _localizedValues[locale.languageCode]!['pleaseEnterYourPoints']!;
+  String get discountPointsApplied =>
+      _localizedValues[locale.languageCode]!['discountPointsApplied']!;
+  String get dontHaveAnyPoints =>
+      _localizedValues[locale.languageCode]!['dontHaveAnyPoints']!;
+  String get discountPointsDeleted =>
+      _localizedValues[locale.languageCode]!['discountPointsDeleted']!;
+  String get pointsBalance =>
+      _localizedValues[locale.languageCode]!['pointsBalance']!;
+  String get ourOffers =>
+      _localizedValues[locale.languageCode]!['ourOffers']!;
+  String get offerDetails =>
+      _localizedValues[locale.languageCode]!['offerDetails']!;
+  String get welcomeToDarakson =>
+      _localizedValues[locale.languageCode]!['welcomeToDarakson']!;
+  String get chooseYourLanguage =>
+      _localizedValues[locale.languageCode]!['chooseYourLanguage']!;
+  String get trackBalanceAndPayments =>
+      _localizedValues[locale.languageCode]!['trackBalanceAndPayments']!;
+  String get serverErrorCheckLogs =>
+      _localizedValues[locale.languageCode]!['serverErrorCheckLogs']!;
+  String get enterValidSixDigitOtp =>
+      _localizedValues[locale.languageCode]!['enterValidSixDigitOtp']!;
+  String get accountVerifiedSuccessfully =>
+      _localizedValues[locale.languageCode]!['accountVerifiedSuccessfully']!;
+  String get verificationFailedTryAgain =>
+      _localizedValues[locale.languageCode]!['verificationFailedTryAgain']!;
+  String get addYourPointsHint =>
+      _localizedValues[locale.languageCode]!['addYourPointsHint']!;
+  String get madfouPaymentLabel =>
+      _localizedValues[locale.languageCode]!['madfouPaymentLabel']!;
+  String get tamaraPaymentLabel =>
+      _localizedValues[locale.languageCode]!['tamaraPaymentLabel']!;
+
   String? get minutes => _localizedValues[locale.languageCode]!['minutes'];
 
   String? get seconds => _localizedValues[locale.languageCode]!['seconds'];

@@ -253,7 +253,7 @@ class _EditProfileFormState extends State<_EditProfileForm> {
                       auth: true,
                       controller: phoneControler,
                       type: TextInputType.phone,
-                      label: locale.isDirectionRTL(context) ? 'رقم الجوال' : "Phone Number",
+                      label: locale.phoneNumber,
                       pIcon: Icons.phone_iphone_outlined,
                     ),
                     SizedBox(height: 16.h),

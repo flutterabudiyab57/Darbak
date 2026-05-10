@@ -89,9 +89,7 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
           SizedBox(
             width: 305.w,
             child: Text(
-              locale.isDirectionRTL(context)
-                  ? 'لقد تم حجز سيارتك بنجاح يمكنك الاطلاع على تفاصيل الحجز من خلال صفحة الحجوزات'
-                  : 'Your car has been successfully booked. You can view booking details through the bookings page',
+              locale.bookingSuccessMessage,
               textAlign: TextAlign.center,
               style: AppTypography.headingColor16(context).copyWith(
                 fontWeight: FontWeight.w600,
@@ -117,9 +115,7 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
                   );
                 },
                 child: ADGradientButton(
-                  locale.isDirectionRTL(context)
-                      ? 'الإنتقال للصفحة الحجوزات'
-                      : 'Go to Bookings',
+                  locale.goToBookings,
                   // backgroundColor: buttonPrimaryBgColor(context),
                   textColor: buttonTextColor(context),
                 ),

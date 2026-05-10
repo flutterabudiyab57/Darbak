@@ -34,7 +34,7 @@ class _ClasicState extends State<Clasic> {
       appBar: AppBar(
         toolbarHeight: 100.h,
         title: AutoSizeText(
-          locale!.isDirectionRTL(context) ? "الفروع" : "Branches",
+          locale.branches!,
           style: GoogleFonts.almarai(
             fontWeight: FontWeight.w500,
             fontSize: 20.sp,

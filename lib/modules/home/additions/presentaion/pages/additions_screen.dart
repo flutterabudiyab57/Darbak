@@ -3,19 +3,19 @@ import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/additions/presentaion/blocs/addition_cubit/additions_cubit.dart';
 import 'package:darbak/modules/home/additions/presentaion/widgets/services.dart';
 import 'package:darbak/modules/home/additions/presentaion/widgets/services_notCompleted.dart';
+import 'package:darbak/modules/home/all_bookings/presentaion/bloc/allbooking_cubit.dart';
+import 'package:darbak/modules/home/blocs/booking_cubit/booking_cubit.dart';
 import 'package:darbak/modules/home/cars/data/models/cars_model.dart';
+import 'package:darbak/modules/shell/app_shell.dart';
 import 'package:darbak/modules/widgets/components/ad_gradient_btn.dart';
-import 'package:bounce/bounce.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
 import '../../../../../core/helpers/SharedPreference/pereferences.dart';
 import '../../../../../core/helpers/helper_fun.dart';
 import 'package:darbak/modules/home/all_bookings/data/model/booking_model.dart';
-import '../../../../auth/signin/presentation/pages/signin_screen.dart';
 import '../../../../widgets/components/appbar.dart';
 import '../../../all_bookings/data/model/check_order_step_model.dart';
 import '../../../cash_back/bloc/cashback__cubit.dart';
@@ -143,45 +143,36 @@ class _AdditionsScreenState extends State<AdditionsScreen>
                                 SizedBox(
                                   height: size.height / 7,
                                 ),
-                                Image.asset(
-                                  Assets.img_empty,
-                                  // width: size.width * 0.9,
-                                  // height: size.height * 0.5,
-                                ),
+                                Image.asset(Assets.img_empty),
+                                SizedBox(height: 20.sp),
                                 Text(
-                                  state.error.contains("not Authanticated")
-                                      ? locale.loginToContinue.toString()
-                                      : extractDetails(state.error.toString()),
+                                  locale.bookingNotAvailable,
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
-                                SizedBox(height: 10.sp),
-                                if (state.error.contains("not Authanticated"))
-                                  Bounce(
-                                      onTap: () async {
-                                        var data =
-                                            await PersistentNavBarNavigator
-                                                .pushNewScreen(
-                                          context,
-                                          screen:
-                                              SignInScreen(pushAddition: true),
-                                          withNavBar: false,
-                                        );
-                                        if (data) {
-                                          BlocProvider.of<AdditionsCubit>(context)
-                                              .getCarFeatures(
-                                            context,
-                                            widget.datum!.id.toString(),
-                                            BlocProvider.of<AdditionsCubit>(context).filterModel, // âœ…
-                                          );
-                                        }
-                                      },
-                                      child: ADGradientButton(
-                                        locale.signIn.toString(),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.5,
-                                      )),
+                                SizedBox(height: 20.sp),
+                                GestureDetector(
+                                  onTap: () async {
+                                    BlocProvider.of<BookingCubit>(context)
+                                        .reset();
+                                    await BlocProvider.of<AllBookingCubit>(
+                                            context)
+                                        .getAllBooking(state: 'running');
+
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AppShell(initialTab: 2)),
+                                      (Route<dynamic> route) => false,
+                                    );
+                                  },
+                                  child: ADGradientButton(
+                                    locale.goToBookings,
+                                    textColor: buttonTextColor(context),
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                  ),
+                                ),
                               ],
                             ),
                           ))

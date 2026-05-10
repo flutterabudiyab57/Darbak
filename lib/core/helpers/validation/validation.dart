@@ -52,23 +52,19 @@ class Validate {
     }
 
     if (value.isEmpty) {
-      return locale!.isDirectionRTL(context) ? "الرجاء إدخال رقم الهويه" : "Please enter your ID number.";
+      return locale!.pleaseEnterIdNumber;
     }
 
     if (value.length != 10) {
-      return locale!.isDirectionRTL(context) ? "الرجاء رقم الهويه يساوى 10 ارقام" : "Please, the ID number must be  10 number.";
+      return locale!.idMustBe10Digits;
     }
 
     if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-      return locale!.isDirectionRTL(context)
-          ? 'الرجاء إدخال أرقام فقط'
-          : 'Please enter numbers only';
+      return locale!.pleaseEnterNumbersOnly;
     }
 
     if (!value.startsWith('1')) {
-      return locale!.isDirectionRTL(context)
-          ? 'الرجاء أن يبدأ رقم الهوية بالرقم 1'
-          : 'Please ensure the ID number starts with 1.';
+      return locale!.idMustStartWith1;
     }
 
     return null;
@@ -82,23 +78,19 @@ class Validate {
     }
 
     if (value.isEmpty) {
-      return locale!.isDirectionRTL(context) ? "الرجاء إدخال رقم الهويه" : "Please enter your ID number.";
+      return locale!.pleaseEnterIdNumber;
     }
 
     if (value.length != 10) {
-      return locale!.isDirectionRTL(context) ? "الرجاء رقم الهويه يساوى 10 ارقام" : "Please, the ID number must be 10 number.";
+      return locale!.idMustBe10Digits;
     }
 
     if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-      return locale!.isDirectionRTL(context)
-          ? 'الرجاء إدخال أرقام فقط'
-          : 'Please enter numbers only';
+      return locale!.pleaseEnterNumbersOnly;
     }
 
     if (!value.startsWith('2')) {
-      return locale!.isDirectionRTL(context)
-          ? 'الرجاء أن يبدأ رقم الاقامه بالرقم 2'
-          : 'Please ensure the ID number starts with 2.';
+      return locale!.iqamaMustStartWith2;
     }
 
     return null;
@@ -119,7 +111,7 @@ class Validate {
     final regex = RegExp(r'^(009665|9665|\+9665|5)(5|3|6|4|9|1|8|7|0)([0-9]{7})$');
 
     if (!regex.hasMatch(value)) {
-      return locale!.isDirectionRTL(context) ? "الرجاء إدخال رقم جوال صالح" : "Please Enter a valid phone number.";
+      return locale!.pleaseEnterValidPhone;
     }
 
     return null;
@@ -139,9 +131,7 @@ class Validate {
 
     // التحقق من أن القيمة تحتوي على أرقام فقط
     if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-      return locale!.isDirectionRTL(context)
-          ? 'الرجاء إدخال أرقام فقط'
-          : 'Please enter numbers only';
+      return locale!.pleaseEnterNumbersOnly;
     }
 
     // إذا كان الكود السعودي (966)
@@ -319,12 +309,12 @@ class Validate {
     final locale = AppLocalizations.of(context);
 
     if (yearValue == null || yearValue.isEmpty) {
-      return locale!.isDirectionRTL(context) ? "الرجاء إدخال سنه انتهاء." : "Please enter Expire year.";
+      return locale!.pleaseEnterExpireYear;
     }
 
     final int? year = int.tryParse(yearValue);
     if (year == null || year < 0) {
-      return locale!.isDirectionRTL(context) ? "الرجاء إدخال سنة صالحة." : "Please enter valid year.";
+      return locale!.pleaseEnterValidYear;
     }
 
     final DateTime now = DateTime.now();
@@ -332,13 +322,13 @@ class Validate {
     final int currentMonth = now.month;
 
     if (year + 2000 < currentYear) {
-      return locale!.isDirectionRTL(context)? "بطاقتك منتهية الصلاحية." : "your card is expired. " ;
+      return locale!.cardIsExpired ;
     }
 
     if (year + 2000 == currentYear && monthValue != null && monthValue.isNotEmpty) {
       final int? month = int.tryParse(monthValue);
       if (month != null && month < currentMonth) {
-        return locale!.isDirectionRTL(context)? "بطاقتك منتهية الصلاحية." : "your card is expired. " ;
+        return locale!.cardIsExpired ;
       }
     }
 

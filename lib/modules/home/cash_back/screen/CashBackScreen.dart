@@ -160,8 +160,7 @@ class CashbackScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(locale.isDirectionRTL(context)?
-                        "تابع رصيدك ومدفوعاتك في مكان واحد":"Track your balance and payments in one place",
+                      Text(locale.trackBalanceAndPayments,
                         textAlign: TextAlign.center,
                         style: AppTypography.paragraphColor16(context),
                       ),

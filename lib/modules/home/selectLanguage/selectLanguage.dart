@@ -67,15 +67,13 @@ class _SelectLanguageState extends State<SelectLanguage> {
               ),
               Image.asset("assets/images/selc_language.png"),
               SizedBox(height: size.height * 0.07,),
-              Text(locale.isDirectionRTL(context)?
-                  'أهلا بك في دركسون':"Welcome to Darakson",
+              Text(locale.welcomeToDarakson,
                   style: AppTypography.headingColor26(context)
               ),
               SizedBox(
                 height: size.height * 0.010,
               ),
-              Text(locale.isDirectionRTL(context)?
-                'من فضلك أختر لغتك المفضلة للإستخدام':"Please choose your preferred language for use",
+              Text(locale.chooseYourLanguage,
                 textAlign: TextAlign.center,
                   style: AppTypography.paragraphColor20(context)
               ),

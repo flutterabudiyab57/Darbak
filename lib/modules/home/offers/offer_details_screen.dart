@@ -56,7 +56,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: CustomAppBar(
-          title:locale.isDirectionRTL(context) ? "تفاصيل العرض" : "Offer Details",
+          title:locale.offerDetails,
 
           showBackButton: true,
           // showThemeToggle: true,

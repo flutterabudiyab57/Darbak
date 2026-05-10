@@ -42,7 +42,7 @@ class _DeliveryPackageScreenState extends State<DeliveryPackageScreen> {
     return Scaffold(
       backgroundColor:backgroundColor(context),
       appBar: CustomAppBar(
-        title:locale!.isDirectionRTL(context) ? "توصيـل و استلام" : "Delivery and pickup",
+        title:locale!.deliveryAndPickup,
         showBackButton: true,
         // showThemeToggle: true,
       ),

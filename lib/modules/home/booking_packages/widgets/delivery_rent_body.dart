@@ -380,7 +380,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
                       borderRadius: BorderRadius.circular(12.r)),
                 ),
                 child: Text(
-                  locale.isDirectionRTL(context) ? 'حسناً' : 'OK',
+                  locale.ok!,
                   style: AppTypography.buttonText18(context),
                 ),
               ),

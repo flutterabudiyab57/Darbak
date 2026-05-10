@@ -33,7 +33,7 @@ class _ClasicState extends State<Clasic> {
     return Scaffold(
       backgroundColor: backgroundColor(context),
       appBar: CustomAppBar(
-        title:locale.isDirectionRTL(context) ? "إستلام من الفرع" : "Pickup from the branch",
+        title:locale.pickupFromTheBranch,
         showBackButton: true,
         // showThemeToggle: true,
       ),

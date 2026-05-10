@@ -42,6 +42,7 @@ The app follows a **feature-module + clean-architecture-lite** layout. Each feat
 2. `initializeHive()` — opens Hive, registers all `BranchModel`-related adapters (`BranchModelAdapter`, `WorkTimeAdapter`, `AlldaysAdapter`, `FriAdapter`, `AfternoneAdapter`, `MonAdapter`), then calls `CacheHelper.init()` which opens boxes `branches_box`, `cars_box`, `cache_meta_box`. **Any new Hive type must be registered here** — adapters are not auto-discovered.
 3. `di.setup()` — `service_locator.dart` (GetIt) registers all blocs/cubits, repositories, remote/local datasources, and shared singletons (`Dio`, `SharedPreferencesHelper`, `DateHandler`). The setup function early-returns if `AuthBloc` is already registered, so it is safe to call more than once but will silently skip re-wiring — clear GetIt if you need a true reset.
 4. `runApp(App())` → `ScreenUtilInit` → `CreateBlocProviders(context)` mounts a `MultiBlocProvider` with the global blocs (Auth, Cars, Booking, Language, ForgetPassword, Profile, Additions, Invoice, Search, Filter, AllBooking, AllBranch, AllCars, Theme) wrapped in `BlocBuilder<LanguageCubit>` + `BlocBuilder<ThemeCubit>` + `AppLifeCycleManager` + `MaterialApp`.
+5. `MaterialApp.builder` wraps every page with `MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling), child: child!)` — text scale is **locked** regardless of the user's system font-size setting. Don't remove this; layouts depend on `flutter_screenutil`'s fixed 390×844 design and break under arbitrary scaling.
 
 **Steps 2 and 3 are wrapped in `try { ... } catch (e, stackTrace) { }` with no logging in `main.dart`.** A corrupted Hive box or a missing GetIt registration will silently boot the app into a broken state. When investigating startup mysteries (blank screen, missing data, "X not registered" errors deep in a feature), add logging in that catch block first.
 
@@ -61,16 +62,37 @@ If you add a feature-level cubit that should be globally available, register it 
 - **Hive** (`lib/core/helpers/cache/cache_helper.dart`) — TTL of 5 minutes (`cacheValidDuration`), boxes `branches_box`/`cars_box`/`cache_meta_box`, with metadata keys of the form `${key}_time`. Use `CacheHelper.isCacheValid(key)` before serving cached data.
 - **SharedPreferences** wrapper at `lib/core/helpers/SharedPreference/pereferences.dart` (note spelling), exposed as `SharedPreferencesHelper` via GetIt. Auth token is read from here in the Dio interceptor.
 
+### App shell and tab navigation
+
+The 4-tab bottom-nav app structure lives in `lib/modules/shell/`, **not** in a `HomeScreen` (the old `lib/modules/home/home_screen/home_screen.dart` was deleted).
+
+- **`AppShell`** (`app_shell.dart`) is the root tabbed widget. It renders an `IndexedStack` of the 4 root pages — index `0=SearchScreen`, `1=AllCarsScreen`, `2=AllBookingScreen`, `3=MyProfile` — with `ShellBottomNavBar` underneath. Hosts `SettingsCubit`, `TabNavigationCubit`, and a `TabScrollRegistry` (via a private `InheritedWidget`). Runs `_checkVersion` and `ProfileCubit.getProfile()` once on mount.
+- **`ShellBottomNavBar`** (`bottom_nav_bar.dart`) is the `CurvedNavigationBar` instance — same visuals as before. It is the *only* place the nav appears.
+- **`TabNavigationCubit`** (`tab_navigation_cubit.dart`) is a `Cubit<int>` holding the selected index. It exposes `context.jumpToShellTab(int)` — pops to the shell route then sets the index, so any deep screen can switch tabs.
+- **`TabScrollRegistry`** (`tab_scroll_registry.dart`) maps tab index → `ScrollController`. Root tab pages register/unregister in `didChangeDependencies` / `dispose` (use `shellScrollRegistryOf(context)`). Tapping the same tab → shell calls `scrollToTop` on the registered controller. Tab 2 (`AllBookingScreen`) is intentionally *not* registered (nested TabBar makes it ambiguous) — same-tap there is a no-op.
+- **`UpdateDialog`** (`update_dialog.dart`) — version-update prompt shown by `_checkVersion`.
+
+**Visibility rule:** the bottom nav appears **only on the 4 root tabs**. Every screen pushed via `Navigator.push` / `MaterialPageRoute` covers the shell scaffold, so the nav is hidden for free — there is no `withNavBar: false` to set. Detail screens, payment, profile sub-pages, maps, etc. all push normally.
+
+**Entry-point pattern.** Every "go home" or "land on tab N" action **must** push `AppShell(initialTab: N)` (use `pushAndRemoveUntil` for clean stacks). Landing inside the shell is what makes the nav appear. Hardcoding `MaterialPageRoute(builder: (_) => MyProfile())` etc. lands the page *outside* the shell with no nav — wrong. Examples:
+- Logout → `AppShell(initialTab: 0)`
+- Booking-confirmed "Go to Bookings" → `AppShell(initialTab: 2)`
+- Avatar tap from inside the shell → `context.jumpToShellTab(3)` (no push)
+
+**`persistent_bottom_nav_bar` is in `pubspec.yaml`** and `PersistentNavBarNavigator.pushNewScreen(...)` is still called in many places. Without a `PersistentTabView` ancestor, those calls fall back to a regular push, which is exactly what we want (nav hides). Don't add `PersistentTabView` — it would re-introduce per-tab nested navigators which conflict with the visibility rule.
+
 ### Localization
 
 Custom localization (no `arb`/`gen-l10n`). Strings live in `lib/language/languages/english.dart` and `arabic.dart` as `Map<String, String>`; `AppLocalizations` in `lib/language/locale.dart` exposes them as getters; `AppLocalizationsDelegate` is registered in `bloc_providers.dart`. Supported locales: `en`, `ar`. RTL via `intl.Bidi`.
 
-**Migration in progress.** The codebase is being moved from inline `isRTL ? 'ar' : 'en'` ternaries to centralized `AppLocalizations` calls. As of the last pass, ~49 files still contain inline ternaries; do not add new ones. When you touch a file with inline ternaries, migrate them as part of the change:
+**Hard rule: no hardcoded UI strings.** Every string that renders in the UI must go through `AppLocalizations`. This includes inline `isRTL ? 'ar' : 'en'` ternaries — they are *also* hardcoded strings, just two of them. When you add or touch UI text:
 
-1. Add a key to **both** `english.dart` and `arabic.dart` (lowerCamelCase, e.g. `'updateAvailable'`).
-2. Add a corresponding getter on `AppLocalizations` in `locale.dart` (e.g. `String get updateAvailable => _localizedValues[locale.languageCode]!['updateAvailable']!;`).
+1. Add a key to **both** `english.dart` and `arabic.dart` (lowerCamelCase, e.g. `'goToBookings'`). English is the **source of truth** — write it first, then translate.
+2. Add a corresponding getter on `AppLocalizations` in `locale.dart` (e.g. `String get goToBookings => _localizedValues[locale.languageCode]!['goToBookings']!;`). Prefer non-nullable `String get` for new keys; fall back to `String? get` only if the key may legitimately be missing.
 3. Replace the call site with `AppLocalizations.of(context)!.<key>` (or `locale.<key>` if the method already has a `locale` variable).
-4. Reuse an existing key when both English and Arabic match exactly — don't add duplicates. The dictionaries were de-orphaned recently (177 unused getters/keys removed); keep them lean.
+4. Reuse an existing key when both translations match exactly — don't duplicate. The dictionaries were de-orphaned recently (177 unused getters/keys removed); keep them lean.
+
+**Migration is incremental.** ~49 files still contain inline ternaries (count from a previous pass — verify with `grep -rE "isRTL.*\\?.*'.+'.*:.*'.+'" lib/`). When you touch one of those files, migrate the strings you encounter as part of the change. Don't introduce new ternaries.
 
 Some existing getters are nullable (`String? get foo`) — at call sites where the surrounding type wants `String`, append `!`.
 
@@ -92,7 +114,7 @@ Firebase / FCM has been removed from the codebase: `main.dart` no longer calls `
 - **Print statements** are commented out throughout `main.dart` and elsewhere; keep new logs gated similarly or remove before committing.
 - **Service locator double-init guard:** `setup()` checks `sl.isRegistered<AuthBloc>()` and returns early. If you intentionally need to re-register, reset GetIt first (`sl.reset()`).
 - **Bulk regex over Dart strings**: `[^'"]+` truncates at apostrophes inside double-quoted English (e.g. `"Let's"`). Use `"((?:[^"\\]|\\.)*)"` or two passes (one per quote style). After bulk substitutions always run `flutter analyze` and look for `Unterminated string literal` — that's the signature of mid-string truncation.
-- **`SplashScreenOld` is the active splash**, not deprecated despite the name. Wired up at `bloc_providers.dart:63` (`home: SplashScreenOld()`); source at `lib/modules/auth/splash_screen.dart`. Cross-fades between two states (`gradient1` background → white) over `Darbak_logo.png`, then navigates to `SelectLanguage` or `ComposeUi` based on the `isLanguageSelected` flag in `SharedPreferences`.
+- **`SplashScreenOld` is the active splash**, not deprecated despite the name. Wired up in `bloc_providers.dart` (`home: SplashScreenOld()`); source at `lib/modules/auth/splash_screen.dart`. Cross-fades between two states (`gradient1` background → white) over `Darbak_logo.png`, then navigates to `SelectLanguage` (first run) or `ComposeUi` based on the `isLanguageSelected` flag in `SharedPreferences`. `ComposeUi` then renders `AppShell` — that is how the shell first mounts.
 - **`deviceToken` global is dead.** `String? deviceToken;` declared in `lib/core/constants/langCode.dart:9` is never assigned anywhere in the codebase. `signin_screen.dart:422` does `device_token: deviceToken.toString()`, which sends the literal string `"null"` to `/login` in `SignInModel.toMap()`. There is no separate "register device" / token-refresh endpoint. Reintroducing push means assigning this global from `FirebaseMessaging.instance.getToken()` at boot and listening to `onTokenRefresh`.
 - **Stale `AssetManifest.bin` causes hot-reload `PathNotFoundException`.** If hot reload fails with `Cannot open file ... assets/<name>` for a path that doesn't exist anywhere in source (sometimes referencing the old `fast-rent` folder name), the cause is a stale `build/app/intermediates/.../AssetManifest.bin` from a previous build. Fix: `android\gradlew.bat --stop`, then `flutter clean && flutter pub get`, then re-run.
 - **Asset folder convention.** `assets/icons/` holds SVGs; `assets/images/` holds raster images and a few Lottie JSONs (most Lottie files live in `assets/anim/`). Code uniformly references `assets/icons/<name>.svg` for SVGs — do not duplicate SVG icons into `assets/images/`. The `assets:` block in `pubspec.yaml` declares directories (not individual files), so dropping a file into a declared directory is enough to ship it; no manifest entry needed. After a recent cleanup, ~75 unreferenced files were deleted across both folders; `git log --diff-filter=D -- assets/` will show what was removed.

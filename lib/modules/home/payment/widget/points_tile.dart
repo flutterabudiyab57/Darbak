@@ -61,7 +61,7 @@ class _PointsTileState extends State<PointsTile> {
 
 
     if (pointsText.isEmpty || int.tryParse(pointsText) == null) {
-      setState(() => _pointsMessage = locale!.isDirectionRTL(context) ? "من فضلك أدخل نقاطك" :'Please enter your points');
+      setState(() => _pointsMessage = locale!.pleaseEnterYourPoints);
       _hideMessageAfterDelay();
 
       return;
@@ -81,7 +81,7 @@ class _PointsTileState extends State<PointsTile> {
 
       setState(() {
         if (response.data['error'] == null) {
-          _pointsMessage = locale!.isDirectionRTL(context) ? "خصم النقاط تم بنجاح" :'Discount Points Applied';
+          _pointsMessage = locale!.discountPointsApplied;
           _showClearButton = true;
           _showApplyButton = false;
         } else {
@@ -92,7 +92,7 @@ class _PointsTileState extends State<PointsTile> {
     } catch (_) {
       _showClearButton = true;
       _showApplyButton = false;
-      setState(() => _pointsMessage = locale!.isDirectionRTL(context) ? "ليس لديك أى نقاط " : "Don't have any Points");
+      setState(() => _pointsMessage = locale!.dontHaveAnyPoints);
       _hideMessageAfterDelay();
     }
   }
@@ -112,7 +112,7 @@ class _PointsTileState extends State<PointsTile> {
 
       setState(() {
         if (response.data['error'] == null) {
-          _pointsMessage = locale!.isDirectionRTL(context) ? "تم حذف النقاط بنجاح" :'Discount Points Deleted';
+          _pointsMessage = locale!.discountPointsDeleted;
           _showClearButton = false;
           _showApplyButton = true;
           _hideMessageAfterDelay();
@@ -124,7 +124,7 @@ class _PointsTileState extends State<PointsTile> {
     } catch (_) {
       _showClearButton = false;
       _showApplyButton = true;
-      setState(() => _pointsMessage = locale!.isDirectionRTL(context) ? "ليس لديك أى نقاط " : "Don't have any Points");
+      setState(() => _pointsMessage = locale!.dontHaveAnyPoints);
       _hideMessageAfterDelay();
     }
   }
@@ -180,7 +180,7 @@ class _PointsTileState extends State<PointsTile> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              '${locale!.isDirectionRTL(context) ? "رصيد نقاطك " : "Points Balance "}$_availablePoints = ${_availablePoints! ~/ 10} ${locale.sar}',
+              '${locale!.pointsBalance}$_availablePoints = ${_availablePoints! ~/ 10} ${locale.sar}',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.blueGrey,
                 fontWeight: FontWeight.bold,
@@ -240,9 +240,7 @@ class _PointsTileState extends State<PointsTile> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                hintText: locale!.isDirectionRTL(context)
-                    ? "أضف القيمه بالريال..."
-                    : "Add your Points...",
+                hintText: locale!.addYourPointsHint,
                 hintStyle: Theme.of(context).textTheme.bodyMedium,
                 suffixIcon: _showClearButton
                     ? GestureDetector(
@@ -267,7 +265,7 @@ class _PointsTileState extends State<PointsTile> {
             Bounce(
               onTap: _controller.text.isNotEmpty ? _applyPoints : null,
               child: Text(
-                locale.isDirectionRTL(context) ? "تطبيق" : "APPLY",
+                locale.apply!.toUpperCase(),
                 style: TextStyle(
                   color: _controller.text.isNotEmpty ? Theme.of(context).colorScheme.onPrimary : Colors.white,
                   fontSize: 12.sp,

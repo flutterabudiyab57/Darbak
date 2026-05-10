@@ -56,7 +56,7 @@ class _DailyPackagesState extends State<DailyPackages> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar:  CustomAppBar(
-        title:locale!.isDirectionRTL(context) ? "استلام من الفرع" : "Pick-Up from branch",
+        title:locale!.pickUpFromBranch,
         showBackButton: true,
         // showThemeToggle: true,
       ),

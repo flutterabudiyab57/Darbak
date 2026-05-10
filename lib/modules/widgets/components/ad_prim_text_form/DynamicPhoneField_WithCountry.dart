@@ -143,7 +143,7 @@ class _DynamicPhoneFieldWithCountryState
                         fillColor: backgroundColor(context),
                         filled: true,
                         hintStyle: AppTypography.paragraphColor15(context),
-                        labelText: locale.isDirectionRTL(context) ? "رقم الجوال" : "Phone Number",
+                        labelText: locale.phoneNumber,
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
                         labelStyle: AppTypography.paragraphColor16(context),
                         prefixIcon: Icon(

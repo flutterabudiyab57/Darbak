@@ -64,7 +64,7 @@ class _NotCompletedOrderState extends State<NotCompletedOrder> {
             HelperFunctions.showFlashBar(
                 context: context,
                 title: '',
-                message: locale.isDirectionRTL(context)?'تم الغاء الطلب بنجاح':'Order has been cancelled Successfully',
+                message: locale.orderCancelledSuccessfully,
                 icon: Icons.check,
                 iconColor: Color(0xff327B5B)
             );
@@ -90,7 +90,7 @@ class _NotCompletedOrderState extends State<NotCompletedOrder> {
                 color:Color(0xffDCEFE3) ,
                 context: context,
                 title: '',
-                message: locale.isDirectionRTL(context)?'تم حذف الطلب بنجاح':'Order has been Deleted Successfully',
+                message: locale.orderDeletedSuccessfully,
                 titlcolor: Color(0xff327B5B),
                 icon: Icons.check,
                 iconColor: Color(0xff327B5B)
@@ -200,7 +200,7 @@ class _NotCompletedOrderState extends State<NotCompletedOrder> {
                                           FittedBox(
                                             child: TextTileWidget(
                                               contant: "${bookingData.price}"+" "+locale.sar.toString(),
-                                              title: locale.isDirectionRTL(context)?"المبلغ المدفوع: ":"Total amount: ",
+                                              title: locale.totalAmountLabel,
                                               size: 30,
                                             ),
                                           ),
@@ -292,7 +292,7 @@ class _NotCompletedOrderState extends State<NotCompletedOrder> {
                                                     ),
                                                     child: Center(
                                                       child: Text(
-                                                        locale.isDirectionRTL(context)?"عدم الحذف":"No",
+                                                        locale.dontDelete,
                                                         style: TextStyle(
                                                             color: Theme.of(context).colorScheme.onPrimary
                                                         ),
@@ -316,7 +316,7 @@ class _NotCompletedOrderState extends State<NotCompletedOrder> {
                                                       ),
                                                       child: Center(
                                                         child: Text(
-                                                          locale.isDirectionRTL(context)?"حذف الحجز":"Cancel Order",
+                                                          locale.cancelOrder,
                                                           style: TextStyle(
                                                               color: Colors.white
                                                           ),

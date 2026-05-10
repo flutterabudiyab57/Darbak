@@ -50,11 +50,11 @@ class _MonthlyRentBodyState extends State<MonthlyRentBody> {
     final locale = AppLocalizations.of(context);
 
     final List<String> monthsRanges = [
-      "1 ${locale!.isDirectionRTL(context) ? 'شهر' : 'month'}",
-      "3 ${locale.isDirectionRTL(context) ? 'شهور' : 'months'}",
-      "6 ${locale.isDirectionRTL(context) ? 'شهور' : 'months'}",
-      "9 ${locale.isDirectionRTL(context) ? 'شهور' : 'months'}",
-      "12 ${locale.isDirectionRTL(context) ? 'شهور' : 'months'}",
+      "1 ${locale!.month}",
+      "3 ${locale.months}",
+      "6 ${locale.months}",
+      "9 ${locale.months}",
+      "12 ${locale.months}",
     ];
     final List<int> monthsOptions = [1, 3, 6, 9, 12];
 

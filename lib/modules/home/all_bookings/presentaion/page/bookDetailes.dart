@@ -355,7 +355,7 @@ class BookDetails extends StatelessWidget  {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 AutoSizeText(
-                                  "${locale.isDirectionRTL(context) ? "طريقه الدفع: " : "Payment Type: "} ",
+                                  "${locale.paymentTypeLabel} ",
                                   style: AppTypography.headingColor14(context),
                                 ),
                                 Text(

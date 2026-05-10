@@ -172,9 +172,9 @@ class _InvoiceUIState extends State<InvoiceUI> {
 
               final isVisa = selectedPaymentMethod == locale!.visa.toString();
               final isMadfou = selectedPaymentMethod ==
-                  (locale.isDirectionRTL(context) ? "مدفوع" : "madfou");
+                  locale.madfouPaymentLabel;
               final isTamara = selectedPaymentMethod ==
-                  (locale.isDirectionRTL(context) ? "تمارا" : "tamara");
+                  locale.tamaraPaymentLabel;
               final isCash = selectedPaymentMethod == locale.cash.toString();
               final isPoints = selectedPaymentMethod == locale.points;
               if (!isVisa &&
@@ -297,7 +297,7 @@ class _InvoiceUIState extends State<InvoiceUI> {
                 expiryYearSaved = null;
                 isVisa = false;
               } else if (selectedPaymentMethod ==
-                  (locale.isDirectionRTL(context) ? "مدفوع" : "madfou")) {
+                  locale.madfouPaymentLabel) {
                 navigateTo(
                     context,
                     WebPayment(
@@ -305,7 +305,7 @@ class _InvoiceUIState extends State<InvoiceUI> {
                     ));
                 print("selectedPaymentMethod 0 : ${selectedPaymentMethod}");
               } else if (selectedPaymentMethod ==
-                  (locale.isDirectionRTL(context) ? "تمارا" : "tamara")) {
+                  locale.tamaraPaymentLabel) {
                 navigateTo(
                     context,
                     WebPayment(

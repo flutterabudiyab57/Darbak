@@ -61,7 +61,7 @@ class TileTimeBooking extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.date_range,size: 15.sp,color: Theme.of(context).colorScheme.primary,),
-              SizedBox(width: size.width * 0.20, child: Text(local.isDirectionRTL(context)?'التاريخ':'Date')),
+              SizedBox(width: size.width * 0.20, child: Text(local.dateLabel)),
               Expanded(child: Row(
                 children: [
                   Text(date),

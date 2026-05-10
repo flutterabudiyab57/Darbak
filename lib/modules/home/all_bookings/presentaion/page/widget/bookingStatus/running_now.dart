@@ -90,7 +90,7 @@ class _RunningNowState extends State<RunningNow> {
                           .cancelBooking(orderId: booking.id);
                     },
                     child: ADGradientButton(
-                      locale.isDirectionRTL(context) ? "إلغاء الحجز" : "Cancel",
+                      locale.cancelBooking,
                     ),
                   ),
                 ),

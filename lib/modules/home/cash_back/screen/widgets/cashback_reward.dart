@@ -90,7 +90,7 @@ class CashbackReward extends StatelessWidget {
                     color: mainTypographyColor(context),
                   ),
                   SizedBox(width: 6.w),
-                  Text(locale.isDirectionRTL(context) ? "كاش باك" : "Cashback",
+                  Text(locale.cashback,
                       style: AppTypography.mainTypographyColor14(context)),
                 ],
               ),

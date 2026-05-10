@@ -47,7 +47,7 @@ void showErrorAlertDialog(BuildContext context, String text) {
                 ),
               ),
               child: Text(
-                locale!.isDirectionRTL(context) ? "حسنأ" : "OK",
+                locale!.ok!,
                 style: AppTypography.buttonText18(context),
               ),
             ),

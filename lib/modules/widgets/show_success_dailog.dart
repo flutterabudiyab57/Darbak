@@ -23,7 +23,7 @@ void showSuccessAlertDialog(BuildContext context, String content) {
             ),
             SizedBox(width: 8.0),
             Text(
-              locale!.isDirectionRTL(context) ? "تم بنجاح" : "Success",
+              locale!.success,
               style: TextStyle(color: Colors.blue, fontSize: 18.sp),
             ),
           ],

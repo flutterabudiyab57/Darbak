@@ -64,7 +64,7 @@ class _OffersScreenState extends State<OffersScreen> {
         child: Scaffold(
           backgroundColor: backgroundColor(context),
           appBar: CustomAppBar(
-            title: locale.isDirectionRTL(context) ? "عروضنا" : "Our offers,",
+            title: locale.ourOffers,
             showBackButton: true,
             // showThemeToggle: true,
           ),

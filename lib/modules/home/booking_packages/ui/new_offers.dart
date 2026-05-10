@@ -67,7 +67,7 @@ class _NewOffersState extends State<NewOffers> {
                     children: [
                       if (locale.isDirectionRTL(context))
                         Text(
-                          locale.isDirectionRTL(context) ? "رجوع" : "Back",
+                          locale.back!,
                           style: GoogleFonts.almarai(
                             color: Colors.white,
                             fontSize: 16.sp,
