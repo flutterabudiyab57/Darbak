@@ -1,5 +1,5 @@
 ﻿import 'package:darbak/language/locale.dart';
-import 'package:darbak/modules/home/home_screen/home_screen.dart';
+import 'package:darbak/modules/shell/app_shell.dart';
 import 'package:darbak/shared/commponents.dart';
 import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class AdHomeButton extends StatelessWidget {
       padding:   EdgeInsets.all(8.sp),
       child:  Bounce(
           onTap: isBackHandled ? onPressed : () =>
-              navigateAndFinish(context, HomeScreen()),
+              navigateAndFinish(context, const AppShell()),
           child: Container(
             padding: EdgeInsets.only(
                 left: locale!.isDirectionRTL(context) ? 8.w : 8.w,

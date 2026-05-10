@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:darbak/core/style/style.dart';
-import 'package:darbak/modules/home/home_screen/home_screen.dart';
 import 'package:darbak/modules/home/profile/page/widget/login_noAuth.dart';
+import 'package:darbak/modules/shell/app_shell.dart';
+import 'package:darbak/modules/shell/tab_scroll_registry.dart';
 import 'package:darbak/modules/widgets/call_us.dart';
 import 'package:darbak/core/constants/assets/assets.dart';
 import 'package:darbak/language/locale.dart';
@@ -73,14 +74,41 @@ class MyProfile extends StatelessWidget {
   }
 }
 
-class _ProfileContent extends StatelessWidget {
+class _ProfileContent extends StatefulWidget {
   const _ProfileContent({Key? key}) : super(key: key);
+
+  @override
+  State<_ProfileContent> createState() => _ProfileContentState();
+}
+
+class _ProfileContentState extends State<_ProfileContent> {
+  final ScrollController _scrollController = ScrollController();
+  TabScrollRegistry? _registry;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final registry = shellScrollRegistryOf(context);
+    if (registry != _registry) {
+      _registry?.unregister(3, _scrollController);
+      _registry = registry;
+      _registry?.register(3, _scrollController);
+    }
+  }
+
+  @override
+  void dispose() {
+    _registry?.unregister(3, _scrollController);
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
 
     return SingleChildScrollView(
+      controller: _scrollController,
       physics: BouncingScrollPhysics(),
       child: Column(
         spacing: 15.h,
@@ -267,7 +295,7 @@ class _ProfileContent extends StatelessWidget {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => HomeScreen(
+                            builder: (_) => const AppShell(
                               skipLoginCheckInSearch: false,
                             ),
                           ),

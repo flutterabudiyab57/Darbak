@@ -25,6 +25,8 @@ import '../../booking_packages/ui/monthly_package_screen.dart';
 import '../../cars/presentaion/search_cars/search_about_car.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../../shell/app_shell.dart';
+import '../../../shell/tab_scroll_registry.dart';
 import '../../offers/offers_tap_screen.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../profile/page/profile.dart';
@@ -45,6 +47,8 @@ class _SearchState extends State<SearchScreen>
   String? points;
   Dio dio = Dio();
   bool _loginSheetShown = false;
+  final ScrollController _scrollController = ScrollController();
+  TabScrollRegistry? _registry;
 
   @override
   bool get wantKeepAlive => true;
@@ -62,6 +66,25 @@ class _SearchState extends State<SearchScreen>
         _checkTokenAndShowLogin();
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final registry = shellScrollRegistryOf(context);
+    if (registry != _registry) {
+      _registry?.unregister(0, _scrollController);
+      _registry = registry;
+      _registry?.register(0, _scrollController);
+    }
+  }
+
+  @override
+  void dispose() {
+    _registry?.unregister(0, _scrollController);
+    _scrollController.dispose();
+    _mapController?.dispose();
+    super.dispose();
   }
 
   Future<void> _checkTokenAndShowLogin() async {
@@ -213,7 +236,7 @@ class _SearchState extends State<SearchScreen>
         body: Padding(
           padding:   EdgeInsets.all(12.w),
           child: ListView(
-
+            controller: _scrollController,
              children: [
               _buildTripCard(locale),
               SizedBox(height: 20.h,),
@@ -554,10 +577,5 @@ class _SearchState extends State<SearchScreen>
         ),
       ),
     );
-  }
-  @override
-  void dispose() {
-    _mapController?.dispose();
-    super.dispose();
   }
 }

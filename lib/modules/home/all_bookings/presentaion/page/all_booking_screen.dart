@@ -1,5 +1,5 @@
 ﻿import 'package:darbak/language/locale.dart';
-import 'package:darbak/modules/home/home_screen/home_screen.dart';
+import 'package:darbak/modules/shell/app_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
@@ -31,7 +31,7 @@ class _AllBookingScreenState extends State<AllBookingScreen> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (_) => HomeScreen(
+        builder: (_) => const AppShell(
           skipLoginCheckInSearch: true,
         ),
       ),

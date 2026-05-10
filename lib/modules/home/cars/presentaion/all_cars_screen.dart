@@ -13,6 +13,8 @@ import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../../core/style/style.dart';
+import '../../../shell/app_shell.dart';
+import '../../../shell/tab_scroll_registry.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../profile/data/models/profile_model.dart';
 import 'bloc/all_cars_cubit/all_cars_cubit.dart';
@@ -36,7 +38,8 @@ class _AllCarsScreenState extends State<AllCarsScreen>
     with TickerProviderStateMixin {
   late int pageNumber;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+  TabScrollRegistry? _registry;
 
   late AnimationController filterPanelAnimationController;
   late Animation<double> filterPanelExpansionAnimation;
@@ -68,12 +71,20 @@ class _AllCarsScreenState extends State<AllCarsScreen>
   }
   @override
   void dispose() {
+    _registry?.unregister(1, _scrollController);
+    _scrollController.dispose();
     filterPanelAnimationController.dispose();
     super.dispose();
   }
 
   @override
   void didChangeDependencies() {
+    final registry = shellScrollRegistryOf(context);
+    if (registry != _registry) {
+      _registry?.unregister(1, _scrollController);
+      _registry = registry;
+      _registry?.register(1, _scrollController);
+    }
     if (widget.fromFilter) {
       pageNumber = 1;
       BlocProvider.of<AllCarsCubit>(context).getCarsByFilter(

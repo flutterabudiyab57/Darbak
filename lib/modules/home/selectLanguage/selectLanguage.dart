@@ -9,8 +9,8 @@ import '../../../core/constants/assets/app_colors.dart';
 import '../../../core/fade_route.dart';
 import '../../../core/helpers/SharedPreference/pereferences.dart';
 import '../../auth/on_boarding/on_boarding.dart';
+import '../../shell/app_shell.dart';
 import '../../widgets/components/ad_gradient_btn.dart';
-import '../home_screen/home_screen.dart';
 
 class SelectLanguage extends StatefulWidget {
   final bool isStart;
@@ -180,7 +180,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                       Navigator.of(context).pushAndRemoveUntil(
                         FadeRoute(
                           builder: (BuildContext context) =>
-                          token != null ? HomeScreen() : OnBoarding(),
+                          token != null ? const AppShell() : OnBoarding(),
                         ),
                             (route) => false,
                       );

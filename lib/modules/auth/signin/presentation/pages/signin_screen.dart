@@ -13,8 +13,8 @@ import '../../../../../core/style/style.dart';
 import '../../../../../language/locale.dart';
 import '../../../../../service_locator.dart';
 import '../../../../home/all_bookings/presentaion/bloc/allbooking_cubit.dart';
-import '../../../../home/home_screen/home_screen.dart';
 import '../../../../home/profile/blocs/profile_cubit/profile_cubit.dart';
+import '../../../../shell/app_shell.dart';
 import '../../../../widgets/components/ad_gradient_btn.dart';
 import '../../../../widgets/components/ad_prim_text_form/DynamicPhoneField_WithCountry.dart';
 import '../../../../widgets/components/ad_prim_text_form/ad_prim_text_form.dart';
@@ -176,9 +176,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   } else {
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                            builder: (_) => HomeScreen(
-                              skipLoginCheckInSearch: true,
-                            )),
+                            builder: (_) => const AppShell(
+                                  skipLoginCheckInSearch: true,
+                                )),
                             (route) => false);
                   }
                 }
@@ -333,9 +333,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                 onTap: () {
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
-                                          builder: (_) => HomeScreen(
-                                            skipLoginCheckInSearch: true,
-                                          )),
+                                          builder: (_) => const AppShell(
+                                                skipLoginCheckInSearch: true,
+                                              )),
                                           (_) => false);
                                 },
                                 child: Container(

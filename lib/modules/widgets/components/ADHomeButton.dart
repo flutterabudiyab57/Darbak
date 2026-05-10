@@ -1,5 +1,5 @@
 ﻿import 'package:darbak/language/locale.dart';
-import 'package:darbak/modules/home/home_screen/home_screen.dart';
+import 'package:darbak/modules/shell/app_shell.dart';
 import 'package:darbak/shared/commponents.dart';
 import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ class ADHomeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
     return Bounce(
-        onTap: isBackHandled ? onPressed : () => navigateAndFinish(context,HomeScreen()),
+        onTap: isBackHandled ? onPressed : () => navigateAndFinish(context, const AppShell()),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [

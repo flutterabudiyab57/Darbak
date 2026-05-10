@@ -1,7 +1,7 @@
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/all_bookings/presentaion/bloc/allbooking_cubit.dart';
 import 'package:darbak/modules/home/blocs/booking_cubit/booking_cubit.dart';
-import 'package:darbak/modules/home/home_screen/home_screen.dart';
+import 'package:darbak/modules/shell/app_shell.dart';
 import 'package:darbak/modules/widgets/components/ad_gradient_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -104,26 +104,6 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
           Column(
             spacing: 10.h,
             children: [
-              // GestureDetector(
-              //   onTap: () async {
-              //     BlocProvider.of<BookingCubit>(context).reset();
-              //     await BlocProvider.of<AllBookingCubit>(context)
-              //         .getAllBooking(state: 'running');
-              //
-              //     Navigator.of(context).pushAndRemoveUntil(
-              //       MaterialPageRoute(builder: (context) => AllBookingScreen()),
-              //           (Route<dynamic> route) => false,
-              //     );
-              //   },
-              //   child: ADGradientButton(
-              //     locale.isDirectionRTL(context)
-              //         ? 'الإنتقال للصفحة الحجوزات'
-              //         : 'Go to Bookings',
-              //     backgroundColor: buttonPrimaryBgColor(context),
-              //     textColor: buttonTextColor(context),
-              //   ),
-              // ),
-              SizedBox(height: 10.h),
               GestureDetector(
                 onTap: () async {
                   BlocProvider.of<BookingCubit>(context).reset();
@@ -131,7 +111,28 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
                       .getAllBooking(state: 'running');
 
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const AppShell(initialTab: 2)),
+                        (Route<dynamic> route) => false,
+                  );
+                },
+                child: ADGradientButton(
+                  locale.isDirectionRTL(context)
+                      ? 'الإنتقال للصفحة الحجوزات'
+                      : 'Go to Bookings',
+                  // backgroundColor: buttonPrimaryBgColor(context),
+                  textColor: buttonTextColor(context),
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  BlocProvider.of<BookingCubit>(context).reset();
+                  await BlocProvider.of<AllBookingCubit>(context)
+                      .getAllBooking(state: 'running');
+
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const AppShell(initialTab: 0)),
                     (Route<dynamic> route) => false,
                   );
                 },

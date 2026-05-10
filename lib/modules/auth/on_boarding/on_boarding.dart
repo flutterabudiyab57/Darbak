@@ -4,7 +4,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../core/constants/assets/app_colors.dart';
 import '../../../core/style/style.dart';
 import '../../../language/locale.dart';
-import '../../home/home_screen/home_screen.dart';
+import '../../shell/app_shell.dart';
 import '../../widgets/components/ad_gradient_btn.dart';
 
 class OnBoarding extends StatefulWidget {
@@ -158,7 +158,7 @@ class _OnBoardingState extends State<OnBoarding> {
   Route _createRoute() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
-          HomeScreen(skipLoginCheckInSearch: false),
+          const AppShell(skipLoginCheckInSearch: false),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0);
         const end = Offset.zero;
