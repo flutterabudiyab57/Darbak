@@ -26,10 +26,10 @@ import '../../cars/presentaion/search_cars/search_about_car.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../shell/app_shell.dart';
+import '../../../shell/tab_navigation_cubit.dart';
 import '../../../shell/tab_scroll_registry.dart';
 import '../../offers/offers_tap_screen.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
-import '../../profile/page/profile.dart';
 import '../../../auth/signin/presentation/pages/signin_screen.dart';
 
 
@@ -287,10 +287,7 @@ class _SearchState extends State<SearchScreen>
             children: [
               Bounce(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyProfile()),
-                  );
+                  context.jumpToShellTab(3);
                 },
                 child: DottedBorder(
                   borderType: BorderType.Circle,
@@ -378,10 +375,7 @@ class _SearchState extends State<SearchScreen>
             children: [
               Bounce(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyProfile(showBackButton: true,)),
-                  );
+                  context.jumpToShellTab(3);
                 },
                 child: DottedBorder(
                   borderType: BorderType.Circle,
