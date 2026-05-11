@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter analyze *)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Test-Path *)",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(Get-Content *)",
+      "PowerShell(flutter analyze *)",
+      "PowerShell($en = [System.IO.File]::ReadAllBytes\\(\"E:\\\\projects\\\\fast-rent\\\\lib\\\\language\\\\languages\\\\english.dart\"\\); $text = [System.Text.Encoding]::UTF8.GetString\\($en\\); $lines = $text -split \"`n\"; \"Line 263: $\\($lines[262]\\)\"; \"Line 264: $\\($lines[263]\\)\"; \"Line 265: $\\($lines[264]\\)\")",
+      "PowerShell($bytes = [System.IO.File]::ReadAllBytes\\(\"E:\\\\projects\\\\fast-rent\\\\lib\\\\modules\\\\home\\\\search_screen\\\\presentaion\\\\search_Screen.dart\"\\); $text = [System.Text.Encoding]::UTF8.GetString\\($bytes\\); $lines = $text -split \"`n\"; \"Line 309 raw: $\\($lines[308]\\)\"; \"Line 309 hex around col 30-45:\"; $line = $lines[308]; for \\($i=29; $i -lt [Math]::Min\\(50,$line.Length\\); $i++\\) { \"  col $\\($i+1\\): char='$\\($line[$i]\\)' hex=$\\([int]$line[$i]\\)\" })",
+      "PowerShell(Import-Csv *)",
+      "PowerShell($utf8NoBom = New-Object System.Text.UTF8Encoding $false; $f = \"E:\\\\projects\\\\fast-rent\\\\lib\\\\modules\\\\home\\\\search_screen\\\\presentaion\\\\search_Screen.dart\"; $text = [System.Text.Encoding]::UTF8.GetString\\([System.IO.File]::ReadAllBytes\\($f\\)\\); $newText = $text -replace [regex]::Escape\\('${locale.lets book your car the easiest way.\"}'\\), '${locale.letsBookCar}'; if \\($text -ne $newText\\) { [System.IO.File]::WriteAllText\\($f, $newText, $utf8NoBom\\); \"Fixed broken interpolation lines\" } else { \"No replacement made\" })",
+      "PowerShell(flutter clean *)",
+      "PowerShell(flutter pub *)",
+      "PowerShell(dart run *)",
+      "PowerShell(New-Item *)",
+      "PowerShell(\"Pub cache size: $\\(\\(Get-ChildItem 'E:\\\\.pub-cache' -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum\\).Sum / 1MB\\) MB\"; \"Old cache \\(will be auto-cleaned over time\\): $\\(\\(Get-ChildItem 'C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Pub\\\\Cache' -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum\\).Sum / 1MB\\) MB\")",
+      "PowerShell($size = \\(Get-ChildItem 'C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Pub\\\\Cache' -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum\\).Sum; if \\($size\\) { \"Still has: $\\($size / 1MB\\) MB\" } else { \"Empty or gone\" }; Test-Path 'C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Pub\\\\Cache')",
+      "PowerShell($size = \\(Get-ChildItem 'C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Pub\\\\Cache' -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum\\).Sum; \"C:\\\\ cache: $\\($size / 1MB\\) MB\"; $newSize = \\(Get-ChildItem 'E:\\\\.pub-cache' -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum\\).Sum; \"E:\\\\ cache: $\\($newSize / 1MB\\) MB\")",
+      "PowerShell(cmd /c \"rd /s /q C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Pub\\\\Cache\" 2>&1; \"exit=$LASTEXITCODE\"; \"Path exists: $\\(Test-Path 'C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Pub\\\\Cache'\\)\"; $size = \\(Get-ChildItem 'C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Pub\\\\Cache' -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum\\).Sum; if \\($size\\) { \"Remaining: $\\($size / 1MB\\) MB\" } else { \"Remaining: 0 MB / not present\" })",
+      "Bash(grep -v \":0$\")",
+      "Bash(awk -F: '$2>0')"
+    ]
+  }
+}
