@@ -163,6 +163,7 @@ Color TransmissionContainer(BuildContext context) =>
 // ===========================
 // Gradients
 // ===========================
+// ===========================
 Alignment _figmaToFlutter(double x, double y) {
   return Alignment((x * 2) - 1, (y * 2) - 1);
 }

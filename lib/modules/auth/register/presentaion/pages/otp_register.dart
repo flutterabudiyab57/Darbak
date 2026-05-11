@@ -152,8 +152,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                       },
                     ),
                   ),
-
-
                   SizedBox(height: screenWidth * 0.05),
                   isLoading
                       ? LoadingIndicator()
