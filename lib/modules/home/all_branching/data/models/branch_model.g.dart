@@ -8,7 +8,7 @@ part of 'branch_model.dart';
 
 class BranchModelAdapter extends TypeAdapter<BranchModel> {
   @override
-  final int typeId = 0;
+  final typeId = 0;
 
   @override
   BranchModel read(BinaryReader reader) {
@@ -17,18 +17,18 @@ class BranchModelAdapter extends TypeAdapter<BranchModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return BranchModel(
-      id: fields[0] as int?,
+      id: (fields[0] as num?)?.toInt(),
       name: fields[1] as String?,
       region: fields[2] as String?,
-      regionId: fields[3] as int?,
+      regionId: (fields[3] as num?)?.toInt(),
       address: fields[4] as String?,
       lat: fields[5] as String?,
       long: fields[6] as String?,
       phone: fields[7] as String?,
       locationUrl: fields[8] as String?,
       workTime: fields[9] as WorkTime?,
-      bookToday: fields[10] as int?,
-      deliveryPrice: fields[11] as int?,
+      bookToday: (fields[10] as num?)?.toInt(),
+      deliveryPrice: (fields[11] as num?)?.toInt(),
       polygon: (fields[12] as List?)?.cast<PolygonPoint>(),
       center: fields[13] as BranchCenter?,
     );
@@ -81,7 +81,7 @@ class BranchModelAdapter extends TypeAdapter<BranchModel> {
 
 class WorkTimeAdapter extends TypeAdapter<WorkTime> {
   @override
-  final int typeId = 1;
+  final typeId = 1;
 
   @override
   WorkTime read(BinaryReader reader) {
@@ -98,7 +98,7 @@ class WorkTimeAdapter extends TypeAdapter<WorkTime> {
       tue: fields[5] as Mon?,
       wed: fields[6] as Mon?,
       thu: fields[7] as Mon?,
-      openAllDays: fields[8] as int?,
+      openAllDays: (fields[8] as num?)?.toInt(),
     );
   }
 
@@ -139,7 +139,7 @@ class WorkTimeAdapter extends TypeAdapter<WorkTime> {
 
 class AlldaysAdapter extends TypeAdapter<Alldays> {
   @override
-  final int typeId = 2;
+  final typeId = 2;
 
   @override
   Alldays read(BinaryReader reader) {
@@ -148,7 +148,7 @@ class AlldaysAdapter extends TypeAdapter<Alldays> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Alldays(
-      period: fields[0] as int?,
+      period: (fields[0] as num?)?.toInt(),
       morning: fields[1] as Afternone?,
       afternone: fields[2] as Afternone?,
     );
@@ -179,7 +179,7 @@ class AlldaysAdapter extends TypeAdapter<Alldays> {
 
 class FriAdapter extends TypeAdapter<Fri> {
   @override
-  final int typeId = 3;
+  final typeId = 3;
 
   @override
   Fri read(BinaryReader reader) {
@@ -188,10 +188,10 @@ class FriAdapter extends TypeAdapter<Fri> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Fri(
-      period: fields[0] as int?,
+      period: (fields[0] as num?)?.toInt(),
       morning: fields[1] as Afternone?,
       afternone: fields[2] as Afternone?,
-      lock: fields[3] as int?,
+      lock: (fields[3] as num?)?.toInt(),
     );
   }
 
@@ -222,7 +222,7 @@ class FriAdapter extends TypeAdapter<Fri> {
 
 class AfternoneAdapter extends TypeAdapter<Afternone> {
   @override
-  final int typeId = 4;
+  final typeId = 4;
 
   @override
   Afternone read(BinaryReader reader) {
@@ -259,7 +259,7 @@ class AfternoneAdapter extends TypeAdapter<Afternone> {
 
 class MonAdapter extends TypeAdapter<Mon> {
   @override
-  final int typeId = 5;
+  final typeId = 5;
 
   @override
   Mon read(BinaryReader reader) {
@@ -268,7 +268,7 @@ class MonAdapter extends TypeAdapter<Mon> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Mon(
-      lock: fields[0] as int?,
+      lock: (fields[0] as num?)?.toInt(),
     );
   }
 
@@ -293,7 +293,7 @@ class MonAdapter extends TypeAdapter<Mon> {
 
 class PolygonPointAdapter extends TypeAdapter<PolygonPoint> {
   @override
-  final int typeId = 6;
+  final typeId = 6;
 
   @override
   PolygonPoint read(BinaryReader reader) {
@@ -302,8 +302,8 @@ class PolygonPointAdapter extends TypeAdapter<PolygonPoint> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PolygonPoint(
-      lat: fields[0] as double?,
-      lng: fields[1] as double?,
+      lat: (fields[0] as num?)?.toDouble(),
+      lng: (fields[1] as num?)?.toDouble(),
     );
   }
 
@@ -330,7 +330,7 @@ class PolygonPointAdapter extends TypeAdapter<PolygonPoint> {
 
 class BranchCenterAdapter extends TypeAdapter<BranchCenter> {
   @override
-  final int typeId = 7;
+  final typeId = 7;
 
   @override
   BranchCenter read(BinaryReader reader) {
@@ -339,8 +339,8 @@ class BranchCenterAdapter extends TypeAdapter<BranchCenter> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return BranchCenter(
-      lat: fields[0] as double?,
-      lng: fields[1] as double?,
+      lat: (fields[0] as num?)?.toDouble(),
+      lng: (fields[1] as num?)?.toDouble(),
     );
   }
 

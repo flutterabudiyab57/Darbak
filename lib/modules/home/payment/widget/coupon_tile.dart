@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../../core/constants/assets/assets.dart';
+import '../../../../core/helpers/text_scale_sizing.dart';
 import '../../../../core/style/style.dart';
 import '../../../../language/locale.dart';
 import '../../../home/blocs/booking_cubit/booking_cubit.dart';
@@ -74,7 +75,8 @@ class _CouponTileState extends State<CouponTile> {
             color: buttonWhiteColor(context),
             borderRadius: BorderRadius.circular(15.r),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+          padding:
+              EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.hs(context)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -122,7 +124,7 @@ class _CouponTileState extends State<CouponTile> {
                         child: ADGradientButton(
 
                           locale.cancel.toString(),
-                          height: 50.h,
+                          height: 50.hs(context),
                           backgroundColor: buttonRedColor(context),
                           textColor: buttonWhiteColor(context),
                           textStyle: AppTypography.buttonRed14(context),
@@ -166,7 +168,7 @@ class _CouponTileState extends State<CouponTile> {
               if (couponMessage != null)
                 Padding(
                   padding:
-                  EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+                  EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.hs(context)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

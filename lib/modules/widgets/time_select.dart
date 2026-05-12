@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../core/constants/assets/app_colors.dart';
 import '../../core/style/style.dart';
 import '../../language/locale.dart';
 import '../home/search_screen/presentaion/widget/select_day_and_time.dart';

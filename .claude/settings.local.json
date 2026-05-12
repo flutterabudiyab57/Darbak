@@ -20,7 +20,8 @@
       "PowerShell($size = \\(Get-ChildItem 'C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Pub\\\\Cache' -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum\\).Sum; \"C:\\\\ cache: $\\($size / 1MB\\) MB\"; $newSize = \\(Get-ChildItem 'E:\\\\.pub-cache' -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum\\).Sum; \"E:\\\\ cache: $\\($newSize / 1MB\\) MB\")",
       "PowerShell(cmd /c \"rd /s /q C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Pub\\\\Cache\" 2>&1; \"exit=$LASTEXITCODE\"; \"Path exists: $\\(Test-Path 'C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Pub\\\\Cache'\\)\"; $size = \\(Get-ChildItem 'C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Pub\\\\Cache' -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum\\).Sum; if \\($size\\) { \"Remaining: $\\($size / 1MB\\) MB\" } else { \"Remaining: 0 MB / not present\" })",
       "Bash(grep -v \":0$\")",
-      "Bash(awk -F: '$2>0')"
+      "Bash(awk -F: '$2>0')",
+      "Bash(dart run *)"
     ]
   }
 }

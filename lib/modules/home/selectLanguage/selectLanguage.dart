@@ -43,13 +43,8 @@ class _SelectLanguageState extends State<SelectLanguage> {
 
   @override
   Widget build(BuildContext context) {
-    var scaffoldKey = GlobalKey<ScaffoldState>();
     var locale = AppLocalizations.of(context)!;
     var size = MediaQuery.of(context).size;
-    List languages = [
-      locale.eng,
-      locale.arab,
-    ];
 
     return Scaffold(
       backgroundColor: Theme.of(context).brightness == Brightness.light

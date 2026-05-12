@@ -12,6 +12,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../widgets/components/ad_gradient_btn.dart';
@@ -218,8 +219,8 @@ class _SearchState extends State<SearchScreen>
         extendBody: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          toolbarHeight: 80.h,
-          leadingWidth: 400.w,
+          toolbarHeight: 80.hs(context),
+          leadingWidth: 400.ws(context),
           leading: BlocBuilder<ProfileCubit, ProfileState>(
             builder: (context, state) {
               if (state is ProfileLoading) {
@@ -368,53 +369,53 @@ class _SearchState extends State<SearchScreen>
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              Bounce(
-                onTap: () {
-                  context.jumpToShellTab(3);
-                },
-                child: DottedBorder(
-                  borderType: BorderType.Circle,
-                  padding: EdgeInsets.all(2.sp),
-                  color: mainTypographyColor(context),
-                  strokeWidth: 2.w,
-                  child: Container(
-                    padding: EdgeInsets.all(2.sp),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color:strokeGrayColor(context), width: 1.0.w),
-                    ),
-                    child: CircleAvatar(
-                      radius: 20.sp,
-                      backgroundImage: avatarImage,
-                      backgroundColor: Colors.transparent,
-                    ),
-                  ),
+          Bounce(
+            onTap: () {
+              context.jumpToShellTab(3);
+            },
+            child: DottedBorder(
+              borderType: BorderType.Circle,
+              padding: EdgeInsets.all(2.sp),
+              color: mainTypographyColor(context),
+              strokeWidth: 2.w,
+              child: Container(
+                padding: EdgeInsets.all(2.sp),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                      color: strokeGrayColor(context), width: 1.0.w),
+                ),
+                child: CircleAvatar(
+                  radius: 20.sp,
+                  backgroundImage: avatarImage,
+                  backgroundColor: Colors.transparent,
                 ),
               ),
-              SizedBox(width: 7.h),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AutoSizeText(
-                    '${locale.welcome}$profileName',
-                    style: AppTypography.headingColor16(context),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  AutoSizeText(
-                    '${locale.letsBookCar}',
-                    style: AppTypography.paragraphColor16(context),
-                  ),
-                ],
-              ),
-            ],
+            ),
+          ),
+          SizedBox(width: 7.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AutoSizeText(
+                  '${locale.welcome}$profileName',
+                  style: AppTypography.headingColor16(context),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                AutoSizeText(
+                  '${locale.letsBookCar}',
+                  style: AppTypography.paragraphColor16(context),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
         ],
       ),

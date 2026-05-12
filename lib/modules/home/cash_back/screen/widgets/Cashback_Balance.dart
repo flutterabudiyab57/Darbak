@@ -1,4 +1,5 @@
 import 'package:bounce/bounce.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -215,7 +216,8 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
           padding: EdgeInsets.symmetric(horizontal: 10.w),
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+            padding:
+                EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.hs(context)),
             decoration: ShapeDecoration(
               color: buttonWhiteColor(context),
               shape: RoundedRectangleBorder(
@@ -231,8 +233,8 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                 Row(
                   children: [
                     Container(
-                      width: 35.w,
-                      height: 35.h,
+                      width: 35.ws(context),
+                      height: 35.hs(context),
                       decoration: ShapeDecoration(
                         color: buttonWhiteColor(context),
                         shape: RoundedRectangleBorder(
@@ -246,13 +248,13 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                       child: Center(
                         child: SvgPicture.asset(
                           Assets.icon_wallet,
-                          height: 16.h,
-                          width: 17.w,
+                          height: 16.hs(context),
+                          width: 17.ws(context),
                           color: iconDefaultColor(context),
                         ),
                       ),
                     ),
-                    SizedBox(width: 10.w),
+                    SizedBox(width: 10.ws(context)),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -278,8 +280,8 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                             SizedBox(width: 5.w),
                             SvgPicture.asset(
                               Assets.icon_riyal,
-                              height: 14.h,
-                              width: 13.w,
+                              height: 14.hs(context),
+                              width: 13.ws(context),
                               color: mainTypographyColor(context),
                             ),
                           ],
@@ -291,8 +293,8 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                       onTap: _handleToggle,
                       child: AnimatedContainer(
                         duration: Duration(milliseconds: 200),
-                        width: 65.w,
-                        height: 30.h,
+                        width: 65.ws(context),
+                        height: 30.hs(context),
                         decoration: ShapeDecoration(
                           color: _isToggled
                               ? iconDefaultColor(context)
@@ -307,9 +309,9 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                               ? Alignment.centerLeft
                               : Alignment.centerRight,
                           child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 5.w),
-                            width: 20.w,
-                            height: 20.h,
+                            margin: EdgeInsets.symmetric(horizontal: 5.ws(context)),
+                            width: 20.ws(context),
+                            height: 20.hs(context),
                             decoration: ShapeDecoration(
                               color: buttonWhiteColor(context),
                               shape: RoundedRectangleBorder(
@@ -332,7 +334,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                           SizedBox(height: 10.h),
                           Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 20.w, vertical: 15.h),
+                                horizontal: 20.w, vertical: 15.hs(context)),
                             decoration: ShapeDecoration(
                               color: buttonGreenColor(context).withOpacity(.15),
                               shape: RoundedRectangleBorder(
@@ -348,7 +350,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                                 style: TextStyle(
                                   fontFamily: 'IBMPlexSansArabic',
                                   color: buttonGreenColor(context),
-                                  fontSize: 12.sp,
+                                  fontSize: 12.sps(context),
                                   fontWeight: FontWeight.bold,
                                 ),
                                 children: [
@@ -361,8 +363,8 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                                     alignment: PlaceholderAlignment.middle,
                                     child: SvgPicture.asset(
                                       Assets.icon_riyal,
-                                      height: 14.h,
-                                      width: 14.w,
+                                      height: 14.hs(context),
+                                      width: 14.ws(context),
                                       color: buttonGreenColor(context),
                                     ),
                                   ),
@@ -448,7 +450,8 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                                       Expanded(
                                         child: Container(
                                           padding: EdgeInsets.symmetric(
-                                              horizontal: 10.w, vertical: 10.h),
+                                              horizontal: 10.w,
+                                              vertical: 10.hs(context)),
                                           decoration: BoxDecoration(
                                             color: buttonGreenColor(context)
                                                 .withOpacity(.10),
@@ -497,8 +500,10 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                                                           child:
                                                               SvgPicture.asset(
                                                             Assets.icon_riyal,
-                                                            height: 12.h,
-                                                            width: 11.w,
+                                                            height: 12
+                                                                .hs(context),
+                                                            width: 11
+                                                                .ws(context),
                                                             color:
                                                                 buttonGreenColor(
                                                                     context),
@@ -528,7 +533,8 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                                                 _handleCancelCashback(context),
                                         child: Container(
                                           padding: EdgeInsets.symmetric(
-                                              horizontal: 10.w, vertical: 10.h),
+                                              horizontal: 10.w,
+                                              vertical: 10.hs(context)),
                                           decoration: BoxDecoration(
                                             color: buttonRedColor(context)
                                                 .withOpacity(.1),

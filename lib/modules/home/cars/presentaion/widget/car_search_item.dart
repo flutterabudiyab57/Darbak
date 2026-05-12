@@ -1,16 +1,12 @@
-import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
 import '../../../../../core/constants/assets/assets.dart';
 import '../../../../../core/style/style.dart';
 import '../../../../../language/locale.dart';
 import '../../../search_screen/data/models/filter_model.dart';
 import '../../data/models/cars_model.dart';
-import '../page/cars_info.dart';
-import 'car_icon_info.dart';
 
 class CarSearchItem extends StatelessWidget {
   final DataCars car;

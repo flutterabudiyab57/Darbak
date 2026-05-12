@@ -9,6 +9,7 @@ import 'package:darbak/modules/widgets/components/error_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../../core/helpers/interceptors/loading_indicator.dart';
@@ -106,7 +107,7 @@ class _AllCarsScreenState extends State<AllCarsScreen>
       backgroundColor: backgroundColor(context),
       appBar: AppBar(
         backgroundColor: backgroundColor(context),
-        toolbarHeight: 80.h,
+        toolbarHeight: 80.hs(context),
         title: AutoSizeText(
           widget.filterModel?.selectedBranch?.name ?? locale.allCar.toString(),
           style: AppTypography.headingColor22(context),

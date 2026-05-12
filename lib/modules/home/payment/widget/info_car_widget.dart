@@ -1,5 +1,4 @@
-﻿import 'package:darbak/language/locale.dart';
-import 'package:darbak/modules/home/cars/data/models/cars_model.dart';
+﻿import 'package:darbak/modules/home/cars/data/models/cars_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,7 +16,6 @@ class InfoCarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = AppLocalizations.of(context);
     return Row(
       children: [
         Expanded(

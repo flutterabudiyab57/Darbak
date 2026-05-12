@@ -49,7 +49,6 @@ class _BoxTileWidgetState extends State<BoxTileWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var locale = AppLocalizations.of(context)!;
     return Column(
       children: [
         ContainerTileWidget(widgets: [

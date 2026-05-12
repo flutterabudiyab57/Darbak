@@ -10,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
-import 'package:super_tooltip/super_tooltip.dart';
 import '../../../core/constants/assets/app_colors.dart';
 import '../../../core/constants/assets/assets.dart';
 import '../../../core/constants/langCode.dart';
@@ -96,7 +95,6 @@ class _InvoiceUIState extends State<InvoiceUI> {
 
   void _showForceCashPaymentDialog() {
     final locale = AppLocalizations.of(context);
-    final isRTL = locale!.isDirectionRTL(context);
 
     BlocProvider.of<BookingCubit>(context)
         .setPaymentMethods(locale!.cash.toString());
@@ -156,8 +154,6 @@ class _InvoiceUIState extends State<InvoiceUI> {
     final locale = AppLocalizations.of(context);
     final isRTL = locale!.isDirectionRTL(context);
     Size size = MediaQuery.of(context).size;
-    final _controller = SuperTooltipController();
-    final _controller2 = SuperTooltipController();
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(

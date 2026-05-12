@@ -1,4 +1,5 @@
 ﻿import 'package:auto_size_text/auto_size_text.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:darbak/core/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,7 +40,7 @@ class ADGradientButton extends StatelessWidget {
 
     return SizedBox(
       width: width ?? double.infinity,
-      height: height ?? 50.h,
+      height: height ?? 50.hs(context),
       child: Container(
         decoration: BoxDecoration(
           gradient: backgroundColor == null
@@ -61,7 +62,7 @@ class ADGradientButton extends StatelessWidget {
               if (icon != null)
                 Icon(
                   icon,
-                  size: iconSize ?? 22.sp,
+                  size: iconSize ?? 22.sps(context),
                   color: iconColor ?? textColor ?? Colors.white,
                 ),
               if (icon != null) SizedBox(width: 8.w),

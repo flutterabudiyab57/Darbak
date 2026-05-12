@@ -3,6 +3,7 @@ import 'package:darbak/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 
 import '../../../core/constants/assets/app_colors.dart';
 
@@ -26,7 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: backgroundColor(context),
-      toolbarHeight: 80.h,
+      toolbarHeight: 80.hs(context),
       title: Text(
         title,
         style: AppTypography.mainTypographyColor22(context),

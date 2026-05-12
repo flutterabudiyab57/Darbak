@@ -1,7 +1,7 @@
 ﻿import 'dart:async';
 import 'package:darbak/core/style/style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../../../core/helpers/helper_fun.dart';
 import '../../../../language/locale.dart';
@@ -58,7 +58,7 @@ class _WebPaymentState extends State<WebPayment> {
     final locale = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight:80.h,
+        toolbarHeight: 80.hs(context),
         title: Text(
           locale!.continuePaymentProcess,
           style:AppTypography.headingColor22(context),

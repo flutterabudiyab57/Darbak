@@ -6,7 +6,6 @@ import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../language/locale.dart';
 import '../offer_details_screen.dart';
 
 class OfferCard extends StatelessWidget {
@@ -34,7 +33,6 @@ class OfferCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var locale = AppLocalizations.of(context)!;
     // onTap: () {
     //   Navigator.push(
     //     context,

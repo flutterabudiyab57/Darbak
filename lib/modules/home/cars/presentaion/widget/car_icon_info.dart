@@ -1,4 +1,5 @@
-﻿import 'package:auto_size_text/auto_size_text.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:darbak/core/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,10 +27,10 @@ class CarIconInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
-      minWidth: 76.w,
+      minWidth: 60.ws(context),
     ),
-      margin: EdgeInsets.all(6.sp),
-      padding: EdgeInsets.all(8.sp),
+      margin: EdgeInsets.all(4.sp),
+      padding: EdgeInsets.all(4.sp),
       decoration: BoxDecoration(
         color: backgroundColor ?? Colors.white,
         border: Border.all(
@@ -45,7 +46,7 @@ class CarIconInfo extends StatelessWidget {
             width: 30.w,
             height: 28.h,
             child: SvgPicture.asset(image, fit: BoxFit.contain,color: iconGrayColor(context),),
-            
+
           ),
           SizedBox(height: 10.h),
           if (description != null && description!.isNotEmpty)

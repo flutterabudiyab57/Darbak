@@ -1,6 +1,7 @@
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:darbak/core/constants/assets/app_colors.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,7 +28,7 @@ class ShellBottomNavBar extends StatelessWidget {
       backgroundColor: Colors.transparent,
       color: buttonTextColor(context),
       buttonBackgroundColor: Colors.transparent,
-      height: 90.h,
+      height: 80.hs(context),
       animationDuration: const Duration(milliseconds: 300),
       items: [
         _navItem(
@@ -35,7 +36,7 @@ class ShellBottomNavBar extends StatelessWidget {
             assetPath: 'assets/icons/home.png',
             label: locale.home!,
             width: 30.w,
-            height: 30.h,
+            height: 25.h,
             index: 0),
         _navItem(
             context: context,
@@ -95,7 +96,7 @@ class ShellBottomNavBar extends StatelessWidget {
       labelStyle: TextStyle(
         fontFamily: 'IBMPlexSansArabic',
         color: isSelected ? buttonBlueColor(context) : iconGrayColor(context),
-        fontSize: 16.sp,
+        fontSize: 12.sps(context),
         fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,
       ),
     );

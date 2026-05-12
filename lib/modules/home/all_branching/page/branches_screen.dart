@@ -59,7 +59,6 @@ class _BranchesScreenState extends State<BranchesScreen> {
   @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
-    Size size = MediaQuery.of(context).size;
 
     return Directionality(
       textDirection: TextDirection.rtl,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../language/locale.dart';
@@ -22,7 +23,7 @@ class _NewOffersState extends State<NewOffers> {
           : TextDirection.ltr,
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 100.h,
+          toolbarHeight: 100.hs(context),
           backgroundColor: Colors.transparent,
           leadingWidth: double.infinity,
           leading: Padding(

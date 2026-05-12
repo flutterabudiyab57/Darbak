@@ -12,7 +12,6 @@ import '../../../../core/constants/langCode.dart';
 import '../../../../core/helpers/validation/form_validator.dart';
 import '../../../../language/locale.dart';
 import '../../../widgets/components/ad_prim_text_form/ad_prim_text_form.dart';
-import '../data/models/credit_card_model.dart';
 
 class PaymentMethodCard extends StatefulWidget {
   final Color color;
@@ -228,19 +227,6 @@ class _PaymentMethodCardState extends State<PaymentMethodCard> {
 
   bookNowWithVisa() async {
     if (_formKey.currentState!.validate()) {
-      CreditCardModel cardModel = CreditCardModel(
-        orderId: context.read<BookingCubit>().orderID.toString(),
-        nameOnCard: cardHolderName.text,
-        cardNumber: cardNumber.text.replaceAll("-", "").trim(),
-        paymentType: context
-            .read<BookingCubit>()
-            .selectedPaymentMethods
-            .toString()
-            .toLowerCase(),
-        securityCode: int.parse(cvv.text),
-        expiryMonth: int.parse(month.text.substring(0, 2)),
-        expiryYear: int.parse(year.text.substring(0, 2)),
-      );
       setState(() {
         cardNameSaved = cardHolderName.text;
         cardNumberSaved = cardNumber.text.replaceAll("-", "").trim();

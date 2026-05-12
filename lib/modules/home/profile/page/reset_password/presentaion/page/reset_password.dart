@@ -6,7 +6,6 @@ import 'package:darbak/modules/home/profile/page/reset_password/presentaion/bloc
 import 'package:darbak/modules/home/profile/page/widget/container_tile.dart';
 import 'package:darbak/modules/widgets/components/ad_gradient_btn.dart';
 import 'package:darbak/modules/widgets/components/ad_prim_text_form/ad_prim_text_form.dart';
-import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

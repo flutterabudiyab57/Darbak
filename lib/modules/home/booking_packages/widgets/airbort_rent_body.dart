@@ -2,7 +2,6 @@ import 'package:darbak/core/style/style.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/search_screen/blocs/search_bloc/search_cubit.dart';
 import 'package:darbak/modules/home/search_screen/blocs/search_bloc/search_state.dart';
-import 'package:darbak/modules/home/search_screen/presentaion/widget/select_day_and_time.dart';
 import 'package:darbak/modules/widgets/components/ad_gradient_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +32,6 @@ class _AirPortRentBodyState extends State<AirPortRentBody> {
 
     return BlocBuilder<SearchCubit, SearchState>(
       builder: (context, state) {
-        final cubit = BlocProvider.of<SearchCubit>(context);
         final searchCubit = context.read<SearchCubit>();
         final receiveDate = searchCubit.receiveDateValue;
         final driveDate = searchCubit.driveDateValue;

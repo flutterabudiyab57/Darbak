@@ -1,6 +1,6 @@
 ﻿import 'package:darbak/core/helpers/cache/cache_helper.dart';
 import 'package:darbak/modules/home/all_branching/data/models/branch_model.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 class BranchLocalDataSource {
   static const String _branchesKey = 'all_branches';

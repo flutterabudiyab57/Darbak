@@ -12,11 +12,9 @@ import '../../../../../../../core/constants/assets/app_colors.dart';
 import '../../../../../../../language/locale.dart';
 import '../../../../core/helpers/SharedPreference/pereferences.dart';
 import '../../../../core/helpers/interceptors/loading_indicator.dart';
-import '../../../widgets/Dashed_divider.dart';
 import '../../../widgets/components/appbar.dart';
 import '../../profile/page/widget/container_tile.dart';
 import '../bloc/cashback__cubit.dart';
-import '../models/cashback_transactions.dart';
 import '../repository/applycashback.dart';
 import '../repository/cashback_balance.dart';
 

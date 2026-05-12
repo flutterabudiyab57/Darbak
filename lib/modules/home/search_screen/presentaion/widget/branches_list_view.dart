@@ -92,7 +92,6 @@ class _BranchesListViewState extends State<BranchesListView> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final locale = AppLocalizations.of(context);
     return Column(
       children: [
@@ -232,6 +231,7 @@ class _BranchesListViewState extends State<BranchesListView> {
                                     width: MediaQuery.of(context).size.width * 0.40,
                                     child: ADGradientButton(
                                       locale.callUs.toString(),
+                                      gradient: secondary2,
                                       icon: Icons.phone,
                                       iconSize: 20.sp,
                                       textStyle: AppTypography.buttonText15(context),
@@ -270,7 +270,8 @@ class _BranchesListViewState extends State<BranchesListView> {
                                   child: SizedBox(
                                     width: MediaQuery.of(context).size.width * 0.42,
                                     child: ADGradientButton(
-                                      locale.openLocation.toString(),
+                                      gradient: secondary,
+                                      locale.LocationOnMap.toString(),
                                       textStyle: AppTypography.buttonText15(context),
                                       icon: Icons.arrow_forward_ios_rounded,
                                       iconSize: 14.sp,

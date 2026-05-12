@@ -4,6 +4,7 @@ import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui';
 import '../../../../../core/constants/assets/app_colors.dart';
@@ -406,7 +407,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 backgroundColor: backgroundColor(context),
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
-                  toolbarHeight: 70.h,
+                  toolbarHeight: 70.hs(context),
                   backgroundColor: backgroundColor(context),
                   title: Padding(
                     padding: EdgeInsets.only(top: 20.h),

@@ -85,7 +85,6 @@ class _ServicesState extends State<Services> {
       itemBuilder: (BuildContext context, int index) {
         final feature = insuranceList[index];
         final title = feature?.title ?? "";
-        final subTitle = feature?.subTitle ?? "";
         final price = "${feature?.price}";
         final daily = feature?.daily == false
             ? ""
@@ -295,7 +294,6 @@ class _ServicesState extends State<Services> {
 
   Widget buildAdditionsList(List<Feature?> additionsList) {
     final locale = AppLocalizations.of(context)!;
-    final size = MediaQuery.of(context).size;
 
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
@@ -305,7 +303,6 @@ class _ServicesState extends State<Services> {
       itemBuilder: (BuildContext context, int index) {
         final feature = additionsList[index];
         final title = feature?.title ?? "";
-        final subTitle = feature?.subTitle ?? "";
 
         final price = "${feature?.price}";
         final daily = feature?.daily == false

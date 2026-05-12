@@ -3,7 +3,6 @@ import 'package:darbak/modules/home/all_branching/data/models/branch_model.dart'
 import 'package:darbak/modules/home/search_screen/data/models/areas_model.dart';
 import 'package:darbak/modules/home/search_screen/presentaion/widget/location_list_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../widgets/components/appbar.dart';
 
 class MapListView extends StatefulWidget {

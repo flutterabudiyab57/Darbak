@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:widget_zoom/widget_zoom.dart';
 
@@ -91,7 +90,6 @@ class _EditProfileContentState extends State<_EditProfileContent> {
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, profileState) {
-        final locale = AppLocalizations.of(context)!;
         if (profileState is ProfileLoading) {
           return Center(child: ShimmerLoadingList(itemCount: 4));
         }

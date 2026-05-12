@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -18,7 +17,6 @@ import '../../search_screen/blocs/search_bloc/search_cubit.dart';
 import '../../search_screen/blocs/search_bloc/search_state.dart';
 import '../../search_screen/data/models/regions_model.dart';
 import '../../search_screen/presentaion/widget/rental_summary_card.dart';
-import '../../search_screen/presentaion/widget/select_day_and_time.dart';
 import '../Delivery_widgets/delivery_branch_selection_sheet.dart';
 import '../Delivery_widgets/region_selection_bottom_sheet.dart';
 

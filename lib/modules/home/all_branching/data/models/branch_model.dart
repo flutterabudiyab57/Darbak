@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 part 'branch_model.g.dart';
 Data branchModelFromMap(String str) => Data.fromMap(json.decode(str));
 String dataModelToMap(Data data) => json.encode(data.toMap());

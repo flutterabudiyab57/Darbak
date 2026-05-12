@@ -1,6 +1,6 @@
 import 'package:bounce/bounce.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:darbak/core/style/style.dart';
-import 'package:darbak/main.dart';
 import 'package:darbak/modules/home/payment/widget/copouns_bottom_sheet.dart';
 import 'package:darbak/modules/home/payment/widget/coupon_tile.dart';
 import 'package:darbak/modules/home/payment/widget/invoice_bottom_sheet.dart';
@@ -272,14 +272,14 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                 ),
                               ),
                               SizedBox(
-                                height: 12.h,
+                                height: 12.hs(context),
                               ),
                               CouponTile(),
                             ],
                           ),
                         ),
                         SizedBox(
-                          height: 15.h,
+                          height: 15.hs(context),
                         ),
                         BlocBuilder<CashbackCubit, CashbackState>(
                           builder: (context, cashbackState) {

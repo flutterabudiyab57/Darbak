@@ -31,7 +31,6 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
   }
 
   Future<void> _navigateToNextScreen() async {
-    String? token = await SharedPreferencesHelper().get("token");
     String? isLanguageSelectedStr =
     await SharedPreferencesHelper().get("isLanguageSelected");
 
