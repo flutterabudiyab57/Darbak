@@ -21,6 +21,7 @@ import '../../profile/data/models/profile_model.dart';
 import 'bloc/all_cars_cubit/all_cars_cubit.dart';
 import 'bloc/cubit/cars_cubit.dart';
 import 'widget/car_tile.dart';
+import 'package:darbak/service_locator.dart';
 
 class AllCarsScreen extends StatefulWidget {
   final FilterModel? filterModel;
@@ -30,6 +31,20 @@ class AllCarsScreen extends StatefulWidget {
   const AllCarsScreen(
       {Key? key, this.filterModel, this.fromFilter = false, this.model})
       : super(key: key);
+
+  static Widget entry({
+    FilterModel? filterModel,
+    bool fromFilter = false,
+    ProfileModel? model,
+  }) =>
+      BlocProvider<AllCarsCubit>(
+        create: (_) => sl<AllCarsCubit>(),
+        child: AllCarsScreen(
+          filterModel: filterModel,
+          fromFilter: fromFilter,
+          model: model,
+        ),
+      );
 
   @override
   State<AllCarsScreen> createState() => _AllCarsScreenState();
@@ -119,7 +134,7 @@ class _AllCarsScreenState extends State<AllCarsScreen>
               : IconButton(
             onPressed: () {
               PersistentNavBarNavigator.pushNewScreen(context,
-                  screen: FiltersCars());
+                  screen: FiltersCars.entry());
             },
             icon: Image.asset(
               "assets/icons/filter_new.png",

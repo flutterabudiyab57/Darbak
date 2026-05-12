@@ -16,8 +16,14 @@ import '../../../widgets/components/ad_prim_text_form/ad_prim_text_form.dart';
 import '../../../widgets/components/appbar.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
 import '../data/models/branch_model.dart';
+import 'package:darbak/service_locator.dart';
 class BranchesScreen extends StatefulWidget {
   const BranchesScreen({Key? key}) : super(key: key);
+
+  static Widget entry() => BlocProvider<AllBranchCubit>(
+        create: (_) => sl<AllBranchCubit>(),
+        child: const BranchesScreen(),
+      );
 
   @override
   State<BranchesScreen> createState() => _BranchesScreenState();

@@ -19,6 +19,11 @@ import '../all_cars_screen.dart';
 class FiltersCars extends StatefulWidget {
   const FiltersCars({Key? key}) : super(key: key);
 
+  static Widget entry() => BlocProvider<FilterCubit>(
+        create: (_) => sl<FilterCubit>(),
+        child: const FiltersCars(),
+      );
+
   @override
   State<FiltersCars> createState() => _FiltersCarsState();
 }
@@ -186,7 +191,8 @@ class _FiltersCarsState extends State<FiltersCars>
                                 Assets.icon_riyal,
                                 height: 20.h,
                                 width: 20.w,
-                                color: paragraphColor(context),
+                                colorFilter: ColorFilter.mode(
+                                    paragraphColor(context), BlendMode.srcIn),
                               ),
                             ],
                           ),
@@ -217,7 +223,8 @@ class _FiltersCarsState extends State<FiltersCars>
                                 Assets.icon_riyal,
                                 height: 20.h,
                                 width: 20.w,
-                                color: paragraphColor(context),
+                                colorFilter: ColorFilter.mode(
+                                    paragraphColor(context), BlendMode.srcIn),
                               ),
                             ],
                           ),
@@ -355,7 +362,7 @@ class _FiltersCarsState extends State<FiltersCars>
                   GestureDetector(
                     onTap: () {
                       PersistentNavBarNavigator.pushNewScreen(context,
-                        screen: AllCarsScreen(fromFilter: true),
+                        screen: AllCarsScreen.entry(fromFilter: true),
                       );
                     },
                     child: ADGradientButton(locale.search),

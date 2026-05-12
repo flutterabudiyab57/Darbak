@@ -22,7 +22,7 @@ class Branches_Card extends StatelessWidget {
         BlocProvider.of<SearchCubit>(context).getAirPortBranches();
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => DeliveryPackageScreen()),
+          MaterialPageRoute(builder: (_) => DeliveryPackageScreen.entry()),
         );
       },
       child: Container(

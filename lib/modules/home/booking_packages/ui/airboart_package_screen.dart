@@ -18,9 +18,15 @@ import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
 import '../cars_list_package.dart';
 import '../widgets/airbort_rent_body.dart';
+import 'package:darbak/service_locator.dart';
 
 class AirportPackageScreen extends StatefulWidget {
   const AirportPackageScreen({super.key});
+
+  static Widget entry() => BlocProvider<CarsCubit>(
+        create: (_) => sl<CarsCubit>(),
+        child: const AirportPackageScreen(),
+      );
 
   @override
   State<AirportPackageScreen> createState() => _AirportPackagesState();
@@ -99,7 +105,7 @@ class _AirportPackagesState extends State<AirportPackageScreen> {
                                 context.read<ProfileCubit>().custClass.toString())
                         .then((value) {
                       PersistentNavBarNavigator.pushNewScreen(context,
-                          screen: CarsListPackage(filterModel: filterModel));
+                          screen: CarsListPackage.entry(filterModel: filterModel));
                     });
                   } else {
                     print(

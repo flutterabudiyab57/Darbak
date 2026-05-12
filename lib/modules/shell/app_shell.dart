@@ -88,8 +88,8 @@ class _AppShellBodyState extends State<_AppShellBody> {
   void initState() {
     super.initState();
     _pages = [
-      SearchScreen(skipLoginCheck: widget.skipLoginCheckInSearch),
-      const AllCarsScreen(fromFilter: false, filterModel: null),
+      SearchScreen.entry(skipLoginCheck: widget.skipLoginCheckInSearch),
+      AllCarsScreen.entry(fromFilter: false, filterModel: null),
       AllBookingScreen(),
       const MyProfile(),
     ];

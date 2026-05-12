@@ -11,6 +11,7 @@ import '../../../../../core/constants/preferences_constants.dart';
 import '../../../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../../../core/style/style.dart';
 import '../../../../../language/locale.dart';
+import '../../../../widgets/components/ad_gradient_btn.dart';
 import '../../../../widgets/components/ad_prim_text_form/ad_prim_text_form.dart';
 import '../bloc/forget_password.state.dart';
 import '../bloc/forget_password_cubit.dart';
@@ -179,20 +180,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   confirmPassword: confirmPasswordControler.text,
                                 );
                               },
-                              child: Container(
-                                height: 50.h,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15.r),
-                                  color: buttonPrimaryBgColor(context),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    locale.changePassword.toString(),
-                                    style: AppTypography.buttonText20(context),
-                                  ),
-                                ),
-                              ),
+                              child:  ADGradientButton(
+                                locale.changePassword.toString(),
+                  )
                             ),
                             SizedBox(height: 20.h),
                           ],

@@ -15,6 +15,7 @@ import '../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../widgets/components/appbar.dart';
 import '../cars/presentaion/bloc/cubit/cars_cubit.dart';
 import '../profile/blocs/profile_cubit/profile_cubit.dart';
+import 'package:darbak/service_locator.dart';
 
 
 class CarsListPackage extends StatefulWidget {
@@ -23,6 +24,12 @@ class CarsListPackage extends StatefulWidget {
 
   const CarsListPackage({Key? key, this.filterModel, this.fromFilter = false})
       : super(key: key);
+
+  static Widget entry({FilterModel? filterModel, bool fromFilter = false}) =>
+      BlocProvider<CarsCubit>(
+        create: (_) => sl<CarsCubit>(),
+        child: CarsListPackage(filterModel: filterModel, fromFilter: fromFilter),
+      );
 
   @override
   State<CarsListPackage> createState() => _CarsListPackageState();

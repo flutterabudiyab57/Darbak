@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/style/style.dart';
 import '../../../../../language/locale.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
+import '../../../../widgets/components/ad_gradient_btn.dart';
 import '../../../signin/presentation/pages/signin_screen.dart';
 
 class SuccessBottomSheet extends StatelessWidget {
@@ -88,20 +89,9 @@ class SuccessBottomSheet extends StatelessWidget {
                             ),
                           );
                         },
-                        child: Container(
-                          height: 50.h,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.r),
-                            color: buttonPrimaryBgColor(context),
-                          ),
-                          child: Center(
-                            child: Text(
-                              locale.signIn.toString(),
-                              style: AppTypography.buttonText20(context),
-                            ),
-                          ),
-                        ),
+                          child: ADGradientButton(
+                            locale.signIn.toString(),
+                          )
                       ),
                       SizedBox(height: 20.h),
                     ],

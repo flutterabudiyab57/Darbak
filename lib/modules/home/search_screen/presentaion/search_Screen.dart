@@ -32,11 +32,18 @@ import '../../../shell/tab_scroll_registry.dart';
 import '../../offers/offers_tap_screen.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../../auth/signin/presentation/pages/signin_screen.dart';
+import 'package:darbak/service_locator.dart';
 
 
 class SearchScreen extends StatefulWidget {
   SearchScreen({Key? key, this.skipLoginCheck = false}) : super(key: key);
   final bool skipLoginCheck;
+
+  static Widget entry({bool skipLoginCheck = false}) =>
+      BlocProvider<AllBranchCubit>(
+        create: (_) => sl<AllBranchCubit>(),
+        child: SearchScreen(skipLoginCheck: skipLoginCheck),
+      );
 
   @override
   _SearchState createState() => _SearchState();
@@ -255,7 +262,7 @@ class _SearchState extends State<SearchScreen>
                  onTap: () {
                    Navigator.push(
                      context,
-                     MaterialPageRoute(builder: (_) => MonthlyPackageScreen()),
+                     MaterialPageRoute(builder: (_) => MonthlyPackageScreen.entry()),
                    );
                  },
                ),
@@ -500,7 +507,7 @@ class _SearchState extends State<SearchScreen>
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => AirportPackageScreen()),
+                              builder: (_) => AirportPackageScreen.entry()),
                         );
                       },
                       Icon(

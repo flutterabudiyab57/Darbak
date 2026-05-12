@@ -3,7 +3,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../../blocs/auth_bloc/auth_bloc.dart';
 import '../../data/models/signin_model.dart';
 import '../../data/repositories/signin_repository_impl.dart';
 
@@ -12,9 +11,8 @@ part 'signin_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final SignInRepositoryImpl signInRepository;
-  final AuthBloc authBloc;
 
-  SignInBloc(this.authBloc, this.signInRepository)
+  SignInBloc(this.signInRepository)
       : super(SignInInitial()) {
     on<SignIn>(_onSignInEvent);
   }

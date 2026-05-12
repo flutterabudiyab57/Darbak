@@ -145,7 +145,7 @@ class FilterWidget extends StatelessWidget {
                      Bounce(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => AllCarsScreen(fromFilter: true)));
+                              builder: (_) => AllCarsScreen.entry(fromFilter: true)));
                         },
                         child: Container(
                           height: size.height * 0.05,

@@ -18,9 +18,15 @@ import '../../search_screen/data/models/filter_model.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
 import '../cars_list_package.dart';
 import '../widgets/delivery_rent_body.dart';
+import 'package:darbak/service_locator.dart';
 
 class DeliveryPackageScreen extends StatefulWidget {
   const DeliveryPackageScreen({super.key});
+
+  static Widget entry() => BlocProvider<CarsCubit>(
+        create: (_) => sl<CarsCubit>(),
+        child: const DeliveryPackageScreen(),
+      );
 
   @override
   State<DeliveryPackageScreen> createState() => _DeliveryPackageScreenState();
@@ -104,7 +110,7 @@ class _DeliveryPackageScreenState extends State<DeliveryPackageScreen> {
                   )
                       .then((value) {
                     PersistentNavBarNavigator.pushNewScreen(context,
-                        screen: CarsListPackage(filterModel: filterModel));
+                        screen: CarsListPackage.entry(filterModel: filterModel));
                   });
                 } else {
                   print(

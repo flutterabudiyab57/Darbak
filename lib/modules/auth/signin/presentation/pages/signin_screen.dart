@@ -295,7 +295,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     builder: (context) => BackdropFilter(
                                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                                       child: FractionallySizedBox(
-                                          child: ForgotPasswordScreen()),
+                                          child: ForgotPasswordScreen.entry()),
                                     ),
                                   );
                                 },
@@ -338,24 +338,15 @@ class _SignInScreenState extends State<SignInScreen> {
                                               )),
                                           (_) => false);
                                 },
-                                child: Container(
-                                  height: 50.h,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15.sp),
-                                    border: Border.all(
-                                      color: Color(0xFF05658F),
-                                      width: 1.5.w,
-                                    ),
+                                child: ADGradientButton(
+                                  locale.continueAsGuest!,
+                                  border: Border.all(
+                                    color: const Color(0xFF05658F),
+                                    width: 1.5.w,
                                   ),
-                                  child: Center(
-                                    child: AutoSizeText(
-                                      locale.continueAsGuest!,
-                                      style: AppTypography.paragraphColor20(context),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                                  backgroundColor: Colors.transparent,
+                                  textStyle: AppTypography.paragraphColor20(context),
+                                ),),
                               SizedBox(height: 10.h),
 
                               Row(

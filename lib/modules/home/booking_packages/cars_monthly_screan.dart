@@ -13,6 +13,7 @@ import '../../widgets/components/appbar.dart';
 import '../cars/presentaion/widget/car_tile.dart';
 import '../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../cars/presentaion/bloc/cubit/cars_cubit.dart';
+import 'package:darbak/service_locator.dart';
 
 class CarsMonthlyScreen extends StatefulWidget {
   final FilterModel? filterModel;
@@ -20,6 +21,12 @@ class CarsMonthlyScreen extends StatefulWidget {
 
   const CarsMonthlyScreen({Key? key, this.filterModel, this.fromFilter = false})
       : super(key: key);
+
+  static Widget entry({FilterModel? filterModel, bool fromFilter = false}) =>
+      BlocProvider<CarsCubit>(
+        create: (_) => sl<CarsCubit>(),
+        child: CarsMonthlyScreen(filterModel: filterModel, fromFilter: fromFilter),
+      );
 
   @override
   State<CarsMonthlyScreen> createState() => _CarsMonthlyScreenState();

@@ -9,6 +9,7 @@ import '../../../../../core/helpers/helper_fun.dart';
 import '../../../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../../../core/style/style.dart';
 import '../../../../../language/locale.dart';
+import '../../../../widgets/components/ad_gradient_btn.dart';
 import '../bloc/forget_password.state.dart';
 import '../bloc/forget_password_cubit.dart';
 import 'change_password.dart';
@@ -142,6 +143,7 @@ class _EnterCodeScreanState extends State<EnterCodeScrean> {
                 );
               }
               if (state is CodeLoaded) {
+                final cubit = context.read<ForgetPasswordCubit>();
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
@@ -151,10 +153,13 @@ class _EnterCodeScreanState extends State<EnterCodeScrean> {
                   constraints: BoxConstraints(
                     maxWidth: double.infinity,
                     // maxHeight: MediaQuery.of(context).size.height * 0.95,
-                  ),                          builder: (context) => BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                    child: FractionallySizedBox(
-                      child: ChangePasswordScreen(),
+                  ),                          builder: (_) => BlocProvider<ForgetPasswordCubit>.value(
+                    value: cubit,
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child: FractionallySizedBox(
+                        child: ChangePasswordScreen(),
+                      ),
                     ),
                   ),
                 );
@@ -243,20 +248,9 @@ class _EnterCodeScreanState extends State<EnterCodeScrean> {
                                 BlocProvider.of<ForgetPasswordCubit>(context)
                                     .sendCode(code: code);
                               },
-                              child: Container(
-                                height: 50.h,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15.r),
-                                  color: buttonPrimaryBgColor(context),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    locale.send.toString(),
-                                    style: AppTypography.buttonText20(context),
-                                  ),
-                                ),
-                              ),
+                              child:  ADGradientButton(
+                                locale.send.toString(),
+                )
                             ),
                             SizedBox(height: 20.h),
                           ],

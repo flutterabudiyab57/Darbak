@@ -152,7 +152,7 @@ class _ProfileContentState extends State<_ProfileContent> {
             ontap: () {
               PersistentNavBarNavigator.pushNewScreen(
                 context,
-                screen: BranchesScreen(),
+                screen: BranchesScreen.entry(),
               );
             },
           ),

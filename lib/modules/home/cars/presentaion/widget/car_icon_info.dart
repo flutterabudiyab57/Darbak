@@ -27,7 +27,7 @@ class CarIconInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
-      minWidth: 60.ws(context),
+      minWidth: 75.ws(context),
     ),
       margin: EdgeInsets.all(4.sp),
       padding: EdgeInsets.all(4.sp),

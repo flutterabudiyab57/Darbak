@@ -3,7 +3,6 @@ import 'package:get_it/get_it.dart';
 
 import 'core/helpers/SharedPreference/pereferences.dart';
 import 'core/helpers/helper/date_helper.dart';
-import 'modules/auth/blocs/auth_bloc/onboarding_cubt_cubit.dart';
 import 'modules/auth/forgotPassword/data/datasources/forget_password_data_sourse.dart';
 import 'modules/auth/forgotPassword/presentaion/bloc/forget_password_cubit.dart';
 import 'modules/auth/register/presentaion/bloc/register_cubit.dart';
@@ -17,7 +16,7 @@ import 'modules/home/all_branching/data/local/branch_local_datasource.dart';
 import 'modules/home/booking_from_cars/datasources/booking_cars_remote_datasource.dart';
 import 'modules/home/booking_from_cars/presentaion/bloc/booking_cars_cubit.dart';
 import 'modules/home/selectLanguage/languageCubit.dart';
-import 'modules/auth/blocs/auth_bloc/auth_bloc.dart';
+import 'modules/auth/blocs/auth_bloc/onboarding_cubt_cubit.dart';
 import 'modules/auth/register/data/datasources/local/register_local_datasources.dart';
 import 'modules/auth/register/data/datasources/remote/register_remote_datasource.dart';
 import 'modules/auth/signin/data/datasources/loacal/sigin_local_datasource.dart';
@@ -55,14 +54,13 @@ import 'modules/home/search_screen/data/datasources/remote/regions_remote_dataso
 GetIt sl = GetIt.instance;
 
 Future<void> setup() async {
-  if (sl.isRegistered<AuthBloc>()) {
+  if (sl.isRegistered<SignInBloc>()) {
     print('⚠️ Service Locator already initialized, skipping...');
     return;
   }
 
   // ==================== Blocs/Cubits ====================
-  sl.registerFactory(() => AuthBloc(sl()));
-  sl.registerFactory(() => SignInBloc(sl(), sl()));
+  sl.registerFactory(() => SignInBloc(sl()));
   sl.registerFactory(() => RegisterCubit(sl()));
   sl.registerFactory(() => OnBoardingCubit());
   sl.registerLazySingleton(() => BookingCubit(sl()));

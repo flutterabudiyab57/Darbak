@@ -329,7 +329,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       builder: (context) => BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                         child: FractionallySizedBox(
-                          child: ForgotPasswordScreen(),
+                          child: ForgotPasswordScreen.entry(),
                         ),
                       ),
                     );

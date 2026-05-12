@@ -19,9 +19,18 @@ import '../../cars/presentaion/bloc/cubit/cars_cubit.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
 import '../widgets/monthly_rent_body.dart';
+import 'package:darbak/service_locator.dart';
 
 class MonthlyPackageScreen extends StatefulWidget {
   const MonthlyPackageScreen({super.key});
+
+  static Widget entry() => MultiBlocProvider(
+        providers: [
+          BlocProvider<AllBranchCubit>(create: (_) => sl<AllBranchCubit>()),
+          BlocProvider<CarsCubit>(create: (_) => sl<CarsCubit>()),
+        ],
+        child: const MonthlyPackageScreen(),
+      );
 
   @override
   State<MonthlyPackageScreen> createState() => _MonthlyPackageScreenState();
@@ -100,7 +109,7 @@ class _MonthlyPackageScreenState extends State<MonthlyPackageScreen> {
                               context.read<ProfileCubit>().custClass.toString())
                       .then((value) {
                     PersistentNavBarNavigator.pushNewScreen(context,
-                        screen: CarsMonthlyScreen(filterModel: filterModel));
+                        screen: CarsMonthlyScreen.entry(filterModel: filterModel));
                   });
                 } else {
                   print(
