@@ -9,6 +9,7 @@ import 'modules/home/selectLanguage/languageCubit.dart';
 import 'language/locale.dart';
 import 'modules/auth/splash_screen.dart';
 import 'service_locator.dart';
+import 'modules/auth/blocs/auth_status_cubit.dart';
 import 'modules/home/additions/presentaion/blocs/addition_cubit/additions_cubit.dart';
 import 'modules/home/all_bookings/presentaion/bloc/allbooking_cubit.dart';
 import 'modules/home/blocs/booking_cubit/booking_cubit.dart';
@@ -19,6 +20,7 @@ import 'modules/home/search_screen/blocs/search_bloc/search_cubit.dart';
 MultiBlocProvider CreateBlocProviders(BuildContext context) {
   return MultiBlocProvider(
     providers: [
+      BlocProvider<AuthStatusCubit>.value(value: sl<AuthStatusCubit>()),
       BlocProvider<BookingCubit>(create: (context) => sl<BookingCubit>()),
       BlocProvider<LanguageCubit>(create: (context) => sl<LanguageCubit>()),
       BlocProvider<ProfileCubit>(create: (context) => sl<ProfileCubit>()),

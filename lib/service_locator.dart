@@ -17,6 +17,7 @@ import 'modules/home/booking_from_cars/datasources/booking_cars_remote_datasourc
 import 'modules/home/booking_from_cars/presentaion/bloc/booking_cars_cubit.dart';
 import 'modules/home/selectLanguage/languageCubit.dart';
 import 'modules/auth/blocs/auth_bloc/onboarding_cubt_cubit.dart';
+import 'modules/auth/blocs/auth_status_cubit.dart';
 import 'modules/auth/register/data/datasources/local/register_local_datasources.dart';
 import 'modules/auth/register/data/datasources/remote/register_remote_datasource.dart';
 import 'modules/auth/signin/data/datasources/loacal/sigin_local_datasource.dart';
@@ -60,7 +61,8 @@ Future<void> setup() async {
   }
 
   // ==================== Blocs/Cubits ====================
-  sl.registerFactory(() => SignInBloc(sl()));
+  sl.registerLazySingleton(() => AuthStatusCubit(sl()));
+  sl.registerFactory(() => SignInBloc(sl(), sl()));
   sl.registerFactory(() => RegisterCubit(sl()));
   sl.registerFactory(() => OnBoardingCubit());
   sl.registerLazySingleton(() => BookingCubit(sl()));
