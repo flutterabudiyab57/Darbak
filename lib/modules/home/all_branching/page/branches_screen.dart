@@ -107,9 +107,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                         auth: true,
                         controller: _searchController,
                         type: TextInputType.name,
-                        label: locale.isDirectionRTL(context)
-                            ? "أستكشف فروعنا ..."
-                            : "Explore Our Branches ",
+                        label: locale.exploreOurBranches,
                         pIcon: Icons.search_outlined,
                       ),
                     ),
@@ -168,9 +166,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
             width: 220.w,
           ),
           Text(
-            locale.isDirectionRTL(context)
-                ? "عذراً, لا يوجد فرع لدينا بهذا الاسم."
-                : "Sorry, we do not have a branch with this name.",
+            locale.noBranchWithThisName,
             style: AppTypography.paragraphColor16(context),
           ),
         ],

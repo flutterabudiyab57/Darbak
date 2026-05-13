@@ -109,9 +109,7 @@ class OfferDetailsContent extends StatelessWidget {
           ),
           SizedBox(height: 14.h),
           Text(
-            locale.isDirectionRTL(context)
-                ? "السيارات فى العرض"
-                : "Cars in Offers",
+            locale.carsInOffer,
             style: AppTypography.headingColor18(context),
           ),
           SizedBox(height: 8.h),
@@ -124,9 +122,7 @@ class OfferDetailsContent extends StatelessWidget {
                     height: 200.h,
                   ),
                   Text(
-                    locale.isDirectionRTL(context)
-                        ? "العرض متاح لجميع السيارات."
-                        : "Offer available for all cars.",
+                    locale.offerAvailableAllCars,
                     style: AppTypography.headingColor12(context),
                   ),
                 ],

@@ -82,9 +82,7 @@ class _DailyRentBodyState extends State<DailyRentBody> {
                         ),
                       ),
                       Text(
-                        locale.isDirectionRTL(context)
-                            ? "سوف يتم محاسبتك بالسعر اليومى للسياره"
-                            : "You will be charged the daily price of the car.",
+                        locale.chargedDailyPrice,
                         style: AppTypography.paragraphColor18(context),
                       ),
 

@@ -3,12 +3,12 @@ import 'package:darbak/modules/shell/app_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
-import '../../../../../core/helpers/SharedPreference/pereferences.dart';
 import '../../../../widgets/components/appbar.dart';
 import '../../../../widgets/components/error_image.dart';
 import '../../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../../search_screen/presentaion/widget/shimmer_list.dart';
 import 'mybookings.dart';
+import '../../../../auth/blocs/auth_status_cubit.dart';
 
 class AllBookingScreen extends StatefulWidget {
   final bool? isBottomSheet;
@@ -49,19 +49,13 @@ class _AllBookingScreenState extends State<AllBookingScreen> {
         title: locale.myBookings.toString(),
         // showThemeToggle: true,
       ),
-      body: FutureBuilder<String?>(
-        future: SharedPreferencesHelper().get("token"),
-        builder: (context, snapshot) {
-          // Loading state while checking token
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: BlocBuilder<AuthStatusCubit, bool?>(
+        builder: (context, isAuthenticated) {
+          if (isAuthenticated == null) {
             return Center(child: ShimmerLoadingList());
           }
 
-          final bool hasToken = snapshot.hasData &&
-              snapshot.data != null &&
-              snapshot.data!.isNotEmpty;
-
-          if (!hasToken) {
+          if (!isAuthenticated) {
             return ErrorImage(
               refresh: () {
                 setState(() {});

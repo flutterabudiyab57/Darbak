@@ -119,9 +119,7 @@ class _CarsScreenState extends State<CarsScreen> with TickerProviderStateMixin {
                   listener: (context, state) {
                 if (state is CarsLodError) {
                   Fluttertoast.showToast(
-                    msg: locale.isDirectionRTL(context)
-                        ? "حدث خطأ ما جارى المعالجه."
-                        : "An error has occurred and is being processed.",
+                    msg: locale.errorOccurredProcessing,
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     backgroundColor: Color(0xffF6A9A9),

@@ -23,7 +23,9 @@
       "Bash(awk -F: '$2>0')",
       "Bash(dart run *)",
       "Bash(flutter run *)",
-      "Bash(powershell -Command \"Get-Item build\\\\start_up_info.json | Select-Object LastWriteTime, Length\")"
+      "Bash(powershell -Command \"Get-Item build\\\\start_up_info.json | Select-Object LastWriteTime, Length\")",
+      "Bash(git stash *)",
+      "Bash(git checkout *)"
     ]
   }
 }

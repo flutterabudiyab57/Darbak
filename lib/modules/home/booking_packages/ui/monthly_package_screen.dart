@@ -56,9 +56,7 @@ class _MonthlyPackageScreenState extends State<MonthlyPackageScreen> {
       extendBody: true,
       backgroundColor: backgroundColor(context),
       appBar:   CustomAppBar(
-        title:locale!.isDirectionRTL(context)
-            ? "الباقات الشهريه"
-            : "Monthly Packages",
+        title: locale!.monthlyPackages,
         showBackButton: true,
         // showThemeToggle: true,
       ),

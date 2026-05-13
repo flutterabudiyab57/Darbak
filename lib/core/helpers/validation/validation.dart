@@ -137,22 +137,16 @@ class Validate {
     // إذا كان الكود السعودي (966)
     if (countryCode == '966') {
       if (value.length != 9) {
-        return locale!.isDirectionRTL(context)
-            ? 'رقم الجوال السعودي يجب أن يكون 9 أرقام'
-            : 'Saudi phone number must be 9 digits';
+        return locale!.saudiPhoneMustBe9Digits;
       }
       // التحقق من أن الرقم يبدأ بـ 5
       if (!value.startsWith('5')) {
-        return locale!.isDirectionRTL(context)
-            ? 'رقم الجوال السعودي يجب أن يبدأ بـ 5'
-            : 'Saudi phone number must start with 5';
+        return locale!.saudiPhoneMustStartWith5;
       }
     } else {
       // للدول الأخرى
       if (value.length < 7 || value.length > 15) {
-        return locale!.isDirectionRTL(context)
-            ? 'رقم الجوال غير صحيح'
-            : 'Invalid phone number';
+        return locale!.invalidPhoneNumber;
       }
     }
 
@@ -188,9 +182,7 @@ class Validate {
     }
 
     if (savedPassword != null && value != savedPassword) {
-      return locale!.isDirectionRTL(context)
-          ? "كلمة المرور القديمة غير صحيحة"
-          : "Old password is incorrect";
+      return locale!.oldPasswordIncorrect;
     }
 
     return null;
@@ -283,24 +275,18 @@ class Validate {
     final locale = AppLocalizations.of(context);
 
     if (monthValue == null || monthValue.isEmpty) {
-      return locale!.isDirectionRTL(context)
-          ? "الرجاء إدخال شهر الانتهاء."
-          : "Please enter expire month.";
+      return locale!.pleaseEnterExpireMonth;
     }
 
     // لازم يكون رقمين بس
     if (!RegExp(r'^\d{2}$').hasMatch(monthValue)) {
-      return locale!.isDirectionRTL(context)
-          ? "الرجاء إدخال الشهر بصيغة رقمين (01 - 12)."
-          : "Please enter month in 2 digits format (01 - 12).";
+      return locale!.pleaseEnterMonthIn2Digits;
     }
 
     final int month = int.parse(monthValue);
 
     if (month < 1 || month > 12) {
-      return locale!.isDirectionRTL(context)
-          ? "الرجاء إدخال شهر صالح من 01 إلى 12."
-          : "Please enter valid month from 01 to 12.";
+      return locale!.pleaseEnterValidMonth;
     }
 
     return null;

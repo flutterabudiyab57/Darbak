@@ -236,9 +236,7 @@ class _AllCarsScreenState extends State<AllCarsScreen>
                                   MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      locale.isDirectionRTL(context)
-                                          ? "ابحث عن سيارتك المفضلة..."
-                                          : 'Search on your favorite car...',
+                                      locale.searchYourFavoriteCar,
                                       style: AppTypography.paragraphColor16(context),
                                     ),
                                     Icon(

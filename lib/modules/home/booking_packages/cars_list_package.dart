@@ -103,9 +103,7 @@ class _CarsListPackageState extends State<CarsListPackage> with TickerProviderSt
     return Scaffold(
       backgroundColor:backgroundColor(context),
       appBar: CustomAppBar(
-        title: locale.isDirectionRTL(context)
-            ? "البحث عن سيارة"
-            : "Search for a car",
+        title: locale.searchForACar,
         showBackButton: true,
         // showThemeToggle: true,
       ),
@@ -123,9 +121,7 @@ class _CarsListPackageState extends State<CarsListPackage> with TickerProviderSt
                   listener: (context, state) {
                     if (state is CarsLodError) {
                       Fluttertoast.showToast(
-                        msg: locale.isDirectionRTL(context)
-                            ? "حدث خطأ ما جارى المعالجه."
-                            : "An error has occurred and is being processed.",
+                        msg: locale.errorOccurredProcessing,
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                         backgroundColor: Color(0xffF6A9A9),

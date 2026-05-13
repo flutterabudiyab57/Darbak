@@ -71,9 +71,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                 width: 250.w,
               ),
               Text(
-                locale.isDirectionRTL(context)
-                    ? "لا يوجد تفاصيل فى العرض حتى الأن."
-                    : "There are no details in the offer yet.",
+                locale.noOfferDetailsYet,
                 style: TextStyle(
                   fontSize: 16.sp,
                   color: Theme.of(context).colorScheme.onPrimary,

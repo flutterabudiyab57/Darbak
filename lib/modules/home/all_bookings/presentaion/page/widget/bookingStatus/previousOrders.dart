@@ -42,9 +42,7 @@ class _PreviousOrdersState extends State<PreviousOrders> {
 
         if (state is CancelError) {
           Fluttertoast.showToast(
-            msg: locale.isDirectionRTL(context)
-                ? "حدث خطأ فى الغاء الحجز."
-                : "There was an error canceling the booking.",
+            msg: locale.errorCancelingBooking,
             backgroundColor: Color(0xffF6A9A9),
             textColor: Color(0xffD62E2E),
             toastLength: Toast.LENGTH_SHORT,
@@ -57,9 +55,7 @@ class _PreviousOrdersState extends State<PreviousOrders> {
           BlocProvider.of<AllBookingCubit>(context)
               .getAllBooking(state: 'ended');
           Fluttertoast.showToast(
-            msg: locale.isDirectionRTL(context)
-                ? 'تم الغاء الطلب بنجاح'
-                : 'Order has been cancelled Successfully',
+            msg: locale.orderCancelledSuccessfully,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Color(0xffDCEFE3),
@@ -69,9 +65,7 @@ class _PreviousOrdersState extends State<PreviousOrders> {
 
         if (state is DeleteOrderError) {
           Fluttertoast.showToast(
-            msg: locale.isDirectionRTL(context)
-                ? "حدث خطأ فى حذف الحجز."
-                : "There was an error deleting the booking.",
+            msg: locale.errorDeletingBooking,
             backgroundColor: Color(0xffF6A9A9),
             textColor: Color(0xffD62E2E),
             toastLength: Toast.LENGTH_SHORT,
@@ -84,9 +78,7 @@ class _PreviousOrdersState extends State<PreviousOrders> {
           BlocProvider.of<AllBookingCubit>(context)
               .getAllBooking(state: 'ended');
           Fluttertoast.showToast(
-            msg: locale.isDirectionRTL(context)
-                ? 'تم حذف الطلب بنجاح'
-                : 'Order has been Deleted Successfully',
+            msg: locale.orderDeletedSuccessfully,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Color(0xffDCEFE3),
@@ -287,9 +279,7 @@ class _PreviousOrdersState extends State<PreviousOrders> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              locale.isDirectionRTL(context)
-                                                  ? 'تكلفة الحجز : '
-                                                  : 'Booking Cost : ',
+                                              locale.bookingCostColon,
                                               style: AppTypography.paragraphColor12(context),
                                             ),
                                             Text(
@@ -319,9 +309,7 @@ class _PreviousOrdersState extends State<PreviousOrders> {
                                         : TextDirection.ltr,
                                     children: [
                                       Text(
-                                        locale.isDirectionRTL(context)
-                                            ? 'تاريخ الحجز : '
-                                            : 'Booking Date : ',
+                                        locale.bookingDateColon,
                                         style: AppTypography.paragraphColor12(context),
                                       ),
                                       Flexible(

@@ -49,9 +49,7 @@ class _FavouritesState extends State<Favourites> {
                     Image.asset("assets/images/emptystate.png", width: 220.w),
                     SizedBox(height: 6.h),
                     Text(
-                      locale.isDirectionRTL(context)
-                          ? "أضف سيارتك المفضلة..."
-                          : 'Add your favorite car...',
+                      locale.addFavoriteCar,
                       style: AppTypography.mainTypographyColor20(context),
                       textAlign: TextAlign.center,
                     ),

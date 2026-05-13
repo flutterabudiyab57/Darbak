@@ -75,18 +75,14 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)!.isDirectionRTL(context)
-              ? 'تم رفض إذن الموقع'
-              : 'Location permission denied'),
+          content: Text(AppLocalizations.of(context)!.locationPermissionDenied),
         ));
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!.isDirectionRTL(context)
-            ? 'تم رفض إذن الموقع بشكل دائم. من فضلك فعّله من الإعدادات.'
-            : 'Location permission permanently denied. Please enable it from settings.'),
+        content: Text(AppLocalizations.of(context)!.permissionPermanentlyDeniedBody),
       ));
       return false;
     }
@@ -156,16 +152,12 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
     final locale = AppLocalizations.of(context)!;
 
     if (isPickup && _selectedBranch == null) {
-      _showSnackError(locale.isDirectionRTL(context)
-          ? 'يرجى اختيار فرع التوصيل أولاً'
-          : 'Please select a delivery branch first');
+      _showSnackError(locale.selectDeliveryBranchFirst);
       return;
     }
 
     if (!isPickup && _selectedRegion == null) {
-      _showSnackError(locale.isDirectionRTL(context)
-          ? 'يرجى اختيار المنطقة أولاً'
-          : 'Please select a region first');
+      _showSnackError(locale.selectRegionFirst);
       return;
     }
 
@@ -228,9 +220,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
     final locale = AppLocalizations.of(context)!;
     if (address.contains(',') &&
         double.tryParse(address.split(',')[0].trim()) != null) {
-      return locale.isDirectionRTL(context)
-          ? 'موقع مخصص (${address.split(',')[0].substring(0, 7)}°)'
-          : 'Custom Location (${address.split(',')[0].substring(0, 7)}°)';
+      return '${locale.customLocationLabel} (${address.split(',')[0].substring(0, 7)}°)';
     }
     return address;
   }
@@ -297,27 +287,15 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
     final searchCubit = BlocProvider.of<SearchCubit>(context);
 
     if (pickup_lat == null || pickup_long == null) {
-      _showErrorDialog(
-          context,
-          locale.isDirectionRTL(context)
-              ? 'يرجى اختيار موقع الاستلام'
-              : 'Please select pickup location');
+      _showErrorDialog(context, locale.selectPickupLocation);
       return false;
     }
     if (dropoff_lat == null || dropoff_long == null) {
-      _showErrorDialog(
-          context,
-          locale.isDirectionRTL(context)
-              ? 'يرجى اختيار موقع التسليم'
-              : 'Please select dropoff location');
+      _showErrorDialog(context, locale.selectDropoffLocation);
       return false;
     }
     if (searchCubit.selectedReceiveBranch == null) {
-      _showErrorDialog(
-          context,
-          locale.isDirectionRTL(context)
-              ? 'يرجى اختيار فرع التوصيل'
-              : 'Please select delivery branch');
+      _showErrorDialog(context, locale.selectDeliveryBranchMsg);
       return false;
     }
     try {
@@ -326,11 +304,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
         orElse: () => BranchModel(),
       );
       if (triggeredBranchModel.id == null) {
-        _showErrorDialog(
-            context,
-            locale.isDirectionRTL(context)
-                ? 'حدث خطأ في اختيار الفرع'
-                : 'Error selecting branch');
+        _showErrorDialog(context, locale.errorSelectingBranch);
         return false;
       }
       searchCubit.selectedReceiveModel = triggeredBranchModel;
@@ -340,11 +314,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
       await searchCubit.validateDelivery();
       return true;
     } catch (e) {
-      _showErrorDialog(
-          context,
-          locale.isDirectionRTL(context)
-              ? 'حدث خطأ أثناء التحقق'
-              : 'An error occurred during validation');
+      _showErrorDialog(context, locale.errorDuringValidation);
       return false;
     }
   }
@@ -439,23 +409,17 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  locale.isDirectionRTL(context)
-                      ? 'اختر منطقة الاستلام'
-                      : 'Choose the pickup area',
+                  locale.choosePickupArea,
                   style: AppTypography.headingColor22(context),
                 ),
                 SizedBox(height: 5.h),
                 Text(
-                  locale.isDirectionRTL(context)
-                      ? 'سيتم احتساب السعر حسب مدة الحجز.'
-                      : 'The price will be calculated according to the duration of the booking.',
+                  locale.priceCalculatedByDuration,
                   style: AppTypography.paragraphColor18(context),
                 ),
                 SizedBox(height: 12.h),
                 _buildFloatingLabelField(
-                  label: locale.isDirectionRTL(context)
-                      ? 'أختر منطقة الاستلام'
-                      : 'Select City',
+                  label: locale.selectCity,
                   value: searchCubit.selectedReceiveBranch,
                   onTap: () =>
                       _showBranchBottomSheet(context, searchCubit, locale),
@@ -464,17 +428,13 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
                 GestureDetector(
                   onTap: () => _pickLocation(isPickup: true),
                   child: _buildActionRow(
-                    mainText: locale.isDirectionRTL(context)
-                        ? 'وين تبي نوصلك'
-                        : 'Where to deliver',
+                    mainText: locale.whereToDeliver,
                     controller: pickupController,
                   ),
                 ),
                 SizedBox(height: 12.h),
                 _buildFloatingLabelField(
-                  label: locale.isDirectionRTL(context)
-                      ? 'أختر منطقة التسليم '
-                      : 'Select Region',
+                  label: locale.selectDropoffRegion,
                   value: _selectedRegionCity,
                   onTap: () =>
                       _showRegionBottomSheet(context, searchCubit, locale),
@@ -483,9 +443,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
                 GestureDetector(
                   onTap: () => _pickLocation(isPickup: false),
                   child: _buildActionRow(
-                    mainText: locale.isDirectionRTL(context)
-                        ? 'وين نستلم منك'
-                        : 'Where to pickup from',
+                    mainText: locale.whereToPickup,
                     controller: dropoffController,
                   ),
                 ),

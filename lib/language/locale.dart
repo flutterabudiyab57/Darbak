@@ -306,6 +306,220 @@ class AppLocalizations {
   String get pleaseEnterComplaint =>
       _localizedValues[locale.languageCode]!['pleaseEnterComplaint']!;
 
+  String get niceToMeetYou =>
+      _localizedValues[locale.languageCode]!['niceToMeetYou']!;
+
+  String get openAccountSubtitle =>
+      _localizedValues[locale.languageCode]!['openAccountSubtitle']!;
+
+  String get createAccount =>
+      _localizedValues[locale.languageCode]!['createAccount']!;
+
+  String get saudiPhoneMustBe9Digits =>
+      _localizedValues[locale.languageCode]!['saudiPhoneMustBe9Digits']!;
+  String get saudiPhoneMustStartWith5 =>
+      _localizedValues[locale.languageCode]!['saudiPhoneMustStartWith5']!;
+  String get oldPasswordIncorrect =>
+      _localizedValues[locale.languageCode]!['oldPasswordIncorrect']!;
+  String get pleaseEnterExpireMonth =>
+      _localizedValues[locale.languageCode]!['pleaseEnterExpireMonth']!;
+  String get pleaseEnterMonthIn2Digits =>
+      _localizedValues[locale.languageCode]!['pleaseEnterMonthIn2Digits']!;
+  String get pleaseEnterValidMonth =>
+      _localizedValues[locale.languageCode]!['pleaseEnterValidMonth']!;
+  String get contactNumbers =>
+      _localizedValues[locale.languageCode]!['contactNumbers']!;
+  String get socialMedia =>
+      _localizedValues[locale.languageCode]!['socialMedia']!;
+  String get visitOurWebsite =>
+      _localizedValues[locale.languageCode]!['visitOurWebsite']!;
+  String get checkMobileNumber =>
+      _localizedValues[locale.languageCode]!['checkMobileNumber']!;
+  String get forgetPasswordDescription =>
+      _localizedValues[locale.languageCode]!['forgetPasswordDescription']!;
+  String get makeSureNewPassword =>
+      _localizedValues[locale.languageCode]!['makeSureNewPassword']!;
+  String get returnToLoginScreen =>
+      _localizedValues[locale.languageCode]!['returnToLoginScreen']!;
+  String get pleaseEnter4DigitCode =>
+      _localizedValues[locale.languageCode]!['pleaseEnter4DigitCode']!;
+  String get exploreOurBranches =>
+      _localizedValues[locale.languageCode]!['exploreOurBranches']!;
+  String get noBranchWithThisName =>
+      _localizedValues[locale.languageCode]!['noBranchWithThisName']!;
+  String get errorOccurredProcessing =>
+      _localizedValues[locale.languageCode]!['errorOccurredProcessing']!;
+  String get errorCancelingBooking =>
+      _localizedValues[locale.languageCode]!['errorCancelingBooking']!;
+  String get errorDeletingBooking =>
+      _localizedValues[locale.languageCode]!['errorDeletingBooking']!;
+  String get perDay => _localizedValues[locale.languageCode]!['perDay']!;
+  String get searchYourFavoriteCar =>
+      _localizedValues[locale.languageCode]!['searchYourFavoriteCar']!;
+  String get noResultsFound =>
+      _localizedValues[locale.languageCode]!['noResultsFound']!;
+  String get vehicleClass =>
+      _localizedValues[locale.languageCode]!['vehicleClass']!;
+  String get searchForACar =>
+      _localizedValues[locale.languageCode]!['searchForACar']!;
+  String get ongoingBooking =>
+      _localizedValues[locale.languageCode]!['ongoingBooking']!;
+  String get previousBooking =>
+      _localizedValues[locale.languageCode]!['previousBooking']!;
+  String get bookingCostLabel =>
+      _localizedValues[locale.languageCode]!['bookingCostLabel']!;
+  String get bookingCostColon =>
+      _localizedValues[locale.languageCode]!['bookingCostColon']!;
+  String get bookingDateColon =>
+      _localizedValues[locale.languageCode]!['bookingDateColon']!;
+  String get dontCancel =>
+      _localizedValues[locale.languageCode]!['dontCancel']!;
+  String get cancelOrderAction =>
+      _localizedValues[locale.languageCode]!['cancelOrderAction']!;
+  String get continueOrder =>
+      _localizedValues[locale.languageCode]!['continueOrder']!;
+  String get bookingDays =>
+      _localizedValues[locale.languageCode]!['bookingDays']!;
+  String get daySuffix =>
+      _localizedValues[locale.languageCode]!['daySuffix']!;
+  String get paymentDetails =>
+      _localizedValues[locale.languageCode]!['paymentDetails']!;
+  String get couponDiscount =>
+      _localizedValues[locale.languageCode]!['couponDiscount']!;
+  String get pointsPayment =>
+      _localizedValues[locale.languageCode]!['pointsPayment']!;
+  String get pointsDiscount =>
+      _localizedValues[locale.languageCode]!['pointsDiscount']!;
+  String get locationNotAvailable =>
+      _localizedValues[locale.languageCode]!['locationNotAvailable']!;
+  String get pickupFromAirports =>
+      _localizedValues[locale.languageCode]!['pickupFromAirports']!;
+  String get chargedDailyPrice =>
+      _localizedValues[locale.languageCode]!['chargedDailyPrice']!;
+  String get chargedMonthlyPrice =>
+      _localizedValues[locale.languageCode]!['chargedMonthlyPrice']!;
+  String get selectAirport =>
+      _localizedValues[locale.languageCode]!['selectAirport']!;
+  String get chooseMonthlyPackage =>
+      _localizedValues[locale.languageCode]!['chooseMonthlyPackage']!;
+  String get monthlyPackages =>
+      _localizedValues[locale.languageCode]!['monthlyPackages']!;
+  String get selectDeliveryBranchFirst =>
+      _localizedValues[locale.languageCode]!['selectDeliveryBranchFirst']!;
+  String get selectRegionFirst =>
+      _localizedValues[locale.languageCode]!['selectRegionFirst']!;
+  String get customLocationLabel =>
+      _localizedValues[locale.languageCode]!['customLocationLabel']!;
+  String get selectPickupLocation =>
+      _localizedValues[locale.languageCode]!['selectPickupLocation']!;
+  String get selectDropoffLocation =>
+      _localizedValues[locale.languageCode]!['selectDropoffLocation']!;
+  String get selectDeliveryBranchMsg =>
+      _localizedValues[locale.languageCode]!['selectDeliveryBranchMsg']!;
+  String get errorSelectingBranch =>
+      _localizedValues[locale.languageCode]!['errorSelectingBranch']!;
+  String get errorDuringValidation =>
+      _localizedValues[locale.languageCode]!['errorDuringValidation']!;
+  String get choosePickupArea =>
+      _localizedValues[locale.languageCode]!['choosePickupArea']!;
+  String get priceCalculatedByDuration =>
+      _localizedValues[locale.languageCode]!['priceCalculatedByDuration']!;
+  String get selectCity =>
+      _localizedValues[locale.languageCode]!['selectCity']!;
+  String get selectDropoffRegion =>
+      _localizedValues[locale.languageCode]!['selectDropoffRegion']!;
+  String get whereToDeliver =>
+      _localizedValues[locale.languageCode]!['whereToDeliver']!;
+  String get whereToPickup =>
+      _localizedValues[locale.languageCode]!['whereToPickup']!;
+  String get exploreBestExclusiveOffers =>
+      _localizedValues[locale.languageCode]!['exploreBestExclusiveOffers']!;
+  String get carsInOffer =>
+      _localizedValues[locale.languageCode]!['carsInOffer']!;
+  String get offerAvailableAllCars =>
+      _localizedValues[locale.languageCode]!['offerAvailableAllCars']!;
+  String get exploreExclusiveOffers =>
+      _localizedValues[locale.languageCode]!['exploreExclusiveOffers']!;
+  String get stayTunedForOffers =>
+      _localizedValues[locale.languageCode]!['stayTunedForOffers']!;
+  String get noOfferDetailsYet =>
+      _localizedValues[locale.languageCode]!['noOfferDetailsYet']!;
+  String get discountCoupon =>
+      _localizedValues[locale.languageCode]!['discountCoupon']!;
+  String get viewAvailableCoupons =>
+      _localizedValues[locale.languageCode]!['viewAvailableCoupons']!;
+  String get madfouDescription =>
+      _localizedValues[locale.languageCode]!['madfouDescription']!;
+  String get tamaraDescription =>
+      _localizedValues[locale.languageCode]!['tamaraDescription']!;
+  String get checkCardDetails =>
+      _localizedValues[locale.languageCode]!['checkCardDetails']!;
+  String get checkCardDetailsShort =>
+      _localizedValues[locale.languageCode]!['checkCardDetailsShort']!;
+  String get invoiceLabel =>
+      _localizedValues[locale.languageCode]!['invoiceLabel']!;
+  String get paymentMethodUpdated =>
+      _localizedValues[locale.languageCode]!['paymentMethodUpdated']!;
+  String get cashbackCovered100Percent =>
+      _localizedValues[locale.languageCode]!['cashbackCovered100Percent']!;
+  String get payNow => _localizedValues[locale.languageCode]!['payNow']!;
+  String get notEnoughPoints =>
+      _localizedValues[locale.languageCode]!['notEnoughPoints']!;
+  String get freeServices =>
+      _localizedValues[locale.languageCode]!['freeServices']!;
+  String get helpOnRoad =>
+      _localizedValues[locale.languageCode]!['helpOnRoad']!;
+  String get receiveFullReturnFull =>
+      _localizedValues[locale.languageCode]!['receiveFullReturnFull']!;
+  String get freeHoursEquals =>
+      _localizedValues[locale.languageCode]!['freeHoursEquals']!;
+  String get hourSuffix =>
+      _localizedValues[locale.languageCode]!['hourSuffix']!;
+  String get accidentAssistance =>
+      _localizedValues[locale.languageCode]!['accidentAssistance']!;
+  String get cardNumber =>
+      _localizedValues[locale.languageCode]!['cardNumber']!;
+  String get cardHolderName =>
+      _localizedValues[locale.languageCode]!['cardHolderName']!;
+  String get expireMonth =>
+      _localizedValues[locale.languageCode]!['expireMonth']!;
+  String get expireYear =>
+      _localizedValues[locale.languageCode]!['expireYear']!;
+  String get addPaymentCard =>
+      _localizedValues[locale.languageCode]!['addPaymentCard']!;
+  String get invoiceDetails =>
+      _localizedValues[locale.languageCode]!['invoiceDetails']!;
+  String get deliveryValue =>
+      _localizedValues[locale.languageCode]!['deliveryValue']!;
+  String get availableCountLabel =>
+      _localizedValues[locale.languageCode]!['availableCountLabel']!;
+  String get insurance =>
+      _localizedValues[locale.languageCode]!['insurance']!;
+  String get rewardAfterTrip =>
+      _localizedValues[locale.languageCode]!['rewardAfterTrip']!;
+  String get finishTripEnjoy =>
+      _localizedValues[locale.languageCode]!['finishTripEnjoy']!;
+  String get pleaseEnterAmount =>
+      _localizedValues[locale.languageCode]!['pleaseEnterAmount']!;
+  String get pleaseEnterValidAmount =>
+      _localizedValues[locale.languageCode]!['pleaseEnterValidAmount']!;
+  String get amountExceedsBalance =>
+      _localizedValues[locale.languageCode]!['amountExceedsBalance']!;
+  String get failedToLoadInvoice =>
+      _localizedValues[locale.languageCode]!['failedToLoadInvoice']!;
+  String get darksonBalance =>
+      _localizedValues[locale.languageCode]!['darksonBalance']!;
+  String get pendingCashbackPrefix =>
+      _localizedValues[locale.languageCode]!['pendingCashbackPrefix']!;
+  String get amountToBeUsed =>
+      _localizedValues[locale.languageCode]!['amountToBeUsed']!;
+  String get mustSelectBranchFirst =>
+      _localizedValues[locale.languageCode]!['mustSelectBranchFirst']!;
+  String get dropOffMustBeAfterPickup =>
+      _localizedValues[locale.languageCode]!['dropOffMustBeAfterPickup']!;
+  String get addFavoriteCar =>
+      _localizedValues[locale.languageCode]!['addFavoriteCar']!;
+
   String? get minutes => _localizedValues[locale.languageCode]!['minutes'];
 
   String? get seconds => _localizedValues[locale.languageCode]!['seconds'];

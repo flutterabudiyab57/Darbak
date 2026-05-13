@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `darbak` is a Flutter car-rental mobile app (Android/iOS, with web/desktop folders also generated). The product brand is "Darakson" / "Darbak" — launcher icon source is `assets/images/Darbak_logoo.png` (note the double `oo`). Dart SDK `^3.5.3`. App targets a `390x844` design size via `flutter_screenutil`.
 
-The on-disk project folder is still named `fast-rent` (`E:\projects\fast-rent`) even though the Dart package, Android `applicationId`, iOS bundle id, etc. were all renamed to `darbak` (`com.example.darbak`). Do not change `package:darbak/...` imports back; do not rename the folder casually (Gradle, IDE, and pub cache references would all break).
+The on-disk project folder is `E:\projects\darbak`. It was previously `E:\projects\fast-rent`; the Dart package, Android `applicationId`, iOS bundle id, and folder were all renamed to `darbak` (`com.example.darbak`). Do not change `package:darbak/...` imports back; do not rename the folder casually (Gradle, IDE, and pub cache references would all break). A sibling `~/.claude/projects/E--projects-fast-rent/memory/` slug still exists from the old name and holds older memories (e.g. `feedback_powershell_utf8.md`); new memories live under `E--projects-darbak/`.
 
 ## Commands
 
@@ -30,7 +30,7 @@ dart run flutter_launcher_icons  # regenerate launcher icons (config in pubspec.
 - **Pub cache lives on `E:\.pub-cache`**, not the default `%LOCALAPPDATA%\Pub\Cache`. The `PUB_CACHE` user env var is set to this path. Reason: on Windows, Kotlin's `RelocatableFileToPathConverter` crashes when project sources and pub cache are on different drive letters (`IllegalArgumentException: this and base files have different roots`). Keep `PUB_CACHE` and the project on the same drive.
 - **`flutter pub get` may hit pub.dev's `advisoriesUpdated` decoding bug** (`FormatException: advisoriesUpdated must be a String`). Workaround: `flutter pub get --offline` once packages are cached; the post-solve advisories fetch is what crashes, packages still install.
 - **Gradle/Kotlin daemons hold file locks** in `build/` and `android/app/`. If a delete or replace of any file inside the project tree fails with "file in use", run `android\gradlew.bat --stop` first. Closing Android Studio / VS Code is also often required.
-- **Dart files must be UTF-8 without BOM.** `Get-Content -Raw` in Windows PowerShell 5.1 reads as cp1252 by default — round-tripping through it silently corrupts Arabic strings into mojibake. For bulk edits use `[System.IO.File]::ReadAllBytes` + `[System.Text.Encoding]::UTF8.GetString` for reading and `[System.IO.File]::WriteAllText(path, text, (New-Object System.Text.UTF8Encoding $false))` for writing. See `~/.claude/projects/E--projects-fast-rent/memory/feedback_powershell_utf8.md` for the full incident.
+- **Dart files must be UTF-8 without BOM.** `Get-Content -Raw` in Windows PowerShell 5.1 reads as cp1252 by default — round-tripping through it silently corrupts Arabic strings into mojibake. For bulk edits use `[System.IO.File]::ReadAllBytes` + `[System.Text.Encoding]::UTF8.GetString` for reading and `[System.IO.File]::WriteAllText(path, text, (New-Object System.Text.UTF8Encoding $false))` for writing. The full incident is in the legacy memory folder: `~/.claude/projects/E--projects-fast-rent/memory/feedback_powershell_utf8.md`.
 
 ## Architecture
 

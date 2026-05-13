@@ -62,9 +62,7 @@ class SuccessBottomSheet extends StatelessWidget {
                           style:AppTypography.headingColor26(context)),
                       SizedBox(height: 15.h),
                       Text(
-                        locale.isDirectionRTL(context)
-                            ? 'العودة الي شاشة تسجيل دخول الي التطبيق '
-                            : 'Return to the app login screen',
+                        locale.returnToLoginScreen,
                         textAlign: TextAlign.center,
                         style: AppTypography.paragraphColor20(context),
                       ),

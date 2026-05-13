@@ -448,9 +448,7 @@ class _ServicesState extends State<Services> {
                       Padding(
                         padding: EdgeInsets.all(8.w),
                         child: Text(
-                          locale.isDirectionRTL(context)
-                              ? "التأمين"
-                              : "Insurance",
+                          locale.insurance,
                           style:AppTypography.mainTypographyColor20(context)
                         ),
                       ),
@@ -492,9 +490,7 @@ class _ServicesState extends State<Services> {
                           padding:
                           EdgeInsets.symmetric(horizontal: size.width * 0),
                           child: Text(
-                            locale.isDirectionRTL(context)
-                                ? "الإضافات"
-                                : "Additions",
+                            locale.additions!,
                             style: TextStyle(
                               fontFamily: "IBMPlexSansArabic",
                               fontSize: 18.sp,

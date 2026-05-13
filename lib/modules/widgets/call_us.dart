@@ -110,9 +110,7 @@ class _CallUsView extends StatelessWidget {
                 ),
                 SizedBox(height: 36.h),
                 _SectionTitle(
-                  title: locale.isDirectionRTL(context)
-                      ? 'أرقام التواصل'
-                      : 'Contact numbers',
+                  title: locale.contactNumbers,
                 ),
                 SizedBox(height: 18.h),
                 Row(
@@ -133,9 +131,7 @@ class _CallUsView extends StatelessWidget {
                 dashedDivider(context),
                 SizedBox(height: 28.h),
                 _SectionTitle(
-                  title: locale.isDirectionRTL(context)
-                      ? 'مواقع التواصل الاجتماعي'
-                      : 'Social media',
+                  title: locale.socialMedia,
                 ),
                 SizedBox(height: 18.h),
                 Wrap(
@@ -171,9 +167,7 @@ class _CallUsView extends StatelessWidget {
                 dashedDivider(context),
                 SizedBox(height: 28.h),
                 _SectionTitle(
-                  title: locale.isDirectionRTL(context)
-                      ? 'لزيارة موقعنا الإلكتروني'
-                      : 'Visit our website',
+                  title: locale.visitOurWebsite,
                 ),
                 SizedBox(height: 18.h),
                 _IconTile(

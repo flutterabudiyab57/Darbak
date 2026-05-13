@@ -76,16 +76,12 @@ class _MonthlyRentBodyState extends State<MonthlyRentBody> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  locale.isDirectionRTL(context)
-                      ? "اختر الباقة الشهرية."
-                      : "Choose the monthly package.",
+                  locale.chooseMonthlyPackage,
                   style: AppTypography.headingColor22(context),
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  locale.isDirectionRTL(context)
-                      ? "سوف يتم محاسبتك بالسعر الشهري للسيارة"
-                      : "You will be charged the monthly price of the car.",
+                  locale.chargedMonthlyPrice,
                   style: AppTypography.paragraphColor18(context),
                 ),
                 SizedBox(height: 8.h),

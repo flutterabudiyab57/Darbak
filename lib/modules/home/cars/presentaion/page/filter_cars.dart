@@ -89,9 +89,7 @@ class _FiltersCarsState extends State<FiltersCars>
                   Row(
                     children: [
                       Text(
-                        locale.isDirectionRTL(context)
-                            ? "فئة السيارة"
-                            : "Vehicle class",
+                        locale.vehicleClass,
                         style: AppTypography.headingColor20(context),
                       ),
                     ],

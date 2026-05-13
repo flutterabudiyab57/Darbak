@@ -53,9 +53,7 @@ class FormValidator {
     final locale = AppLocalizations.of(context)!;
 
     if (value == null || value.isEmpty) {
-      return locale.isDirectionRTL(context)
-          ? 'الرجاء إدخال رقم جواز السفر'
-          : 'Please enter the passport number';
+      return locale.pleaseEnterThePassportNumber;
     }
 
     // Pattern: 3-15 characters, alphanumeric, not all zeros
@@ -63,9 +61,7 @@ class FormValidator {
     RegExp regExp = RegExp(pattern);
 
     if (!regExp.hasMatch(value)) {
-      return locale.isDirectionRTL(context)
-          ? 'يجب أن يكون بين 3 إلى 15 أحرفًا وأرقامًا'
-          : 'Must be 3 to 15 letters and numbers.';
+      return locale.mustBe3To15Letters;
     }
 
     return null;

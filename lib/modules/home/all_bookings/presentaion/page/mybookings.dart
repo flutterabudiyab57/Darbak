@@ -62,16 +62,12 @@ class _MyBookingsState extends State<MyBookings>
                 _buildTab(
                   index: 0,
                   size: size,
-                  text: locale.isDirectionRTL(context)
-                      ? "حجوزات جارية"
-                      : "Ongoing booking",
+                  text: locale.ongoingBooking,
                 ),
                 _buildTab(
                   index: 1,
                   size: size,
-                  text: locale.isDirectionRTL(context)
-                      ? "حجوزات سابقة"
-                      : "Previous booking",
+                  text: locale.previousBooking,
                 ),
               ],
             ),

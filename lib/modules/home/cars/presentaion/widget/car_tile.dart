@@ -152,9 +152,7 @@ class _CarTileState extends State<CarTile> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    locale!.isDirectionRTL(context)
-                                        ? "نفذت الكميه"
-                                        : "Out of Stock",
+                                    locale!.outOfStock,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -190,9 +188,7 @@ class _CarTileState extends State<CarTile> {
                                       color: Colors.white,
                                     ),
                                     Text(
-                                      locale!.isDirectionRTL(context)
-                                          ? "/ يوم"
-                                          : "/ Daily",
+                                      locale!.perDay,
                                       style:
                                           AppTypography.buttonText15(context),
                                     ),

@@ -61,17 +61,13 @@ class CashbackReward extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                  locale.isDirectionRTL(context)
-                      ? "مكافأتك بعد الرحلة 🎉"
-                      : "Your reward after the trip 🎉",
+                  locale.rewardAfterTrip,
                   style: AppTypography.headingColor12(context)),
               SizedBox(height: 5.h),
               Row(
                 children: [
                   Text(
-                      locale.isDirectionRTL(context)
-                          ? "خلص رحلتك واستمتع بـ"
-                          : "Finish your trip and enjoy",
+                      locale.finishTripEnjoy,
                       style: AppTypography.mainTypographyColor14(context)),
                   SizedBox(width: 6.w),
                   Text(

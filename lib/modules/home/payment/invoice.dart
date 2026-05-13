@@ -119,17 +119,13 @@ class _InvoiceUIState extends State<InvoiceUI> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    locale.isDirectionRTL(context)
-                        ? "تغيير طريقة الدفع تلقائيًا"
-                        : "Payment Method Updated Automatically",
+                    locale.paymentMethodUpdated,
                     style: AppTypography.headingColor18(context),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 16.h),
                   Text(
-                    locale.isDirectionRTL(context)
-                        ? "نظرًا لاستخدام الكاش باك لتغطية 100% من قيمة الطلب، تم تحويل طريقة الدفع إلى كاش."
-                        : "Since cashback was used to cover 100% of the order amount, the payment method has been changed to Cash.",
+                    locale.cashbackCovered100Percent,
                     style: AppTypography.paragraphColor14(context),
                     textAlign: TextAlign.center,
                   ),
@@ -222,9 +218,7 @@ class _InvoiceUIState extends State<InvoiceUI> {
                       child: Bounce(
                         onTap: onTap,
                         child: ADGradientButton(
-                          locale.isDirectionRTL(context)
-                              ? "أدفع الان"
-                              : "Pay Now",
+                          locale.payNow,
                         ),
                       ),
                     );
@@ -331,9 +325,7 @@ class _InvoiceUIState extends State<InvoiceUI> {
                 HelperFunctions.dialog(
                   context: context,
                   title: locale.error.toString(),
-                  body: locale.isDirectionRTL(context)
-                      ? "لا يوجد نقاط كافيه لتأكيد الحجز."
-                      : "There are not enough points to confirm the reservation.",
+                  body: locale.notEnoughPoints,
                 );
               }
 
@@ -346,9 +338,7 @@ class _InvoiceUIState extends State<InvoiceUI> {
                 HelperFunctions.dialog(
                   context: context,
                   title: locale.error.toString(),
-                  body: locale.isDirectionRTL(context)
-                      ? "من فضلك تاكد من بيانات البطاقه المدخله."
-                      : "Please check the entered card details.",
+                  body: locale.checkCardDetails,
                 );
 
                 print(
@@ -599,24 +589,18 @@ class _InvoiceUIState extends State<InvoiceUI> {
                           dashedDivider(context),
                           SizedBox(height: 12.h),
                           Text(
-                            locale.isDirectionRTL(context)
-                                ? "خدمات مجانية:"
-                                : "Free Services:",
+                            locale.freeServices,
                             style: AppTypography.mainTypographyColor18(context),
                           ),
                           SizedBox(height: 8.h),
                           Row(
                             children: [
                               Text(
-                                  locale.isDirectionRTL(context)
-                                      ? "المساعدة على الطريق"
-                                      : "Help on the Road",
+                                  locale.helpOnRoad,
                                   style: AppTypography.headingColor15(context)),
                               Spacer(),
                               Text(
-                                  locale.isDirectionRTL(context)
-                                      ? "أستلمها ممتلئ وسلمها ممتلئ"
-                                      : "Receive it full and return it full",
+                                  locale.receiveFullReturnFull,
                                   style: AppTypography.headingColor15(context)),
                             ],
                           ),
@@ -626,18 +610,14 @@ class _InvoiceUIState extends State<InvoiceUI> {
                               Row(
                                 children: [
                                   Text(
-                                      locale.isDirectionRTL(context)
-                                          ? "الساعات المجانية = "
-                                          : "Free hours = ",
+                                      locale.freeHoursEquals,
                                       style: AppTypography.headingColor15(
                                           context)),
                                   BlocBuilder<ProfileCubit, ProfileState>(
                                     builder: (context, state) {
                                       if (state is ProfileSuccess) {
                                         return Text(
-                                            locale.isDirectionRTL(context)
-                                                ? "${state.profileModel.membership!.extraHours} ساعة "
-                                                : "${state.profileModel.membership!.extraHours} Hour ",
+                                            "${state.profileModel.membership!.extraHours} ${locale.hourSuffix}",
                                             style: AppTypography.headingColor15(
                                                 context));
                                       }
@@ -649,9 +629,7 @@ class _InvoiceUIState extends State<InvoiceUI> {
                               ),
                               Spacer(),
                               Text(
-                                  locale.isDirectionRTL(context)
-                                      ? " مساعدات الحوادث"
-                                      : "Accident assistance",
+                                  locale.accidentAssistance,
                                   style: AppTypography.headingColor15(context)),
                             ],
                           ),

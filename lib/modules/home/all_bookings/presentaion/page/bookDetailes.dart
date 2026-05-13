@@ -82,9 +82,7 @@ class BookDetails extends StatelessWidget  {
           HelperFunctions.showFlashBar(
               context: context,
               title: '',
-              message: locale.isDirectionRTL(context)
-                  ? 'تم الغاء الطلب بنجاح'
-                  : 'Order has been cancelled Successfully',
+              message: locale.orderCancelledSuccessfully,
               icon: Icons.check,
               iconColor: Color(0xff327B5B));
         }
@@ -140,9 +138,7 @@ class BookDetails extends StatelessWidget  {
                                   Navigator.pop(context);
                                 },
                                 child: ADGradientButton(
-                                  locale.isDirectionRTL(context)
-                                      ? "عدم الالغاء"
-                                      : "No",
+                                  locale.dontCancel,
                                   width: size.width * 0.35,
                                   height: size.height * 0.050,
                                   backgroundColor: backgroundColor(context),
@@ -168,9 +164,7 @@ class BookDetails extends StatelessWidget  {
                                   Navigator.pop(context);
                                 },
                                 child: ADGradientButton(
-                                  locale.isDirectionRTL(context)
-                                      ? "الغاء الحجز"
-                                      : "Cancel Order",
+                                  locale.cancelOrderAction,
                                   width: size.width * 0.35,
                                   height: size.height * 0.050,
                                   backgroundColor: buttonRedColor(context),
@@ -290,10 +284,7 @@ class BookDetails extends StatelessWidget  {
                                                   ? LoadingIndicator()
 
                                               : AutoSizeText(
-                                                      locale.isDirectionRTL(
-                                                              context)
-                                                          ? "إِستكمال الطلب "
-                                                          : "Continue Order",
+                                                      locale.continueOrder,
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .bodyLarge!
@@ -458,18 +449,14 @@ class BookDetails extends StatelessWidget  {
                             children: [
                               Expanded(
                                 child: Text(
-                                  locale.isDirectionRTL(context)
-                                      ? "عدد أيام الحجز:"
-                                      : "Booking days:",
+                                  locale.bookingDays,
                                   style: AppTypography.mainTypographyColor16(context),
                                 ),
                               ),
                               SizedBox(width: 8.w),
                               Expanded(
                                 child: Text(
-                                  locale.isDirectionRTL(context)
-                                      ? "${bookingData.diff.toString()} يوم"
-                                      : "${bookingData.diff.toString()} Day",
+                                  "${bookingData.diff.toString()} ${locale.daySuffix}",
                                   textAlign: TextAlign.end,
                                   style: AppTypography.mainTypographyColor16(context),
                                 ),
@@ -642,9 +629,7 @@ class BookDetails extends StatelessWidget  {
                       ),
                       ),
                        Text(
-                        locale.isDirectionRTL(context)
-                            ? "تفاصيل الدفع"
-                            : "Payment Details",
+                        locale.paymentDetails,
                           style: AppTypography.headingColor16(context)
                       ),
                       Container(
@@ -678,16 +663,12 @@ class BookDetails extends StatelessWidget  {
                                 resultTitle: bookingData.promotional_discount
                                     .toString()),
                             RowRentDetails(
-                              title: locale.isDirectionRTL(context)
-                                  ? "خصم الكوبون"
-                                  : "Coupon Discount",
+                              title: locale.couponDiscount,
                               resultTitle:
                               bookingData.coupon_discount.toString(),
                             ),
                             RowRentDetails(
-                              title: locale.isDirectionRTL(context)
-                                  ? "الدفع بالنقاط"
-                                  : "Points Discount",
+                              title: locale.pointsPayment,
                               resultTitle:
                               bookingData.points_discount.toString(),
                             ),

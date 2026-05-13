@@ -220,9 +220,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                         ),
                                         SizedBox(width: 7.w),
                                         Text(
-                                          locale.isDirectionRTL(context)
-                                              ? "كوبون الخصم"
-                                              : "Discount coupon",
+                                          locale.discountCoupon,
                                           style: AppTypography
                                               .mainTypographyColor18(context),
                                         ),
@@ -257,9 +255,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                           children: [
                                             SizedBox(width: 5.w),
                                             Text(
-                                              locale.isDirectionRTL(context)
-                                                  ? "عرض الكوبونات المتاحة"
-                                                  : "View available coupons",
+                                              locale.viewAvailableCoupons,
                                               style: AppTypography
                                                   .mainTypographyColor14(
                                                       context),
@@ -360,9 +356,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       PaymentMethodCard(
-                                        text: locale.isDirectionRTL(context)
-                                            ? "مدفوع"
-                                            : "madfou",
+                                        text: locale.madfouPaymentLabel,
                                         color: Theme.of(context)
                                             .colorScheme
                                             .surface,
@@ -372,9 +366,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 14.w),
                                         child: Text(
-                                          locale.isDirectionRTL(context)
-                                              ? "قسم فاتورتك حتى 4 أقساط بسهولة وأمان مع مدفوع."
-                                              : "Split in up to 4 payments with Madfou.",
+                                          locale.madfouDescription,
                                           style: AppTypography.paragraphColor14(
                                               context),
                                         ),
@@ -387,9 +379,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       PaymentMethodCard(
-                                        text: locale.isDirectionRTL(context)
-                                            ? "تمارا"
-                                            : "tamara",
+                                        text: locale.tamaraPaymentLabel,
                                         color: Theme.of(context)
                                             .colorScheme
                                             .surface,
@@ -399,9 +389,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 14.w),
                                         child: Text(
-                                          locale.isDirectionRTL(context)
-                                              ? "ادفع جزء من المبلغ الحين والباقي علي دفعات حسب خطة الدفع."
-                                              : "Pay part of the costs and Split payments according to the payment plan.",
+                                          locale.tamaraDescription,
                                           style: AppTypography.paragraphColor14(
                                               context),
                                         ),
@@ -586,10 +574,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                               HelperFunctions.dialog(
                                                 context: context,
                                                 title: locale.error.toString(),
-                                                body: locale
-                                                        .isDirectionRTL(context)
-                                                    ? "من فضلك تاكد من بيانات البطاقه المدخله."
-                                                    : "Please check the entered card details.",
+                                                body: locale.checkCardDetails,
                                               );
                                               print(
                                                   "fdgdfgg: ${BlocProvider.of<BookingCubit>(context).selectedPaymentMethods}");
@@ -640,9 +625,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                           else if (BlocProvider.of<
                                                       BookingCubit>(context)
                                                   .selectedPaymentMethods ==
-                                              (locale.isDirectionRTL(context)
-                                                  ? "مدفوع"
-                                                  : "madfou")) {
+                                              locale.madfouPaymentLabel) {
                                             if (widget.isNotCompleted == true) {
                                               PersistentNavBarNavigator
                                                   .pushNewScreen(
@@ -756,9 +739,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                         );
                                       },
                                       child: ADGradientButton(
-                                        locale.isDirectionRTL(context)
-                                            ? "الفاتورة "
-                                            : "Invoice ",
+                                        locale.invoiceLabel,
                                         height: 55.h,
                                         backgroundColor:
                                             buttonWhiteColor(context),

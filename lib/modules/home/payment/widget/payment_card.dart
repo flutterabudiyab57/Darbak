@@ -84,9 +84,7 @@ class _PaymentMethodCardState extends State<PaymentMethodCard> {
                             maxlenth: 19,
                             controller: cardNumber,
                             type: TextInputType.number,
-                            label: locale.isDirectionRTL(context)
-                                ? 'رقم البطاقة'
-                                : "Card Number",
+                            label: locale.cardNumber,
                             pIcon: Icons.credit_card_sharp,
                             validat: (value) =>
                                 FormValidator.creditValidate(
@@ -96,9 +94,7 @@ class _PaymentMethodCardState extends State<PaymentMethodCard> {
                           ADPrimTextForm(
                             controller: cardHolderName,
                             type: TextInputType.name,
-                            label: locale.isDirectionRTL(context)
-                                ? 'إسم حامل البطاقه'
-                                : "Card Holder Name",
+                            label: locale.cardHolderName,
                             pIcon: Icons.camera_front_rounded,
                             validat: (value) =>
                                 FormValidator.nameValidate(
@@ -109,9 +105,7 @@ class _PaymentMethodCardState extends State<PaymentMethodCard> {
                             maxlenth: 2,
                             controller: month,
                             type: TextInputType.number,
-                            label: locale.isDirectionRTL(context)
-                                ? 'شهر الانتهاء'
-                                : "Expire Month",
+                            label: locale.expireMonth,
                             pIcon: Icons.calendar_today,
                             auth: false,
                             validat: (value) => FormValidator.monthValidate(context, value),
@@ -121,9 +115,7 @@ class _PaymentMethodCardState extends State<PaymentMethodCard> {
                             maxlenth: 2,
                             controller: year,
                             type: TextInputType.number,
-                            label: locale.isDirectionRTL(context)
-                                ? 'سنة الانتهاء'
-                                : "Expire Year",
+                            label: locale.expireYear,
                             pIcon: Icons.calendar_today,
                             auth: false,
                             validat: (value) => FormValidator.yearValidate(context, value, month.text),
@@ -144,9 +136,7 @@ class _PaymentMethodCardState extends State<PaymentMethodCard> {
                           GestureDetector(
                             onTap: bookNowWithVisa,
                             child: ADGradientButton(
-                              locale.isDirectionRTL(context)
-                                  ? 'اضافة البطاقه'
-                                  : 'Add Payment Card',
+                              locale.addPaymentCard,
                             ),
                           ),
                           SizedBox(height: 0.05.sh),

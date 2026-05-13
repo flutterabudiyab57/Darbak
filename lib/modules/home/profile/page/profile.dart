@@ -28,6 +28,7 @@ import '../../search_screen/presentaion/widget/shimmer_list.dart';
 import '../../selectLanguage/selectLanguage.dart';
 import '../blocs/profile_cubit/profile_cubit.dart';
 import 'edit_profile/presentaion/page/edit_profile.dart';
+import '../../../auth/blocs/auth_status_cubit.dart';
 import 'favourites/favourites.dart';
 
 class MyProfile extends StatelessWidget {
@@ -53,21 +54,14 @@ class MyProfile extends StatelessWidget {
           ],
         ),
       ),
-      body: FutureBuilder<String?>(
-        future: SharedPreferencesHelper().get("token"),
-        builder: (context, snapshot) {
-          // Loading state while checking token
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: BlocBuilder<AuthStatusCubit, bool?>(
+        builder: (context, isAuthenticated) {
+          if (isAuthenticated == null) {
             return Center(child: ShimmerLoadingList());
           }
-          final bool hasToken = snapshot.hasData &&
-              snapshot.data != null &&
-              snapshot.data!.isNotEmpty;
-
-          if (!hasToken) {
+          if (!isAuthenticated) {
             return LoginNoAuth();
           }
-
           return _ProfileContent();
         },
       ),
@@ -292,6 +286,7 @@ class _ProfileContentState extends State<_ProfileContent> {
                         await SharedPreferencesHelper().remove("token");
                         context.read<ProfileCubit>().logOut();
                         context.read<AllBookingCubit>().booking = null;
+                        context.read<AuthStatusCubit>().markSignedOut();
 
                         Navigator.pushAndRemoveUntil(
                           context,

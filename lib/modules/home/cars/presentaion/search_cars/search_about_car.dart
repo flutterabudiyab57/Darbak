@@ -170,9 +170,7 @@ class _SearchCarScreenState extends State<SearchCarScreen> {
         Image.asset("assets/images/new_cars.png",
             width: 250.w, height: 200.h, fit: BoxFit.cover),
         Text(
-          locale.isDirectionRTL(context)
-              ? "لم يتم العثور على نتائج. يرجى تجربة بحث آخر."
-              : "No results were found. Please try a different search.",
+          locale.noResultsFound,
           style:AppTypography.mainTypographyColor18(context)
         ),
       ],

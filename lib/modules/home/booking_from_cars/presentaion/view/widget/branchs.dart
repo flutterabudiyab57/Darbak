@@ -213,10 +213,7 @@ class SelectionTile extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 2.w, vertical: 4.h),
                             child: Text(
-                                AppLocalizations.of(context)!
-                                    .isDirectionRTL(context)
-                                    ? 'العدد المتاح: $availableCount'
-                                    : 'Available count: $availableCount',
+                                '${AppLocalizations.of(context)!.availableCountLabel}$availableCount',
                                 style: AppTypography.mainTypographyColor14(context)),
                           ),
                         ),

@@ -35,14 +35,10 @@ class LoginNoAuth extends StatelessWidget {
               height: 12.h,
             ),
             Text(
-              locale.isDirectionRTL(context)
-                  ? "هلا! سعداء بلقائك"
-                  : "Hala! Nice to meet you",
+              locale.niceToMeetYou,
               style:AppTypography.headingColor18(context),),
             Text(
-              locale.isDirectionRTL(context)
-                  ? "أفتح حسابك واستمتع بأفضل السيارات معنا"
-                  : "Open your account and enjoy the best cars with us.",
+              locale.openAccountSubtitle,
               style:AppTypography.headingColor18(context),
             ),
             Center(
@@ -70,9 +66,7 @@ class LoginNoAuth extends StatelessWidget {
             ),
 
             CardTileWidget(
-              title: locale.isDirectionRTL(context)
-                  ? 'فتح حساب'
-                  : 'Create Account',
+              title: locale.createAccount,
               icon: Assets.icon_addAccount,
               ontap: () {
                 showModalBottomSheet(
@@ -206,9 +200,7 @@ class LoginNoAuth extends StatelessWidget {
                       screen: PrivacyPolicyScreen());
                 }),
             CardTileWidget(
-              title: Localizations.localeOf(context).languageCode == 'ar'
-                  ? 'شكاوي'
-                  : 'Complaints',
+              title: locale.complaint!,
               ontap: () {
                 PersistentNavBarNavigator.pushNewScreen(
                   context,

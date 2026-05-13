@@ -202,9 +202,7 @@ class _InvoiceNotCompletedUIState extends State<InvoiceNotCompletedUI> {
             } else if (state is InvoiceFailed) {
               Navigator.pop(context);
               Fluttertoast.showToast(
-                msg: locale.isDirectionRTL(context)
-                    ? "من فضلك تحقق من بيانات البطاقه."
-                    : "Please check your card details.",
+                msg: locale.checkCardDetailsShort,
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 1,

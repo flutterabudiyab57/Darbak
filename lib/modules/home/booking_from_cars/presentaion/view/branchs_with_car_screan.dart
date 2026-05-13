@@ -118,9 +118,7 @@ class _BranchWithCarScreenState extends State<BranchWithCarScreen> {
                               } else {
                                 showErrorAlertDialog(
                                   context,
-                                  locale.isDirectionRTL(context)
-                                      ? "يجب عليك اختيار الفرع اولا"
-                                      : "You Must Select The Branch",
+                                  locale.mustSelectBranchFirst,
                                 );
                               }
                               setState(() => isLoading = false);
@@ -185,9 +183,7 @@ class _BranchWithCarScreenState extends State<BranchWithCarScreen> {
       HelperFunctions.dialog(
         context: context,
         title: locale!.dateInvalid,
-        body: locale.isDirectionRTL(context)
-            ? "يجب أن يكون تاريخ التسليم بعد تاريخ الاستلام"
-            : "The drop-off date must be after the pick-up date.",
+        body: locale.dropOffMustBeAfterPickup,
       );
       return;
     }

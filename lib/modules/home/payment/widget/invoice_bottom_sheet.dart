@@ -92,15 +92,11 @@ class _InvoiceBottomSheetState extends State<InvoiceBottomSheet> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            locale.isDirectionRTL(context)
-                                ? "عدد أيام الحجز: "
-                                : "Booking days: ",
+                            locale.bookingDays,
                             style: AppTypography.headingColor14(context),
                           ),
                           Text(
-                            locale.isDirectionRTL(context)
-                                ? "${widget.invoiceModel.diff} يوم"
-                                : "${widget.invoiceModel.diff} Day",
+                            "${widget.invoiceModel.diff} ${locale.daySuffix}",
                             style: AppTypography.mainTypographyColor14(context),
                           ),
                         ],
@@ -121,9 +117,7 @@ class _InvoiceBottomSheetState extends State<InvoiceBottomSheet> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              locale.isDirectionRTL(context)
-                                  ? "تفاصيل الفاتورة"
-                                  : "Invoice details",
+                              locale.invoiceDetails,
                               style: AppTypography.headingColor18(context),
                             ),
                           ],
@@ -132,9 +126,8 @@ class _InvoiceBottomSheetState extends State<InvoiceBottomSheet> {
 
                       if (_isNotZero(invoiceModel.carPrice))
                         RowRentDetails(
-                          title: locale.isDirectionRTL(context)
-                              ? " ${locale.rent.toString()} / ${widget.invoiceModel.diff} يوم"
-                              : "${widget.invoiceModel.diff} Day / ${locale.rent.toString()}",
+                          title:
+                              "${widget.invoiceModel.diff} ${locale.daySuffix} / ${locale.rent.toString()}",
                           resultTitle:
                           (double.parse(invoiceModel.carPrice ?? '0.0'))
                               .toString(),
@@ -198,9 +191,7 @@ class _InvoiceBottomSheetState extends State<InvoiceBottomSheet> {
 
                       if (_isNotZero(widget.invoiceModel.deliveryValue))
                         RowRentDetails(
-                          title: locale.isDirectionRTL(context)
-                              ? "رسوم التوصيل"
-                              : "Delivery Value",
+                          title: locale.deliveryValue,
                           resultTitle:
                           widget.invoiceModel.deliveryValue.toString(),
                         ),
@@ -223,17 +214,13 @@ class _InvoiceBottomSheetState extends State<InvoiceBottomSheet> {
 
                       if (_isNotZero(invoiceModel.couponValue))
                         RowRentDetails(
-                          title: locale.isDirectionRTL(context)
-                              ? "خصم الكوبون"
-                              : "Coupon Discount",
+                          title: locale.couponDiscount,
                           resultTitle: invoiceModel.couponValue.toString(),
                         ),
 
                       if (_isNotZero(invoiceModel.pointsValue))
                         RowRentDetails(
-                          title: locale.isDirectionRTL(context)
-                              ? "خصم النقاط"
-                              : "Points Discount",
+                          title: locale.pointsDiscount,
                           resultTitle: invoiceModel.pointsValue.toString(),
                         ),
 

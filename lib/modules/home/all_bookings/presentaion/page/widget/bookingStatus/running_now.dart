@@ -105,9 +105,7 @@ class _RunningNowState extends State<RunningNow> {
       listener: (context, state) {
         if (state is CancelError) {
           Fluttertoast.showToast(
-            msg: locale.isDirectionRTL(context)
-                ? "حدث خطأ فى الغاء الحجز."
-                : "There was an error canceling the booking.",
+            msg: locale.errorCancelingBooking,
             backgroundColor: const Color(0xffF6A9A9),
             textColor: const Color(0xffD62E2E),
           );
@@ -116,9 +114,7 @@ class _RunningNowState extends State<RunningNow> {
         if (state is CancelSuccess) {
           BlocProvider.of<AllBookingCubit>(context).getAllBooking(state: 'running');
           Fluttertoast.showToast(
-            msg: locale.isDirectionRTL(context)
-                ? 'تم الغاء الطلب بنجاح'
-                : 'Order has been cancelled Successfully',
+            msg: locale.orderCancelledSuccessfully,
             backgroundColor: const Color(0xffDCEFE3),
             textColor: const Color(0xff327B5B),
           );
@@ -218,9 +214,7 @@ class _RunningNowState extends State<RunningNow> {
                                   TextTileWidget(
                                     contant:
                                     "${booking.price} ${locale.sar}",
-                                    title: locale.isDirectionRTL(context)
-                                        ? "تكلفة الحجز: "
-                                        : "Total amount: ",
+                                    title: locale.bookingCostLabel,
                                     size: 22.sp,
                                   ),
                                 ],

@@ -62,9 +62,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             listener: (context, state) {
               if (state is ChangePassWordError) {
                 Fluttertoast.showToast(
-                  msg: locale!.isDirectionRTL(context)
-                      ? 'تأكد من كلمة المرور الجديدة الخاصة بك'
-                      : 'Make sure your new password.',
+                  msg: locale!.makeSureNewPassword,
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 1,

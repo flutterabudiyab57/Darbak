@@ -93,9 +93,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen>
             listener: (context, state) {
               if (state is ForgetPassWordError) {
                 Fluttertoast.showToast(
-                  msg: locale.isDirectionRTL(context)
-                      ? "برجاء التاكد من رقم الجوال"
-                      : "Please check your mobile number.",
+                  msg: locale.checkMobileNumber,
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 1,
@@ -178,9 +176,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen>
 
                         // ── Description ─────────────────────────────────────
                         Text(
-                          locale.isDirectionRTL(context)
-                              ? 'أدخل رقم الهاتف المرتبط بحسابك وسنرسل رسالة كود التحقق لإعادة تعيين كلمة المرور الخاصة بك.'
-                              : 'Enter Phone Number Associated With Your Account And We Will Send A message With OTP Code To Reset Your Password.',
+                          locale.forgetPasswordDescription,
                           textAlign: TextAlign.right,
                           style: AppTypography.paragraphColor18(context),
                         ),

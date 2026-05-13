@@ -259,9 +259,7 @@ class _BranchesListViewState extends State<BranchesListView> {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            locale.isDirectionRTL(context)
-                                                ? 'الموقع غير متوفر'
-                                                : 'Location not available',
+                                            locale.locationNotAvailable,
                                           ),
                                         ),
                                       );

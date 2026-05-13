@@ -63,15 +63,11 @@ class _AirPortRentBodyState extends State<AirPortRentBody> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      locale!.isDirectionRTL(context)
-                          ? "استلام من المطارات"
-                          : "Pick-Up from Airports",
+                      locale!.pickupFromAirports,
                       style: AppTypography.headingColor22(context),
                     ),
                     Text(
-                      locale.isDirectionRTL(context)
-                          ? "سوف يتم محاسبتك بالسعر اليومى للسياره"
-                          : "You will be charged the daily price of the car.",
+                      locale.chargedDailyPrice,
                       style: AppTypography.paragraphColor18(context),
                     ),
                   ],
@@ -105,9 +101,7 @@ class _AirPortRentBodyState extends State<AirPortRentBody> {
                     if (searchError) {
                       showErrorAlertDialog(
                         context,
-                        locale.isDirectionRTL(context)
-                            ? "برجاء اختيار المطار الذى تريده"
-                            : "Please select the airport you want",
+                        locale.selectAirport,
                       );
                     }
                   },

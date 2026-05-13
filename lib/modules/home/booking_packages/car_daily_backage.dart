@@ -119,9 +119,7 @@ class _CarDailyPackageState extends State<CarDailyPackage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                locale!.isDirectionRTL(context)
-                                    ? "${widget.cubit.data[widget.index].priceAfter}"
-                                    : " ${widget.cubit.data[widget.index].priceAfter}",
+                                "${widget.cubit.data[widget.index].priceAfter}",
                                 style: AppTypography.buttonText15(context),
                               ),
                               SizedBox(width: 4.w),
@@ -132,9 +130,7 @@ class _CarDailyPackageState extends State<CarDailyPackage> {
                                 color: Colors.white,
                               ),
                               Text(
-                                locale.isDirectionRTL(context)
-                                    ? "/ يوم"
-                                    : "/ Daily",
+                                locale!.perDay,
                                 style: AppTypography.buttonText15(context),
                               ),
                             ],

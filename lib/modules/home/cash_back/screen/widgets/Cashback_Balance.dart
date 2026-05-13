@@ -77,9 +77,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
     if (controller.text.isEmpty) {
       ResponsiveFlushbar.show(
         context,
-        message: locale.isDirectionRTL(context)
-            ? "يرجى إدخال المبلغ"
-            : "Please enter amount",
+        message: locale.pleaseEnterAmount,
         backgroundColor: Color(0xffF6A9A9),
         textColor: buttonRedColor(context),
       );
@@ -91,9 +89,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
     if (amount == null || amount < 0) {
       ResponsiveFlushbar.show(
         context,
-        message: locale.isDirectionRTL(context)
-            ? "يرجى إدخال مبلغ صحيح"
-            : "Please enter a valid amount",
+        message: locale.pleaseEnterValidAmount,
         backgroundColor: Color(0xffF6A9A9),
         textColor: buttonRedColor(context),
       );
@@ -103,9 +99,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
     if (amount > widget.availableBalance && amount != 0) {
       ResponsiveFlushbar.show(
         context,
-        message: locale.isDirectionRTL(context)
-            ? "المبلغ المدخل أكبر من الرصيد المتاح"
-            : "Amount exceeds available balance",
+        message: locale.amountExceedsBalance,
         backgroundColor: Color(0xffF6A9A9),
         textColor: buttonRedColor(context),
       );
@@ -117,9 +111,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
     if (invoiceCubit.data == null) {
       ResponsiveFlushbar.show(
         context,
-        message: locale.isDirectionRTL(context)
-            ? "فشل تحميل بيانات الفاتورة"
-            : "Failed to load invoice data",
+        message: locale.failedToLoadInvoice,
         backgroundColor: Color(0xffF6A9A9),
         textColor: buttonRedColor(context),
       );
@@ -146,9 +138,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
     if (invoiceCubit.data == null) {
       ResponsiveFlushbar.show(
         context,
-        message: locale.isDirectionRTL(context)
-            ? "فشل تحميل بيانات الفاتورة"
-            : "Failed to load invoice data",
+        message: locale.failedToLoadInvoice,
         backgroundColor: Color(0xffF6A9A9),
         textColor: Colors.red,
       );
@@ -259,17 +249,13 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          locale.isDirectionRTL(context)
-                              ? "رصيد دراكسون"
-                              : "Darakson Balance",
+                          locale.darksonBalance,
                           style: AppTypography.headingColor16(context),
                         ),
                         Row(
                           children: [
                             Text(
-                              locale.isDirectionRTL(context)
-                                  ? "الرصيد المتاح: "
-                                  : "Available balance:",
+                              locale.availableBalance,
                               style: AppTypography.headingColor16(context),
                             ),
                             Text(
@@ -355,9 +341,8 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: locale.isDirectionRTL(context)
-                                        ? "رصيد قيد الإضافة: بعد انتهاء الرحلة ستحصل على ${expectedCashback.toStringAsFixed(0)} "
-                                        : "Added: After the trip ends, you will receive ${expectedCashback.toStringAsFixed(0)} ",
+                                    text:
+                                        "${locale.pendingCashbackPrefix}${expectedCashback.toStringAsFixed(0)} ",
                                   ),
                                   WidgetSpan(
                                     alignment: PlaceholderAlignment.middle,
@@ -395,9 +380,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                                 Row(
                                   children: [
                                     Text(
-                                      locale.isDirectionRTL(context)
-                                          ? "المبلغ المراد استخدامه"
-                                          : "Amount to be used",
+                                      locale.amountToBeUsed,
                                       style: AppTypography.paragraphColor16(
                                           context),
                                     ),
@@ -426,9 +409,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                                                 _handleApplyOrClear(context),
                                         child: ADGradientButton(
                                           isLoading
-                                              ? (locale.isDirectionRTL(context)
-                                                  ? "جاري"
-                                                  : "Loading")
+                                              ? locale.loading
                                               : (locale.apply),
                                           backgroundColor: isLoading
                                               ? buttonSecondaryColor(context)

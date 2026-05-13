@@ -38,9 +38,7 @@ class _NewOffersState extends State<NewOffers> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        locale.isDirectionRTL(context)
-                            ? "عروضنا،"
-                            : "Our offers,",
+                        locale.ourOffers!,
                         style: GoogleFonts.almarai(
                           color: Colors.white,
                           fontSize: 16.sp,
@@ -49,9 +47,7 @@ class _NewOffersState extends State<NewOffers> {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        locale.isDirectionRTL(context)
-                            ? "أستكشف افضل العروض الحصرية لدى ابوذياب"
-                            : "Explore the best exclusive offers at Abu Diab",
+                        locale.exploreBestExclusiveOffers,
                         style: GoogleFonts.almarai(
                           color: Colors.white,
                           fontSize: 14.sp,

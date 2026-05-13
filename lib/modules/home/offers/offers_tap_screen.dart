@@ -83,9 +83,7 @@ class _OffersScreenState extends State<OffersScreen> {
                     ),
                     SizedBox(width: 6.w),
                     Text(
-                      locale.isDirectionRTL(context)
-                          ? "إستكشف العروض الحصرية "
-                          : "Explore exclusive offers",
+                      locale.exploreExclusiveOffers,
                       style: AppTypography.headingColor20(context),
                     ),
                   ],
@@ -107,9 +105,7 @@ class _OffersScreenState extends State<OffersScreen> {
                         width: 250.w,
                       ),
                       Text(
-                        locale.isDirectionRTL(context)
-                            ? "ترقبوا اقوى العروض."
-                            : "Stay tuned for the best offers soon.",
+                        locale.stayTunedForOffers,
                         style: AppTypography.mainTypographyColor24(context),
                       ),
                     ],

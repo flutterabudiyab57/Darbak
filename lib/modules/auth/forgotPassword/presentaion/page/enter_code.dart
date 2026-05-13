@@ -237,9 +237,7 @@ class _EnterCodeScreanState extends State<EnterCodeScrean> {
                                   HelperFunctions.showFlashBar(
                                     context: context,
                                     title: locale.error.toString(),
-                                    message: locale.isDirectionRTL(context)
-                                        ? 'يرجى إدخال الكود المكون من 4 أرقام'
-                                        : 'Please enter the 4-digit code',
+                                    message: locale.pleaseEnter4DigitCode,
                                     icon: Icons.error,
                                   );
                                   return;
