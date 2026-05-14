@@ -25,7 +25,9 @@
       "Bash(flutter run *)",
       "Bash(powershell -Command \"Get-Item build\\\\start_up_info.json | Select-Object LastWriteTime, Length\")",
       "Bash(git stash *)",
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
+      "Bash(Get-ChildItem -Path \"E:\\\\projects\\\\darbak\" -Directory)",
+      "Bash(Select-Object Name)"
     ]
   }
 }

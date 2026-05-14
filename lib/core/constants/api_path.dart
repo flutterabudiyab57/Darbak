@@ -8,7 +8,7 @@ const String productionApi = "https://api.daraksonksa.com/api";
 const String devEnvApi = "https://sa.abudiyab.com.sa/api";
 const String stagApi = "https://stage-darakson.abudiyabksa.com/api";
 const String testApi = "https://api-darakson.abudiyabksa.com/api";
-const String mainApi = stagApi;
+const String mainApi = productionApi;
 const String oracleApi = "http://oracle.abudiyab-soft.com/api";
 ////////////////// AUTH
 // Endpoint for login request`

@@ -22,6 +22,7 @@ import '../../../../widgets/components/ad_gradient_btn.dart';
 import '../../../additions/presentaion/blocs/addition_cubit/additions_cubit.dart';
 
 import '../../../cars/presentaion/widget/car_tile.dart';
+import '../../../payment/data/models/credit_card_model.dart';
 import '../../../payment/invouce_notCompleted.dart';
 import '../bloc/allbooking_cubit.dart';
 
@@ -242,8 +243,8 @@ class BookDetails extends StatelessWidget  {
                                         carModel: dataCars,
                                         isNotCompletedOrder: true,
                                         orderID: bookingData.id.toString(),
-                                        paymentType: bookingData.paymentType!
-                                            .toLowerCase(),
+                                        paymentType: PaymentMethod.fromWire(
+                                            bookingData.paymentType),
                                         checkOrderStepModel:
                                             BlocProvider.of<AdditionsCubit>(
                                                     context)

@@ -1,10 +1,4 @@
 String langCode = '';
 String? userToken = "";
 String? phoneStorage;
-dynamic cardNameSaved;
-dynamic cardNumberSaved;
-dynamic securityNumberSaved;
-dynamic expiryMonthSaved;
-dynamic expiryYearSaved;
 String ? deviceToken;
-bool isVisa = false;

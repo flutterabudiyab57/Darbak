@@ -1,3 +1,26 @@
+/// Stable internal identifier for the user-selected payment method.
+/// Display strings come from `AppLocalizations` — never compare those against
+/// these values. The switch in [CreditCardModel.toJson] is intentionally
+/// exhaustive: adding a new method here forces every dispatch site to handle
+/// it instead of silently falling back to cash.
+enum PaymentMethod {
+  visa,
+  cash,
+  madfou,
+  tamara,
+  points;
+
+  String get wire => name;
+
+  static PaymentMethod? fromWire(String? value) {
+    if (value == null) return null;
+    final v = value.toLowerCase().trim();
+    for (final m in PaymentMethod.values) {
+      if (m.wire == v) return m;
+    }
+    return null;
+  }
+}
 
 class CreditCardModel {
   String? orderId;
@@ -6,7 +29,7 @@ class CreditCardModel {
   dynamic expiryMonth;
   dynamic expiryYear;
   int? securityCode;
-  String? paymentType;
+  PaymentMethod? paymentType;
 
 
   CreditCardModel({
@@ -22,7 +45,7 @@ class CreditCardModel {
   factory CreditCardModel.fromJson(Map<String, dynamic> json) =>
       CreditCardModel(
         orderId: json["order_id"],
-        paymentType: json["payment_type"],
+        paymentType: PaymentMethod.fromWire(json["payment_type"]),
         nameOnCard: json["nameOnCard"],
         cardNumber: json["CardNumber"],
         expiryMonth: json["expiry_month"],
@@ -31,54 +54,22 @@ class CreditCardModel {
       );
 
   Map<String, dynamic> toJson() {
-    final json;
-
-    print("toJson paymentType ${paymentType}");
-
     switch (paymentType) {
-      case "visa":
-        json = toVisaJson();
-        break;
-      case "بطاقة إئتمان":
-        json = toVisaJson();
-        break;
-      case "cash":
-        json = toCashJson();
-        break;
-      case "نقدي":
-        json = toCashJson();
-        break;
-      case "madfou":
-        json = toMadfouJson();
-        print("paymentType madfou: ${paymentType}");
-        break;
-      case "مدفوع":
-        json = toMadfouJson();
-        print("paymentType مدفوع: ${paymentType}");
-        break;
-      case "tamara":
-        json = toTamaraJson();
-        print("paymentType tamara: ${paymentType}");
-        break;
-      case "تمارا":
-        json = toTamaraJson();
-        print("paymentType تمارا: ${paymentType}");
-        break;
-      case "points":
-        json = toPointsJson();
-        break;
-      case "نقاط":
-        json = toPointsJson();
-        break;
-      default:
-        json = toCashJson();
-        print("paymentType model1: ${paymentType}");
-        break;
+      case PaymentMethod.visa:
+        return toVisaJson();
+      case PaymentMethod.cash:
+        return toCashJson();
+      case PaymentMethod.madfou:
+        return toMadfouJson();
+      case PaymentMethod.tamara:
+        return toTamaraJson();
+      case PaymentMethod.points:
+        return toPointsJson();
+      case null:
+        throw StateError(
+            'CreditCardModel.toJson called with null paymentType — '
+            'caller must set paymentType before submission.');
     }
-
-    return json;
-
-
   }
 
   Map<String, dynamic> toVisaJson() => {
@@ -111,4 +102,28 @@ class CreditCardModel {
     "order_id": orderId,
     "payment_type": "points",
   };
+}
+
+/// Short-lived buffer for credit-card form input.
+/// PCI-DSS req. 3.2.2: CVV must not persist past authorization — every payment
+/// submission site MUST call [clear] in a `finally` block.
+class CardInput {
+  CardInput._();
+  static final CardInput instance = CardInput._();
+
+  String? holderName;
+  String? number;
+  int? cvv;
+  int? expiryMonth;
+  int? expiryYear;
+  bool isValid = false;
+
+  void clear() {
+    holderName = null;
+    number = null;
+    cvv = null;
+    expiryMonth = null;
+    expiryYear = null;
+    isValid = false;
+  }
 }

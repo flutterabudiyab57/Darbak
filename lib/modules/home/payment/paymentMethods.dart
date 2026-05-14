@@ -15,7 +15,6 @@ import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../core/constants/assets/app_colors.dart';
 import '../../../core/constants/assets/assets.dart';
-import '../../../core/constants/langCode.dart';
 import '../../../core/helpers/helper_fun.dart';
 import '../../../language/locale.dart';
 import '../../widgets/components/ad_gradient_btn.dart';
@@ -328,6 +327,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       PaymentMethodCard(
+                                        method: PaymentMethod.visa,
                                         text: locale.visa.toString(),
                                         color: Theme.of(context)
                                             .colorScheme
@@ -338,6 +338,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                   ),
                                 if (_isActive(_couponCashActive, _origCash))
                                   PaymentMethodCard(
+                                    method: PaymentMethod.cash,
                                     text: locale.cash.toString(),
                                     color:
                                         Theme.of(context).colorScheme.surface,
@@ -345,6 +346,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                   ),
                                 if (_isActive(_couponPointsActive, _origPoints))
                                   PaymentMethodCard(
+                                    method: PaymentMethod.points,
                                     text: locale.points.toString(),
                                     color:
                                         Theme.of(context).colorScheme.surface,
@@ -356,6 +358,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       PaymentMethodCard(
+                                        method: PaymentMethod.madfou,
                                         text: locale.madfouPaymentLabel,
                                         color: Theme.of(context)
                                             .colorScheme
@@ -379,6 +382,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       PaymentMethodCard(
+                                        method: PaymentMethod.tamara,
                                         text: locale.tamaraPaymentLabel,
                                         color: Theme.of(context)
                                             .colorScheme
@@ -514,7 +518,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                           if (BlocProvider.of<BookingCubit>(
                                                       context)
                                                   .selectedPaymentMethods !=
-                                              locale.visa.toString()) {
+                                              PaymentMethod.visa) {
                                             if (widget.isNotCompleted == true) {
                                               context
                                                   .read<AdditionsCubit>()
@@ -568,9 +572,8 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                           } else if (BlocProvider.of<
                                                       BookingCubit>(context)
                                                   .selectedPaymentMethods ==
-                                              locale.visa.toString()) {
-                                            if (isVisa == null ||
-                                                isVisa == false) {
+                                              PaymentMethod.visa) {
+                                            if (!CardInput.instance.isValid) {
                                               HelperFunctions.dialog(
                                                 context: context,
                                                 title: locale.error.toString(),
@@ -625,7 +628,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                           else if (BlocProvider.of<
                                                       BookingCubit>(context)
                                                   .selectedPaymentMethods ==
-                                              locale.madfouPaymentLabel) {
+                                              PaymentMethod.madfou) {
                                             if (widget.isNotCompleted == true) {
                                               PersistentNavBarNavigator
                                                   .pushNewScreen(

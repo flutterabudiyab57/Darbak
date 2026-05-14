@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/additions/presentaion/pages/additions_screen.dart';
 import 'package:darbak/modules/home/all_bookings/data/model/check_order_step_model.dart';
@@ -14,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../../../core/constants/langCode.dart';
 import '../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../shared/commponents.dart';
 import '../../widgets/components/appbar.dart';
@@ -32,7 +30,7 @@ class InvoiceNotCompletedUI extends StatefulWidget {
   final Datum? allBookingData;
   final String? totalApplePay;
   final String? orderID;
-  final String? paymentType;
+  final PaymentMethod? paymentType;
   final CheckOrderStepModel? checkOrderStepModel;
 
   const InvoiceNotCompletedUI({
@@ -65,7 +63,7 @@ class _InvoiceNotCompletedUIState extends State<InvoiceNotCompletedUI> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = AppLocalizations.of(context);
+    final locale = AppLocalizations.of(context)!;
     Size size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -73,58 +71,8 @@ class _InvoiceNotCompletedUIState extends State<InvoiceNotCompletedUI> {
         bottomNavigationBar: Container(
           width: size.width,
           decoration: BoxDecoration(),
-          child: BlocProvider.of<BookingCubit>(context)
-              .selectedPaymentMethods ==
-              locale!.applePay &&
-              Platform.isIOS
-              ? Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: size.height * 0.018, horizontal: 15.sp),
-            child: Container(
-              // height: size.height*0.065,
-              // width: size.width,
-              // child: ApplePayButton(
-              //   // paymentConfiguration: PaymentConfiguration.fromJsonString(
-              //   //
-              //   //     payment_configurations.defaultApplePay),
-              //   //  paymentConfigurationAsset: 'applepay.json',
-              //   paymentConfiguration: PaymentConfiguration.fromJsonString(
-              //       payment_configurations.defaultApplePay),
-              //   paymentItems:[
-              //     PaymentItem(
-              //       label: locale.applePayTotal.toString(),
-              //       // amount:widget.isNotCompletedOrder==false?BlocProvider.of<InvoiceCubit>(context).data!.total.toString(): BlocProvider.of<AdditionsCubit>(context).stepModel!.order!.total,
-              //       amount:BlocProvider.of<InvoiceCubit>(context).data!.total.toString(),
-              //       status: PaymentItemStatus.final_price,
-              //     ),
-              //   ],
-              //   style: ApplePayButtonStyle.black,
-              //   type: ApplePayButtonType.buy,
-              //   margin:  EdgeInsets.only(top: 15.0.sp),
-              //   onPaymentResult: (value) {
-              //     navigateAndFinish(context, BookingConfirmed(orderId: widget.orderID.toString(),));
-              //   },
-              //   onError: (error) {
-              //     HelperFunctions.showFlashBar(
-              //         context: context,
-              //         title: locale.error.toString(),
-              //         message: error.toString(),
-              //         icon: Icons.warning_amber,
-              //         color: Color(0xffF6A9A9),
-              //         titlcolor: Colors.red,
-              //         iconColor: Colors.red
-              //     );
-              //   },
-              //   loadingIndicator:  Center(
-              //     child: CircularProgressIndicator.adaptive(
-              //       backgroundColor: Theme.of(context).colorScheme.onPrimary,
-              //     ),
-              //   ),
-              // ),
-            ),
-          )
-              : BlocProvider.of<BookingCubit>(context).selectedPaymentMethods !=
-              locale.visa.toString()
+          child: BlocProvider.of<BookingCubit>(context).selectedPaymentMethods !=
+              PaymentMethod.visa
               ? BlocConsumer<InvoiceCubit, InvoiceState>(
             listener: (context, state) {},
             builder: (context, state) {
@@ -171,23 +119,13 @@ class _InvoiceNotCompletedUIState extends State<InvoiceNotCompletedUI> {
         body: BlocConsumer<InvoiceCubit, InvoiceState>(
           listener: (context, state) {
             if (state is PaymentSuccess) {
-              if (context
-                  .read<BookingCubit>()
-                  .selectedPaymentMethods
-                  .toString()
-                  .toLowerCase() ==
-                  locale.visa.toString().toLowerCase()) {
+              if (context.read<BookingCubit>().selectedPaymentMethods ==
+                  PaymentMethod.visa) {
                 navigateAndFinish(
                     context,
                     WebPayment(
                       url: state.paymentStepModel.paymentUrl,
                     ));
-                cardNameSaved = null;
-                cardNumberSaved = null;
-                securityNumberSaved = null;
-                expiryMonthSaved = null;
-                expiryYearSaved = null;
-                isVisa = false;
               } else {
                 BookingConfirmedBottomSheet.show(
                   context,
@@ -432,44 +370,48 @@ class _InvoiceNotCompletedUIState extends State<InvoiceNotCompletedUI> {
     );
   }
 
+  String _resolveOrderId() {
+    final cubitOrderId = context.read<BookingCubit>().orderID;
+    if (cubitOrderId != null) return cubitOrderId.toString();
+    return BlocProvider.of<AdditionsCubit>(context)
+        .stepModel!
+        .order!
+        .id
+        .toString();
+  }
+
+  PaymentMethod? _resolvePaymentType() {
+    final selected = context.read<BookingCubit>().selectedPaymentMethods;
+    if (selected != null) return selected;
+    final stepPaymentType = BlocProvider.of<AdditionsCubit>(context)
+        .stepModel
+        ?.order
+        ?.paymentType;
+    return PaymentMethod.fromWire(stepPaymentType);
+  }
+
   bookNowWithVisa() async {
-    await BlocProvider.of<InvoiceCubit>(context).activePaymentStep(
-        CreditCardModel(
-            orderId: context.read<BookingCubit>().orderID != null
-                ? context.read<BookingCubit>().orderID.toString()
-                : BlocProvider.of<AdditionsCubit>(context)
-                .stepModel!
-                .order!
-                .id
-                .toString(),
-            paymentType:
-            context.read<BookingCubit>().selectedPaymentMethods != null
-                ? context
-                .read<BookingCubit>()
-                .selectedPaymentMethods
-                .toString()
-                .toLowerCase()
-                : BlocProvider.of<AdditionsCubit>(context)
-                .stepModel!
-                .order!
-                .paymentType
-                .toString()
-                .toLowerCase(),
-            securityCode: securityNumberSaved,
-            cardNumber: cardNumberSaved,
-            expiryMonth: expiryMonthSaved,
-            expiryYear: expiryYearSaved,
-            nameOnCard: cardNameSaved));
+    final input = CardInput.instance;
+    try {
+      await BlocProvider.of<InvoiceCubit>(context).activePaymentStep(
+          CreditCardModel(
+              orderId: _resolveOrderId(),
+              paymentType: _resolvePaymentType(),
+              securityCode: input.cvv,
+              cardNumber: input.number,
+              expiryMonth: input.expiryMonth,
+              expiryYear: input.expiryYear,
+              nameOnCard: input.holderName));
+    } finally {
+      input.clear();
+    }
   }
 
   bookNow() async {
     final CreditCardModel cardModel = CreditCardModel(
-      orderId: context.read<BookingCubit>().orderID != null
-          ? context.read<BookingCubit>().orderID.toString()
-          : widget.orderID,
-      paymentType: context.read<BookingCubit>().selectedPaymentMethods != null
-          ? context.read<BookingCubit>().selectedPaymentMethods.toString()
-          : widget.paymentType!.toLowerCase(),
+      orderId: context.read<BookingCubit>().orderID?.toString() ?? widget.orderID,
+      paymentType: context.read<BookingCubit>().selectedPaymentMethods ??
+          widget.paymentType,
     );
     await BlocProvider.of<InvoiceCubit>(context).activePaymentStep(cardModel);
   }

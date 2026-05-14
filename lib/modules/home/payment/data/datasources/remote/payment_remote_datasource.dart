@@ -20,13 +20,6 @@ class PaymentRemoteDatasource {
         }),
         data: cardModel!.toJson(),
       );
-      // if (response.statusCode == 200) {
-      //   print('${response.headers} : ${response.statusCode.toString()}'+'afff');
-      // }else{
-      //   print('${response.data} : ${response.statusCode.toString()}'+'afff');
-      // }
-
-      print(" response: ${response.data} : ${response.statusCode.toString()}");
       return paymentStepModelFromJson(response.data);
     } on DioError catch (dioError) {
       throw Failure.fromDioError(dioError);

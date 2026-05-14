@@ -32,7 +32,8 @@ class InvoiceCubit extends Cubit<InvoiceState> {
       final additionsCubit = BlocProvider.of<AdditionsCubit>(context);
       final additions = additionsCubit.additions ?? [];
 
-      final paymentType = BlocProvider.of<BookingCubit>(context).selectedPaymentMethods.toString();
+      final paymentType =
+          BlocProvider.of<BookingCubit>(context).selectedPaymentMethods?.wire ?? '';
 
       // Fetch the invoice data
       data = await invoiceRepository.getInvoice(
@@ -60,7 +61,10 @@ class InvoiceCubit extends Cubit<InvoiceState> {
       data = await invoiceRepository.getInvoice(
           orderID: orderId.toString(),
           additions: bookingCubit.additions ?? [],
-          paymentType: BlocProvider.of<BookingCubit>(context).selectedPaymentMethods.toString()
+          paymentType: BlocProvider.of<BookingCubit>(context)
+                  .selectedPaymentMethods
+                  ?.wire ??
+              ''
         // cardModel:cardModel
       );
       emit(InvoiceSuccess(data!));
@@ -74,14 +78,8 @@ class InvoiceCubit extends Cubit<InvoiceState> {
       final PaymentStepModel data =
       await paymentRepository.activePaymentStep(cardModel: cardModel);
       emit(PaymentSuccess(data));
-
-      print("activePaymentStep0: ${data.toString()}");
-      print("activePaymentStep0 cardModel: ${cardModel?.toString()}");
-
     } catch (error) {
       emit(InvoiceFailed(error.toString()));
-      print("activePaymentStep0 Error cardModel: ${cardModel?.toString()}");
-      print("activePaymentStep0 Error cardModel: ${cardModel?.cardNumber.toString()}");
     }
   }
 

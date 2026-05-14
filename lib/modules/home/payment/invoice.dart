@@ -12,7 +12,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import '../../../core/constants/assets/app_colors.dart';
 import '../../../core/constants/assets/assets.dart';
-import '../../../core/constants/langCode.dart';
 import '../../../core/helpers/helper_fun.dart';
 import '../../../language/locale.dart';
 import '../../../shared/commponents.dart';
@@ -43,7 +42,7 @@ class InvoiceUI extends StatefulWidget {
   final Datum? allBookingData;
   final String? totalApplePay;
   final String? orderID;
-  final String? paymentType;
+  final PaymentMethod? paymentType;
   final CheckOrderStepModel? checkOrderStepModel;
 
   const InvoiceUI({
@@ -94,10 +93,10 @@ class _InvoiceUIState extends State<InvoiceUI> {
   }
 
   void _showForceCashPaymentDialog() {
-    final locale = AppLocalizations.of(context);
+    final locale = AppLocalizations.of(context)!;
 
     BlocProvider.of<BookingCubit>(context)
-        .setPaymentMethods(locale!.cash.toString());
+        .setPaymentMethods(PaymentMethod.cash);
 
     showDialog(
       context: context,
@@ -147,8 +146,8 @@ class _InvoiceUIState extends State<InvoiceUI> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = AppLocalizations.of(context);
-    final isRTL = locale!.isDirectionRTL(context);
+    final locale = AppLocalizations.of(context)!;
+    final isRTL = locale.isDirectionRTL(context);
     Size size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -162,13 +161,11 @@ class _InvoiceUIState extends State<InvoiceUI> {
               final selectedPaymentMethod =
                   BlocProvider.of<BookingCubit>(context).selectedPaymentMethods;
 
-              final isVisa = selectedPaymentMethod == locale!.visa.toString();
-              final isMadfou = selectedPaymentMethod ==
-                  locale.madfouPaymentLabel;
-              final isTamara = selectedPaymentMethod ==
-                  locale.tamaraPaymentLabel;
-              final isCash = selectedPaymentMethod == locale.cash.toString();
-              final isPoints = selectedPaymentMethod == locale.points;
+              final isVisa = selectedPaymentMethod == PaymentMethod.visa;
+              final isMadfou = selectedPaymentMethod == PaymentMethod.madfou;
+              final isTamara = selectedPaymentMethod == PaymentMethod.tamara;
+              final isCash = selectedPaymentMethod == PaymentMethod.cash;
+              final isPoints = selectedPaymentMethod == PaymentMethod.points;
               if (!isVisa &&
                   !isMadfou &&
                   !isCash &&
@@ -251,11 +248,8 @@ class _InvoiceUIState extends State<InvoiceUI> {
               );
             }
             if (state is PaymentSuccess) {
-              final selectedPaymentMethod = context
-                  .read<BookingCubit>()
-                  .selectedPaymentMethods
-                  .toString()
-                  .toLowerCase();
+              final selectedPaymentMethod =
+                  context.read<BookingCubit>().selectedPaymentMethods;
 
               final invoiceData = BlocProvider.of<InvoiceCubit>(context).data;
               final isForceCash = invoiceData?.forceCashPayment == true;
@@ -273,35 +267,14 @@ class _InvoiceUIState extends State<InvoiceUI> {
                 return;
               }
 
-              if (selectedPaymentMethod ==
-                  locale!.visa.toString().toLowerCase()) {
+              if (selectedPaymentMethod == PaymentMethod.visa ||
+                  selectedPaymentMethod == PaymentMethod.madfou ||
+                  selectedPaymentMethod == PaymentMethod.tamara) {
                 navigateTo(
                     context,
                     WebPayment(
                       url: state.paymentStepModel.paymentUrl,
                     ));
-                cardNameSaved = null;
-                cardNumberSaved = null;
-                securityNumberSaved = null;
-                expiryMonthSaved = null;
-                expiryYearSaved = null;
-                isVisa = false;
-              } else if (selectedPaymentMethod ==
-                  locale.madfouPaymentLabel) {
-                navigateTo(
-                    context,
-                    WebPayment(
-                      url: state.paymentStepModel.paymentUrl,
-                    ));
-                print("selectedPaymentMethod 0 : ${selectedPaymentMethod}");
-              } else if (selectedPaymentMethod ==
-                  locale.tamaraPaymentLabel) {
-                navigateTo(
-                    context,
-                    WebPayment(
-                      url: state.paymentStepModel.paymentUrl,
-                    ));
-                print("selectedPaymentMethod 1: ${selectedPaymentMethod}");
               } else {
                 BookingConfirmedBottomSheet.show(
                   context,
@@ -316,12 +289,10 @@ class _InvoiceUIState extends State<InvoiceUI> {
             } else if (state is InvoiceFailed) {
               Navigator.pop(context);
 
-              if (context
-                      .read<BookingCubit>()
-                      .selectedPaymentMethods
-                      .toString()
-                      .toLowerCase() ==
-                  locale!.points) {
+              final selectedPaymentMethod =
+                  context.read<BookingCubit>().selectedPaymentMethods;
+
+              if (selectedPaymentMethod == PaymentMethod.points) {
                 HelperFunctions.dialog(
                   context: context,
                   title: locale.error.toString(),
@@ -329,24 +300,13 @@ class _InvoiceUIState extends State<InvoiceUI> {
                 );
               }
 
-              if (context
-                      .read<BookingCubit>()
-                      .selectedPaymentMethods
-                      .toString()
-                      .toLowerCase() ==
-                  locale.visa.toString().toLowerCase()) {
+              if (selectedPaymentMethod == PaymentMethod.visa) {
                 HelperFunctions.dialog(
                   context: context,
                   title: locale.error.toString(),
                   body: locale.checkCardDetails,
                 );
-
-                print(
-                    "credid card data :${securityNumberSaved.toString()} ${cardNumberSaved.toString()} ${expiryMonthSaved.toString()} ${expiryYearSaved.toString()} ${cardNameSaved.toString()}");
               }
-
-              print(
-                  "selectedPaymentMethods ${context.read<BookingCubit>().selectedPaymentMethods.toString().toLowerCase()}");
             }
           },
           builder: (context, state) {
@@ -667,72 +627,64 @@ class _InvoiceUIState extends State<InvoiceUI> {
     );
   }
 
+  String _resolveOrderId() {
+    final cubitOrderId = context.read<BookingCubit>().orderID;
+    if (cubitOrderId != null) return cubitOrderId.toString();
+    return BlocProvider.of<AdditionsCubit>(context)
+        .stepModel!
+        .order!
+        .id
+        .toString();
+  }
+
+  PaymentMethod? _resolvePaymentType() {
+    final selected = context.read<BookingCubit>().selectedPaymentMethods;
+    if (selected != null) return selected;
+    final stepPaymentType = BlocProvider.of<AdditionsCubit>(context)
+        .stepModel
+        ?.order
+        ?.paymentType;
+    return PaymentMethod.fromWire(stepPaymentType);
+  }
+
   bookNowWithVisa() async {
-    await BlocProvider.of<InvoiceCubit>(context).activePaymentStep(
-        CreditCardModel(
-            orderId: context.read<BookingCubit>().orderID != null
-                ? context.read<BookingCubit>().orderID.toString()
-                : BlocProvider.of<AdditionsCubit>(context)
-                    .stepModel!
-                    .order!
-                    .id
-                    .toString(),
-            paymentType:
-                context.read<BookingCubit>().selectedPaymentMethods != null
-                    ? context
-                        .read<BookingCubit>()
-                        .selectedPaymentMethods
-                        .toString()
-                        .toLowerCase()
-                    : BlocProvider.of<AdditionsCubit>(context)
-                        .stepModel!
-                        .order!
-                        .paymentType
-                        .toString()
-                        .toLowerCase(),
-            securityCode: securityNumberSaved,
-            cardNumber: cardNumberSaved,
-            expiryMonth: expiryMonthSaved,
-            expiryYear: expiryYearSaved,
-            nameOnCard: cardNameSaved));
+    final input = CardInput.instance;
+    try {
+      await BlocProvider.of<InvoiceCubit>(context).activePaymentStep(
+          CreditCardModel(
+              orderId: _resolveOrderId(),
+              paymentType: _resolvePaymentType(),
+              securityCode: input.cvv,
+              cardNumber: input.number,
+              expiryMonth: input.expiryMonth,
+              expiryYear: input.expiryYear,
+              nameOnCard: input.holderName));
+    } finally {
+      input.clear();
+    }
   }
 
   bookNow() async {
-    print(
-        "selectedPaymentMethods book Now3: ${context.read<BookingCubit>().selectedPaymentMethods.toString()}");
     final CreditCardModel cardModel = CreditCardModel(
-      orderId: context.read<BookingCubit>().orderID != null
-          ? context.read<BookingCubit>().orderID.toString()
-          : widget.orderID,
-      paymentType: context.read<BookingCubit>().selectedPaymentMethods != null
-          ? context.read<BookingCubit>().selectedPaymentMethods.toString()
-          : widget.paymentType!.toLowerCase(),
+      orderId: context.read<BookingCubit>().orderID?.toString() ?? widget.orderID,
+      paymentType: context.read<BookingCubit>().selectedPaymentMethods ??
+          widget.paymentType,
     );
     await BlocProvider.of<InvoiceCubit>(context).activePaymentStep(cardModel);
   }
 
   bookNowWithMadfou() async {
-    print(
-        "bookNowWithMadfou1: ${context.read<BookingCubit>().selectedPaymentMethods.toString()}");
     final CreditCardModel cardModel = CreditCardModel(
-      orderId: context.read<BookingCubit>().orderID != null
-          ? context.read<BookingCubit>().orderID.toString()
-          : widget.orderID,
-      paymentType:
-          context.read<BookingCubit>().selectedPaymentMethods.toString(),
+      orderId: context.read<BookingCubit>().orderID?.toString() ?? widget.orderID,
+      paymentType: context.read<BookingCubit>().selectedPaymentMethods,
     );
     await BlocProvider.of<InvoiceCubit>(context).activePaymentStep(cardModel);
   }
 
   bookNowWithTamara() async {
-    print(
-        "bookNowWithTamara11: ${context.read<BookingCubit>().selectedPaymentMethods.toString()}");
     final CreditCardModel cardModel = CreditCardModel(
-      orderId: context.read<BookingCubit>().orderID != null
-          ? context.read<BookingCubit>().orderID.toString()
-          : widget.orderID,
-      paymentType:
-          context.read<BookingCubit>().selectedPaymentMethods.toString(),
+      orderId: context.read<BookingCubit>().orderID?.toString() ?? widget.orderID,
+      paymentType: context.read<BookingCubit>().selectedPaymentMethods,
     );
     await BlocProvider.of<InvoiceCubit>(context).activePaymentStep(cardModel);
   }

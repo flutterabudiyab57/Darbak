@@ -10,12 +10,12 @@ abstract class BookingState extends Equatable {
 class BookingInitial extends BookingState {}
 
 class PaymentMethodChanged extends BookingState {
-  final String? method;
+  final PaymentMethod? method;
 
   PaymentMethodChanged(this.method);
 
   @override
-  List<Object> get props => [method ?? ""];
+  List<Object> get props => [method?.wire ?? ""];
 }
 
 class CouponLoading extends BookingState {}

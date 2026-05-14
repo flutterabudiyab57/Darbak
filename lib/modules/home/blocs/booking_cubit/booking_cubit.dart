@@ -1,4 +1,5 @@
 ﻿import 'package:darbak/modules/home/payment/data/models/coupon_model.dart';
+import 'package:darbak/modules/home/payment/data/models/credit_card_model.dart';
 import 'package:darbak/modules/home/payment/data/repositories/coupon_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -10,14 +11,14 @@ class BookingCubit extends Cubit<BookingState> {
 
   BookingCubit(this.couponRepository) : super(BookingInitial());
 
-  String? selectedPaymentMethods;
+  PaymentMethod? selectedPaymentMethods;
   int? orderID;
   List<int>? additions;
   int? days = 0;
   String couponCode = "";
   String? receiveLocationId;
 
-  void setPaymentMethods(String? method) {
+  void setPaymentMethods(PaymentMethod? method) {
     selectedPaymentMethods = method;
     emit(PaymentMethodChanged(selectedPaymentMethods));
   }
