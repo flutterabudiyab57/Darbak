@@ -26,7 +26,7 @@ class PendingCardWidget extends StatelessWidget {
         vertical: 8.h,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFF007A55).withOpacity(.1),
+        color: const Color(0xFF007A55).withValues(alpha: .1),
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: const Color(0xFF007A55),

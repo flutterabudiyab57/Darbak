@@ -21,8 +21,8 @@ class PaymentRemoteDatasource {
         data: cardModel!.toJson(),
       );
       return paymentStepModelFromJson(response.data);
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
 
       print("Error: " + error.toString());
@@ -43,8 +43,8 @@ class PaymentRemoteDatasource {
         data: cardModel!.toJson()..addAll({"contract_id": cardModel.orderId}),
       );
       return paymentStepModelFromJson(response.data);
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
 
       print("Error: 2" + error.toString());
@@ -74,8 +74,8 @@ class PaymentRemoteDatasource {
       final status = data["status"];
       return status;
       // return true;
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       throw '..Oops $error';
     }

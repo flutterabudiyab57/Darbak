@@ -28,8 +28,8 @@ class BookingAutomationDataSources {
       final BookingAutomationModel bookingAutomationModel =
           BookingAutomationModel.fromMap(dataOrders);
       return bookingAutomationModel;
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       throw '..Oops $error';
     }

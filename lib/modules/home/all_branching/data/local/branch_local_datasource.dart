@@ -17,7 +17,7 @@ class BranchLocalDataSource {
        await box.put(_branchesKey, branches);
       await CacheHelper.saveCacheTimestamp(_branchesKey);
 
-      print('âœ… Cached ${branches.length} branches locally');
+      print('… Cached ${branches.length} branches locally');
     } catch (e) {
       print('an Error caching branches: $e');
     }
@@ -38,7 +38,7 @@ class BranchLocalDataSource {
 
        final branches = List<BranchModel>.from(cachedData);
 
-      print('âœ… Loaded ${branches.length} branches from cache');
+      print('… Loaded ${branches.length} branches from cache');
       return branches;
     } catch (e) {
       print('an Error loading cached branches: $e');

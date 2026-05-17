@@ -129,14 +129,14 @@ class _DynamicPhoneFieldWithCountryState
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.r),
                           borderSide: BorderSide(
-                            color: isDark ? Colors.white70 : Colors.red.withOpacity(0.4),
+                            color: isDark ? Colors.white70 : Colors.red.withValues(alpha: 0.4),
                             width: 1.w,
                           ),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.r),
                           borderSide: BorderSide(
-                            color: isDark ? Colors.white70 : Colors.red.withOpacity(0.4),
+                            color: isDark ? Colors.white70 : Colors.red.withValues(alpha: 0.4),
                             width: 1.w,
                           ),
                         ),

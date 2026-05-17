@@ -10,7 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../../../../../../language/locale.dart';
 import '../../../../../../../shared/commponents.dart';
 import '../../../../../../widgets/components/ad_gradient_btn.dart';
-import '../../../../../search_screen/presentaion/widget/shimmer_list.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../bloc/allbooking_cubit.dart';
 import '../../bookDetailes.dart';
 
@@ -19,6 +19,119 @@ class RunningNow extends StatefulWidget {
 
   @override
   State<RunningNow> createState() => _RunningNowState();
+}
+
+class _RunningBookingSkeleton extends StatelessWidget {
+  const _RunningBookingSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer.zone(
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 4,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.all(12.w),
+            child: Container(
+              padding: EdgeInsets.all(14.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: Colors.grey.shade300, width: 2.w),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Bone(
+                          height: 14.sp,
+                          width: 140.w,
+                          borderRadius: BorderRadius.all(Radius.circular(4.r)),
+                        ),
+                      ),
+                      Bone(
+                        height: 28.h,
+                        width: 80.w,
+                        borderRadius: BorderRadius.all(Radius.circular(20.r)),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 6,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Bone(
+                              height: 22.sp,
+                              width: double.infinity,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.r)),
+                            ),
+                            SizedBox(height: 8.h),
+                            Bone(
+                              height: 22.sp,
+                              width: double.infinity,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.r)),
+                            ),
+                            SizedBox(height: 8.h),
+                            Bone(
+                              height: 22.sp,
+                              width: double.infinity,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.r)),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        flex: 4,
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: Bone(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.r)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 6.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Bone(
+                          height: 44.h,
+                          width: double.infinity,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(8.r)),
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Bone(
+                          height: 44.h,
+                          width: double.infinity,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(8.r)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
 
 class _RunningNowState extends State<RunningNow> {
@@ -122,7 +235,7 @@ class _RunningNowState extends State<RunningNow> {
       },
       builder: (context, state) {
         if (state is AllBookingLoading) {
-          return ShimmerLoadingList();
+          return const _RunningBookingSkeleton();
         }
 
         if (state is AllBookingLoaded) {

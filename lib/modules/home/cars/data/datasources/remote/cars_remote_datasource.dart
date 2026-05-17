@@ -49,10 +49,10 @@ class CarsRemoteDataSource {
       }
 
       return cars;
-    } on DioError catch (dioError) {
-      print("Dio error occurred: ${dioError.response?.data}");
-      print("Error message: ${dioError.message}");
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      print("Dio error occurred: ${DioException.response?.data}");
+      print("Error message: ${DioException.message}");
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       print("Unexpected error: $error");
       throw Exception('..Oops $error');
@@ -90,8 +90,8 @@ class CarsRemoteDataSource {
       final dataCars = json.decode(response.data) as Map<String, dynamic>;
       final Cars cars = Cars.fromMap(dataCars);
       return cars;
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       throw '..Oops $error';
     }
@@ -126,10 +126,10 @@ class CarsRemoteDataSource {
       }
 
       return cars;
-    } on DioError catch (dioError) {
-      print("Dio error occurred: ${dioError.response?.data}");
-      print("Error message: ${dioError.message}");
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      print("Dio error occurred: ${DioException.response?.data}");
+      print("Error message: ${DioException.message}");
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       print("Unexpected error: $error");
       throw Exception('..Oops $error');

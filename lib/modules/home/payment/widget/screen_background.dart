@@ -47,7 +47,7 @@ class _PinkBox extends StatelessWidget {
           color: Theme.of(context).colorScheme.surface,
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.0),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.0),
               blurRadius: 1,
               offset: const Offset(0, 3),
             ),
@@ -58,7 +58,7 @@ class _PinkBox extends StatelessWidget {
             end: Alignment.topLeft,
             colors: <Color>[
               Theme.of(context).scaffoldBackgroundColor,
-              Theme.of(context).colorScheme.primary.withOpacity(0.0),
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.0),
 
               //Color(0xff3a3b55),
             ],

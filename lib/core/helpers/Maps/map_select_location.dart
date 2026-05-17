@@ -193,7 +193,7 @@ class _LocationPickerFullState extends State<LocationPickerFull>
           points: widget.bounds!.boundaryPoints,
           strokeColor: const Color(0xFF00323A),
           strokeWidth: 2,
-          fillColor: const Color(0xFF00323A).withOpacity(0.06),
+          fillColor: const Color(0xFF00323A).withValues(alpha: 0.06),
         ));
       });
       return;
@@ -418,7 +418,7 @@ class _LocationPickerFullState extends State<LocationPickerFull>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.18),
+                    Colors.black.withValues(alpha: 0.18),
                     Colors.transparent,
                   ],
                 ),
@@ -468,7 +468,7 @@ class _LocationPickerFullState extends State<LocationPickerFull>
         borderRadius: BorderRadius.circular(15.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -501,7 +501,7 @@ class _LocationPickerFullState extends State<LocationPickerFull>
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             blurRadius: 20,
             offset: const Offset(0, 6),
           ),
@@ -538,7 +538,7 @@ class _LocationPickerFullState extends State<LocationPickerFull>
                       width: 36.w,
                       height: 36.w,
                       decoration: BoxDecoration(
-                        color: iconDefaultColor(context).withOpacity(0.08),
+                        color: iconDefaultColor(context).withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Icon(Icons.location_on_rounded,
@@ -595,7 +595,7 @@ class _LocationPickerFullState extends State<LocationPickerFull>
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.14),
+              color: Colors.black.withValues(alpha: 0.14),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -615,7 +615,7 @@ class _LocationPickerFullState extends State<LocationPickerFull>
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             blurRadius: 24,
             offset: const Offset(0, -4),
           ),

@@ -33,8 +33,8 @@ class BookingDataSources {
       final dataOrders = json.decode(response.data);
       final Booking booking = Booking.fromMap(dataOrders);
       return booking;
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       throw '..Oops $error';
     }

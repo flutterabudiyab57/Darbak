@@ -24,8 +24,8 @@
 //           });
 //       var data = json.decode(response.data);
 //       return data['token'];
-//     } on DioError catch (dioError) {
-//       throw Failure.fromDioError(dioError);
+//     } on DioException catch (DioException) {
+//       throw Failure.fromDioError(DioException);
 //     } catch (error) {
 //       throw '..Oops $error';
 //     }

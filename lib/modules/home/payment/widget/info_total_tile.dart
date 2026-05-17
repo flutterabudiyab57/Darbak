@@ -15,7 +15,7 @@ class InfoTotalTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.4)
+        color: Colors.blue.withValues(alpha: 0.4)
       ),
       child: Column(
         children: [

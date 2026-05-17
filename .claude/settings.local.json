@@ -27,7 +27,10 @@
       "Bash(git stash *)",
       "Bash(git checkout *)",
       "Bash(Get-ChildItem -Path \"E:\\\\projects\\\\darbak\" -Directory)",
-      "Bash(Select-Object Name)"
+      "Bash(Select-Object Name)",
+      "Bash(flutter pub *)",
+      "Bash(Select-String -Pattern \"issues found|issue found|No issues\")",
+      "Bash(Select-Object -Last 5)"
     ]
   }
 }

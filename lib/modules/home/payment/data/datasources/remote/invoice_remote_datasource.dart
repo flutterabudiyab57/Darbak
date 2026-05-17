@@ -32,8 +32,8 @@ class InvoiceRemoteDatasource {
       ///-------------
       print(paymentType.toString());
       return invoiceModelFromJson(response.data);
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       throw '..Oops $error';
     }
@@ -63,8 +63,8 @@ class InvoiceRemoteDatasource {
         },
       );
       return automatedInvoiceModelFromJson(response.data);
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       throw '..Oops $error';
     }

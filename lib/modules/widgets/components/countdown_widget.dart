@@ -49,7 +49,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
         Container(
           width: 60.w,
           decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(6.r)),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 4.w),
@@ -76,7 +76,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
         Container(
           width: 60.w,
           decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(6.r)),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 4.w),
@@ -103,7 +103,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
         Container(
           width: 60.w,
           decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(6.r)),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 4.w),
@@ -128,7 +128,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
         Container(
           width: 60.w,
           decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(6.r)),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 4.w),

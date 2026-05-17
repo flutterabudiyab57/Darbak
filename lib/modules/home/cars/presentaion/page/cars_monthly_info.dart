@@ -142,10 +142,10 @@
 //                                 Container(
 //                                   height: 35.h,
 //                                   decoration: BoxDecoration(
-//                                     color: Color(0xffA70003).withOpacity(0.15),
+//                                     color: Color(0xffA70003).withValues(alpha: 0.15),
 //                                     borderRadius: BorderRadius.circular(10.sp),
 //                                     border: Border.all(
-//                                       color: Color(0xffA70003).withOpacity(0.5),
+//                                       color: Color(0xffA70003).withValues(alpha: 0.5),
 //                                       width: 1.w,
 //                                     ),
 //                                   ),
@@ -176,7 +176,7 @@
 //                                                 backgroundColor:
 //                                                     backgroundColor(context),
 //                                                 barrierColor: Colors.black
-//                                                     .withOpacity(0.5),
+//                                                     .withValues(alpha: 0.5),
 //                                                 constraints: const BoxConstraints(maxWidth: double.infinity,),
 //                                                 shape: RoundedRectangleBorder(
 //                                                   borderRadius:
@@ -482,7 +482,7 @@
 //                               ),
 //                               boxShadow: [
 //                                 BoxShadow(
-//                                   color: Colors.grey.withOpacity(0.2),
+//                                   color: Colors.grey.withValues(alpha: 0.2),
 //                                   blurRadius: 4.r,
 //                                   offset: Offset(0, 3),
 //                                 ),

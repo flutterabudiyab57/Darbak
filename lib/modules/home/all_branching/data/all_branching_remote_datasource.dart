@@ -27,8 +27,8 @@ class AllBranchRemoteDataSource {
       final dataBranch = json.decode(response.data);
       final Data branchModel = Data.fromMap(dataBranch);
       return branchModel;
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       throw '..Oops $error';
     }

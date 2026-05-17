@@ -241,7 +241,7 @@ class _TransactionsBottomSheetContentState
                           Icon(
                             Icons.receipt_long_outlined,
                             size: 64.sp,
-                            color: paragraphColor(context).withOpacity(0.5),
+                            color: paragraphColor(context).withValues(alpha: 0.5),
                           ),
                           SizedBox(height: 16.h),
                           Text(
@@ -291,7 +291,7 @@ class _TransactionsBottomSheetContentState
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
+                                    color: Colors.black.withValues(alpha: 0.05),
                                     blurRadius: 4,
                                     offset: const Offset(0, 2),
                                   ),
@@ -450,7 +450,7 @@ class _TransactionItem extends StatelessWidget {
                 height: 40.w,
                 decoration: ShapeDecoration(
                   color: _getTransactionColor(transaction.eventType)
-                      .withOpacity(0.15),
+                      .withValues(alpha: 0.15),
                   shape: RoundedRectangleBorder(
                     side: BorderSide(
                       width: 1.w,

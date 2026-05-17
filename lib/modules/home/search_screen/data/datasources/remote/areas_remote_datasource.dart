@@ -21,8 +21,8 @@ class AreasRemoteDatasource {
           ));
       final areasList = areasModelFromJson(response.data["data"] as List);
       return areasList;
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       throw '..Oops $error';
     }

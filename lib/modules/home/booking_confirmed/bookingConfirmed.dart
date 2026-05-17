@@ -53,7 +53,7 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
         shape: RoundedRectangleBorder(
           side: BorderSide(
             width: 1.5.w,
-            color: strokeMainColor(context).withOpacity(0.15),
+            color: strokeMainColor(context).withValues(alpha: 0.15),
           ),
           borderRadius: BorderRadius.circular(22.r),
         ),

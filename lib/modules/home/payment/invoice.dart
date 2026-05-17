@@ -28,7 +28,6 @@ import '../cars/data/models/cars_model.dart';
 import '../cars/presentaion/widget/car_tile.dart';
 import '../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../profile/page/widget/login_noAuth.dart';
-import '../search_screen/presentaion/widget/shimmer_list.dart';
 import 'blocs/invoice_cubit.dart';
 import 'data/models/credit_card_model.dart';
 import 'data/models/invoice_model.dart' hide Icon;
@@ -326,13 +325,7 @@ class _InvoiceUIState extends State<InvoiceUI> {
                             style: AppTypography.headingColor18(context),
                           ),
                           BlocConsumer<AdditionsCubit, AdditionsState>(
-                            listener: (context, state) {
-                              if (state is CheckOrderStateLoading) {
-                                Center(
-                                  child: ShimmerLoadingList(),
-                                );
-                              }
-                            },
+                            listener: (context, state) {},
                             builder: (context, state) {
                               return widget.isNotCompletedOrder == true
                                   ? GestureDetector(

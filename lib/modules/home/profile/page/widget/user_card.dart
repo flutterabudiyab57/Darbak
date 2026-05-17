@@ -73,7 +73,7 @@ class _CardUserState extends State<CardUser> {
                                       top: size.width * 0.006,
                                       bottom: size.width * 0.006),
                                   decoration: BoxDecoration(
-                                      color: Color(0xff135C89).withOpacity(0.85),
+                                      color: Color(0xff135C89).withValues(alpha: 0.85),
                                       borderRadius: BorderRadius.only(
                                           topLeft:
                                               Radius.circular(size.width * 0.016),
@@ -188,7 +188,7 @@ class _CardUserState extends State<CardUser> {
                     child: Container(
                       width: size.width * 0.2,
                       decoration: BoxDecoration(
-                          color: Color(0xffA2B0B6).withOpacity(0.17),
+                          color: Color(0xffA2B0B6).withValues(alpha: 0.17),
                           borderRadius: BorderRadius.circular(15)),
                       padding: EdgeInsets.all(8),
                       margin: EdgeInsets.only(right: size.width * 0.02),

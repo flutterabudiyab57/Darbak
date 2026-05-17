@@ -168,7 +168,7 @@ class _RegionTileState extends State<RegionTile> {
                       decoration: BoxDecoration(
                         color: Theme.of(context).brightness == Brightness.light
                             ? Colors.white
-                            : Color(0xffFDFDFD).withOpacity(0.1),
+                            : Color(0xffFDFDFD).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8.r),
                         border: Border.all(
                           color: Color(0xFF05658F),

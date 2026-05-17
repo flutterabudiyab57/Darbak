@@ -7,8 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/api_path.dart';
 import '../../../../core/constants/langCode.dart';
 import '../../../../core/helpers/SharedPreference/pereferences.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
-import '../../search_screen/presentaion/widget/shimmer_list.dart';
 
 class PointsTile extends StatefulWidget {
   final String orderId;
@@ -50,7 +50,7 @@ class _PointsTileState extends State<PointsTile> {
         _availablePoints = int.tryParse(_points!);
       });
     } catch (e) {
-      print(e is DioError ? e.response?.data : "Unexpected Error: $e");
+      print(e is DioException ? e.response?.data : "Unexpected Error: $e");
     }
   }
 
@@ -157,7 +157,10 @@ class _PointsTileState extends State<PointsTile> {
         BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
             if (state is ProfileLoading) {
-              return const Center(child: ShimmerLoadingList(itemCount: 5));
+              return Skeletonizer(
+                enabled: true,
+                child: _buildInputRow(context, locale),
+              );
             }
 
             if (state is ProfileSuccess || state is ProfileFailed) {

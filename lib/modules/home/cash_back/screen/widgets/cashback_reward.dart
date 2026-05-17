@@ -23,7 +23,7 @@ class CashbackReward extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
-        color: backgroundColor(context).withOpacity(0.1),
+        color: backgroundColor(context).withValues(alpha: 0.1),
         shape: RoundedRectangleBorder(
           side: BorderSide(
             width: 1.w,

@@ -15,6 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
 import '../../../../../core/helpers/SharedPreference/pereferences.dart';
 import '../../../../../core/helpers/helper_fun.dart';
+import '../../../../../core/helpers/interceptors/loading_indicator.dart';
 import 'package:darbak/modules/home/all_bookings/data/model/booking_model.dart';
 import '../../../../widgets/components/appbar.dart';
 import '../../../all_bookings/data/model/check_order_step_model.dart';
@@ -82,9 +83,7 @@ class _AdditionsScreenState extends State<AdditionsScreen>
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
-              return Center(
-                child:ShimmerLoadingList(),
-              );
+              return const LoadingIndicator();
             },
           );
         }

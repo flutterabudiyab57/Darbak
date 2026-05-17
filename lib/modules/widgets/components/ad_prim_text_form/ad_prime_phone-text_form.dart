@@ -88,8 +88,8 @@ class _ADPrimPhoneTextFormState extends State<ADPrimPhoneTextForm> {
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
                   color: widget.auth
-                      ? Colors.blueAccent.withOpacity(0.5)
-                      : Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                      ? Colors.blueAccent.withValues(alpha: 0.5)
+                      : Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                   width: 1.0)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -103,14 +103,14 @@ class _ADPrimPhoneTextFormState extends State<ADPrimPhoneTextForm> {
               borderSide: BorderSide(
                   color: widget.auth
                       ? Colors.white70
-                      : Theme.of(context).colorScheme.error.withOpacity(0.3),
+                      : Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                   width: 1.0)),
           focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
                   color: widget.auth
                       ? Colors.white70
-                      : Theme.of(context).colorScheme.error.withOpacity(0.3),
+                      : Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                   width: 1.0)),
           fillColor: widget.auth ? Colors.white10 : null,
           filled: true,
@@ -124,7 +124,7 @@ class _ADPrimPhoneTextFormState extends State<ADPrimPhoneTextForm> {
                 widget.pIcon,
                 color: widget.auth
                     ? Colors.grey[500]
-                    : Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                    : Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
               ),
           suffixIcon: widget.type == TextInputType.visiblePassword
               ? IconButton(
@@ -133,7 +133,7 @@ class _ADPrimPhoneTextFormState extends State<ADPrimPhoneTextForm> {
               isShow ? Icons.visibility : Icons.visibility_off,
               color: widget.auth
                   ? Colors.grey[400]
-                  : Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                  : Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
             ),
           )
               : null,

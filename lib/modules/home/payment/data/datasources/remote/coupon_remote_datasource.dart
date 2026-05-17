@@ -45,7 +45,7 @@ class CouponRemoteDatasource {
       final Response response = await _dio.post(
         deleteCouponPath,
         options: Options(
-          responseType: ResponseType.json, // âœ…
+          responseType: ResponseType.json,
           headers: {
             "Accept": "application/json",
             "content-type": "application/json",

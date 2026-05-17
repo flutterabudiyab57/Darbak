@@ -48,7 +48,6 @@ class BranchesService {
       var data = json.decode(response.body) as Map<String, dynamic>;
       List list = data['data'] as List;
       List<BranchModel> list2 = [];
-      print("list of Delivery Branches: $list ");
       for (var item in list) {
         list2.add(BranchModel.fromMap(item));
       }

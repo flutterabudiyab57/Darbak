@@ -144,8 +144,8 @@ class OrderAdditionsRemoteDatasource {
       final CheckOrderStepModel checkOrderStepModel = CheckOrderStepModel.fromMap(checkOrderSteps);
       log(response.toString());
       return checkOrderStepModel;
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       throw '..Oops  $error';
     }

@@ -54,10 +54,10 @@ class ApplyCashbackRemoteDataSource {
       print('Parsed response: $applyCashbackResponse');
 
       return applyCashbackResponse;
-    } on DioError catch (dioError) {
-      print('Dio error: ${dioError.response}');
-      print('Dio message: ${dioError.message}');
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      print('Dio error: ${DioException.response}');
+      print('Dio message: ${DioException.message}');
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       print('Unexpected error: $error');
       throw Exception('..Oops $error');

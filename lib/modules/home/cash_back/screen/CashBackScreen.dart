@@ -279,7 +279,7 @@ class CashbackScreen extends StatelessWidget {
               Icon(
                 Icons.receipt_long_outlined,
                 size: 64.sp,
-                color: paragraphColor(context).withOpacity(0.5),
+                color: paragraphColor(context).withValues(alpha: 0.5),
               ),
               SizedBox(height: 16.h),
               Text(

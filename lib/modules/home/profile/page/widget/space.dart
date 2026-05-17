@@ -8,7 +8,7 @@ class SpaceWidget extends StatelessWidget {
     return Container(
       height: 1.0,
       width: MediaQuery.of(context).size.width * 0.7,
-      //color: Color(0xff6e9ed3).withOpacity(0.5),
+      //color: Color(0xff6e9ed3).withValues(alpha: 0.5),
     );
   }
 }

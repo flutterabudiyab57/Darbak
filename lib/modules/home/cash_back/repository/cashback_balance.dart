@@ -43,10 +43,10 @@ class CashbackRemoteDataSource {
       print('Parsed balance: $balance');
 
       return balance;
-    } on DioError catch (dioError) {
-      print('Dio error: ${dioError.response}');
-      print('Dio message: ${dioError.message}');
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      print('Dio error: ${DioException.response}');
+      print('Dio message: ${DioException.message}');
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       print('Unexpected error: $error');
       throw Exception('..Oops $error');
@@ -95,10 +95,10 @@ class CashbackRemoteDataSource {
       final transactions = CashbackTransactions.fromMap(data);
 
       return transactions;
-    } on DioError catch (dioError) {
-      print('Transactions Dio error: ${dioError.response}');
-      print('Transactions Dio message: ${dioError.message}');
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      print('Transactions Dio error: ${DioException.response}');
+      print('Transactions Dio message: ${DioException.message}');
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       print('Transactions unexpected error: $error');
       throw Exception('..Oops $error');

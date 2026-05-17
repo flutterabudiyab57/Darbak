@@ -18,7 +18,6 @@ import '../../../../widgets/components/ad_gradient_btn.dart';
 import '../../../../widgets/strike_through_text.dart';
 import '../../../additions/presentaion/blocs/addition_cubit/additions_cubit.dart';
 import '../../../blocs/favourite_cubit/favourite_cubit.dart';
-import '../../../search_screen/presentaion/widget/shimmer_list.dart';
 import '../../data/models/cars_model.dart';
 
 class CarTile extends StatefulWidget {
@@ -86,11 +85,7 @@ class _CarTileState extends State<CarTile> {
     return BlocProvider<FavouriteCubit>(
       create: (_) => FavouriteCubit(sl(), sl()),
       child: BlocConsumer<AdditionsCubit, AdditionsState>(
-        listener: (context, state) {
-          if (state is AdditionsLoading) {
-            Center(child: ShimmerLoadingList());
-          }
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           return Bounce(
             onTap: () {

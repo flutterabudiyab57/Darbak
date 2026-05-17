@@ -120,7 +120,7 @@ class _MonthlyRentBodyState extends State<MonthlyRentBody> {
                       child: Container(
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? buttonPrimaryBgColor(context)
+                              ? iconDefaultColor(context)
                               : buttonSecondaryColor(context),
                           borderRadius: BorderRadius.circular(15.sp),
                         ),

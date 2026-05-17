@@ -79,25 +79,25 @@ class Failure implements Exception {
   @override
   String toString() => message;
 
-  Failure.fromDioError(DioError dioError) {
-    switch (dioError.type) {
-      case DioErrorType.cancel:
+  Failure.fromDioError(DioException DioException) {
+    switch (DioException.type) {
+      case DioExceptionType.cancel:
         message = "Request to API server was cancelled";
         break;
-      case DioErrorType.connectionTimeout:
+      case DioExceptionType.connectionTimeout:
         message = "Connection timeout with server";
         break;
-      case DioErrorType.receiveTimeout:
+      case DioExceptionType.receiveTimeout:
         message = "Receive timeout in connection with server";
         break;
-      case DioErrorType.sendTimeout:
+      case DioExceptionType.sendTimeout:
         message = "Send timeout in connection with server";
         break;
-      case DioErrorType.unknown:
+      case DioExceptionType.unknown:
         message = "Connection failed due to internet connection";
         break;
-      case DioErrorType.badResponse:
-        message = handleError(dioError)!;
+      case DioExceptionType.badResponse:
+        message = handleError(DioException)!;
         break;
       default:
         message = "Something went wrong";
@@ -105,7 +105,7 @@ class Failure implements Exception {
     }
   }
 
-  String? handleError(DioError dioError) {
+  String? handleError(DioException DioException) {
     final statusCodeMessages = {
       500: "Server Error",
       401: "Not Authenticated",
@@ -114,8 +114,8 @@ class Failure implements Exception {
       429: "Too many requests",
       403: "Your Request Is Not Allowed",
     };
-    return statusCodeMessages[dioError.response?.statusCode] ??
-        dioError.message;
+    return statusCodeMessages[DioException.response?.statusCode] ??
+        DioException.message;
   }
 }
 
@@ -133,8 +133,8 @@ Future<Response> safeApiCall(Future<Response> Function() apiCall) async {
 
   try {
     return await apiCall();
-  } on DioError catch (dioError) {
-    throw Failure.fromDioError(dioError);
+  } on DioException catch (DioException) {
+    throw Failure.fromDioError(DioException);
   } catch (e) {
     throw AppException("Unexpected error", e.toString());
   }

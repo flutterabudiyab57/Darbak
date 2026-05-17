@@ -41,8 +41,8 @@ class DateCheckerRemote {
       );
       return response.data['msg'].toString();
 
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       print('Error check data remote: $error');
       throw '..Oops $error';

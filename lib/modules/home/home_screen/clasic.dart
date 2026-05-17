@@ -5,11 +5,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
+import 'package:darbak/service_locator.dart';
+
 import '../../../core/constants/assets/app_colors.dart';
 import '../../../core/helpers/enums.dart';
 import '../../../core/helpers/helper_fun.dart';
 import '../../../language/locale.dart';
 import '../../widgets/components/appbar.dart';
+import '../all_branching/bloc/all_branching_cubit.dart';
 import '../booking_packages/cars_list_package.dart';
 import '../booking_packages/widgets/daily_rent_body.dart';
 import '../cars/presentaion/bloc/cubit/cars_cubit.dart';
@@ -20,6 +23,14 @@ import '../search_screen/data/models/filter_model.dart';
 
 class Clasic extends StatefulWidget {
   const Clasic({super.key});
+
+  static Widget entry() => MultiBlocProvider(
+        providers: [
+          BlocProvider<AllBranchCubit>(create: (_) => sl<AllBranchCubit>()),
+          BlocProvider<CarsCubit>(create: (_) => sl<CarsCubit>()),
+        ],
+        child: const Clasic(),
+      );
 
   @override
   State<Clasic> createState() => _ClasicState();

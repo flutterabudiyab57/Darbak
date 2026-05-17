@@ -24,18 +24,19 @@ class BalanceCardWidget extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
       decoration: ShapeDecoration(
-        color: strokeMainColor(context),
+          gradient: gradient1(context),
+        // color: strokeMainColor(context),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24.r),
         ),
-        shadows: [
-          BoxShadow(
-            color: const Color(0x3300BC7D),
-            blurRadius: 6,
-            offset: const Offset(0, 12),
-            spreadRadius: -4,
-          )
-        ],
+        // shadows: [
+        //   BoxShadow(
+        //     color: const Color(0x3300BC7D),
+        //     blurRadius: 6,
+        //     offset: const Offset(0, 12),
+        //     spreadRadius: -4,
+        //   )
+        // ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -52,7 +53,7 @@ class BalanceCardWidget extends StatelessWidget {
               SizedBox(width: 8.w),
               Text(
                 locale.availableBalance,
-                style: AppTypography.buttonText20(context),
+                style: AppTypography.buttonText16(context),
               ),
             ],
           ),
@@ -67,7 +68,7 @@ class BalanceCardWidget extends StatelessWidget {
               SizedBox(width: 10.w),
               SvgPicture.asset(
                 Assets.icon_riyal,
-                height: 28.h,
+                height: 27.h,
                 width: 30.w,
                 color: buttonTextColor(context),
               ),
@@ -80,11 +81,11 @@ class BalanceCardWidget extends StatelessWidget {
               vertical: 9.h,
             ),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Icon(
                   Icons.info_outline,

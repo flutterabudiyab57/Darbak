@@ -21,8 +21,8 @@ class CategoryRemotDataSource {
       CategoryModelData categoryModelData = CategoryModelData.fromJson(list);
 
       return categoryModelData;
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       throw '..Oops $error';
     }

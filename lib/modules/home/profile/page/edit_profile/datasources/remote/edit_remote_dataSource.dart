@@ -22,7 +22,7 @@ class EditProfileDataSource {
             image,
           ),
         );
-        log("âœ… Avatar image added");
+        log("… Avatar image added");
       }
 
       if (licenceImage != "") {
@@ -33,7 +33,7 @@ class EditProfileDataSource {
             licenceImage,
           ),
         );
-        log("âœ… Licence image added");
+        log("… Licence image added");
       }
 
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -59,7 +59,7 @@ class EditProfileDataSource {
       String responseBody = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
-        log("âœ… Profile updated successfully");
+        log("… Profile updated successfully");
       } else {
         log("an Error: Status code ${response.statusCode}");
         log("an Error body: $responseBody");

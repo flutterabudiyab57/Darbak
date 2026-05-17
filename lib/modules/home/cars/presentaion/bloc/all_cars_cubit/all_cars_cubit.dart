@@ -71,7 +71,7 @@ class AllCarsCubit extends Cubit<AllCarsState> {
         }
       } catch (e) {
         filteredData = [];
-        if (e is DioError) {
+        if (e is DioException) {
           print('Dio error: ${e.response?.data}');
           print('Error details: ${e.message}');
         } else {

@@ -244,7 +244,7 @@ class SearchCubit extends Cubit<SearchState> {
         print("SearchInvalid: $response");
       }
     } catch (error) {
-      if (error is DioError) {
+      if (error is DioException) {
         print("Dio error: ${error.response?.data ?? error.message}");
         print("Dio error status: ${error.response?.statusCode}");
         print("Dio error headers: ${error.response?.headers}");
@@ -295,7 +295,7 @@ class SearchCubit extends Cubit<SearchState> {
       }
     } catch (error) {
       // Handling and logging errors
-      if (error is DioError) {
+      if (error is DioException) {
         print("Dio error: ${error.response?.data ?? error.message}");
       } else {
         print("Validation error: $error");

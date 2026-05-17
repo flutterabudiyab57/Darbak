@@ -149,7 +149,6 @@ class _SearchState extends State<SearchScreen>
           points = fetchedPoints?.toString() ?? '0';
         });
       }
-      print("Full Points response data: ${response.data}");
       print("Points fetching Successfully: $points");
     } catch (e) {
       print("Points fetching Error: $e");
@@ -436,9 +435,9 @@ class _SearchState extends State<SearchScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Color(0xff0A708D).withOpacity(.5),
-            Color(0xFF2BC181).withOpacity(.125),
-            Color(0xff0A708D).withOpacity(.5),
+            Color(0xff0A708D).withValues(alpha: .5),
+            Color(0xFF2BC181).withValues(alpha: .125),
+            Color(0xff0A708D).withValues(alpha: .5),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -476,7 +475,7 @@ class _SearchState extends State<SearchScreen>
                             .clearAllDataSearched();
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => Clasic()),
+                          MaterialPageRoute(builder: (_) => Clasic.entry()),
                         );
                       },
                       Icon(

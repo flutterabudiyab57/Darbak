@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 
 import 'core/helpers/SharedPreference/pereferences.dart';
 import 'core/helpers/helper/date_helper.dart';
+import 'core/helpers/interceptors/app_interceptor.dart';
 import 'modules/auth/forgotPassword/data/datasources/forget_password_data_sourse.dart';
 import 'modules/auth/forgotPassword/presentaion/bloc/forget_password_cubit.dart';
 import 'modules/auth/register/presentaion/bloc/register_cubit.dart';
@@ -139,6 +140,7 @@ Future<void> setup() async {
   sl.registerLazySingleton(() => SharedPreferencesHelper());
   sl.registerLazySingleton(() => DateHandler());
   sl.registerLazySingleton(() => Dio());
+  sl<Dio>().interceptors.add(AppInterceptors(sl<SharedPreferencesHelper>()));
 
   print('✅ Service Locator setup completed with caching system');
 }

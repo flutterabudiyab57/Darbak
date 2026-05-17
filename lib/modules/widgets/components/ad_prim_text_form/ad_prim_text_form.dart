@@ -189,8 +189,8 @@ class _ADPrimTextFormState extends State<ADPrimTextForm> {
               borderRadius: BorderRadius.circular(15.r),
               borderSide: BorderSide(
                 color: widget.auth
-                    ? (isDark ? Colors.white70 : Colors.red.withOpacity(0.4))
-                    : Theme.of(context).colorScheme.error.withOpacity(0.3),
+                    ? (isDark ? Colors.white70 : Colors.red.withValues(alpha: 0.4))
+                    : Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                 width: 1.w,
               ),
             ),
@@ -198,8 +198,8 @@ class _ADPrimTextFormState extends State<ADPrimTextForm> {
               borderRadius: BorderRadius.circular(15.r),
               borderSide: BorderSide(
                 color: widget.auth
-                    ? (isDark ? Colors.white70 : Colors.red.withOpacity(0.4))
-                    : Theme.of(context).colorScheme.error.withOpacity(0.3),
+                    ? (isDark ? Colors.white70 : Colors.red.withValues(alpha: 0.4))
+                    : Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                 width: 1.w,
               ),
             ),

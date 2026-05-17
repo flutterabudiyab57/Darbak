@@ -50,21 +50,21 @@ class SignInRemoteDataSourceImpl extends SignInRemoteDataSource {
       }
 
       return decodedData;
-    } on DioError catch (dioError) {
-      print("❌ DioError: ${dioError.response?.statusCode}");
-      print("Response data: ${dioError.response?.data}");
+    } on DioException catch (DioException) {
+      print("❌ DioException: ${DioException.response?.statusCode}");
+      print("Response data: ${DioException.response?.data}");
 
-      if (dioError.response?.statusCode == 403) {
+      if (DioException.response?.statusCode == 403) {
         try {
-          final data = json.decode(dioError.response?.data ?? '{}');
+          final data = json.decode(DioException.response?.data ?? '{}');
           if (data['requires_verification'] == true) {
-            print("⚠️ DioError: requires verification detected");
+            print("⚠️ DioException: requires verification detected");
             return data; // نرجع البيانات ليتم التعامل معها بالـ Bloc
           }
         } catch (_) {}
       }
 
-      throw Failure.fromDioError(dioError);
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       print("❌ Unknown error: $error");
       throw '😢😢😢😢..Oops $error';

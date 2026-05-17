@@ -11,7 +11,7 @@ import '../../../../../../../core/constants/assets/assets.dart';
 import '../../../../../../../language/locale.dart';
 import '../../../../../../../shared/commponents.dart';
 import '../../../../../../widgets/components/ad_gradient_btn.dart';
-import '../../../../../search_screen/presentaion/widget/shimmer_list.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../bloc/allbooking_cubit.dart';
 import '../../../bloc/allbooking_state.dart';
 import '../../bookDetailes.dart';
@@ -21,6 +21,117 @@ class PreviousOrders extends StatefulWidget {
 
   @override
   State<PreviousOrders> createState() => _PreviousOrdersState();
+}
+
+class _PreviousBookingSkeleton extends StatelessWidget {
+  const _PreviousBookingSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer.zone(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        child: ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: Container(
+                width: double.infinity,
+                decoration: ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      width: 1.5.w,
+                      color: Colors.grey.shade300,
+                    ),
+                    borderRadius: BorderRadius.circular(15.r),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(6.w),
+                      child: Bone(
+                        height: 126.h,
+                        width: double.infinity,
+                        borderRadius: BorderRadius.all(Radius.circular(8.r)),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 14.w),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Bone(
+                              height: 14.sp,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.r)),
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          Bone(
+                            height: 24.h,
+                            width: 60.w,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(5.r)),
+                          ),
+                          SizedBox(width: 10.w),
+                          Bone(
+                            height: 24.h,
+                            width: 60.w,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(5.r)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 14.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Bone(
+                            height: 14.sp,
+                            width: 110.w,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(4.r)),
+                          ),
+                          Bone(
+                            height: 14.sp,
+                            width: 90.w,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(4.r)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 6.h),
+                    Bone(
+                      height: 12.sp,
+                      width: 180.w,
+                      borderRadius: BorderRadius.all(Radius.circular(4.r)),
+                    ),
+                    SizedBox(height: 10.h),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 14.w),
+                      child: Bone(
+                        height: 44.h,
+                        width: double.infinity,
+                        borderRadius: BorderRadius.all(Radius.circular(8.r)),
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
 }
 
 class _PreviousOrdersState extends State<PreviousOrders> {
@@ -88,10 +199,7 @@ class _PreviousOrdersState extends State<PreviousOrders> {
       },
       builder: (context, state) {
         if (state is AllBookingLoading) {
-          return Center(
-            child: ShimmerLoadingList(height:258,
-            ),
-          );
+          return const _PreviousBookingSkeleton();
         } else if (BlocProvider.of<AllBookingCubit>(context).booking != null &&
             BlocProvider.of<AllBookingCubit>(context).filteredBookings !=
                 null &&

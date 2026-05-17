@@ -217,7 +217,7 @@ class _CustomDateTimePickerSheetState
                     color: isSelected
                         ? mainTypographyColor(context)
                         : isToday
-                        ? mainTypographyColor(context).withOpacity(0.1)
+                        ? mainTypographyColor(context).withValues(alpha: 0.1)
                         : Colors.transparent,
                     shape: BoxShape.circle,
                   ),
@@ -313,7 +313,7 @@ class _CustomDateTimePickerSheetState
                             end: Alignment.bottomCenter,
                             colors: [
                               backgroundColor(context),
-                              backgroundColor(context).withOpacity(0),
+                              backgroundColor(context).withValues(alpha: 0),
                             ],
                           ),
                         ),
@@ -328,7 +328,7 @@ class _CustomDateTimePickerSheetState
                             end: Alignment.topCenter,
                             colors: [
                               backgroundColor(context),
-                              backgroundColor(context).withOpacity(0),
+                              backgroundColor(context).withValues(alpha: 0),
                             ],
                           ),
                         ),

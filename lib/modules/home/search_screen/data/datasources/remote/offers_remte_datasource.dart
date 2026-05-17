@@ -20,13 +20,8 @@ class OffersRemotDataSource {
         },
       );
 
-      print('STATUS CODE: ${response.statusCode}');
-      print('RAW RESPONSE: ${response.body}');
-
       if (response.statusCode == 200) {
         final decoded = json.decode(response.body);
-
-        print('DECODED RESPONSE: $decoded');
 
         if (decoded is Map<String, dynamic> && decoded['data'] is List) {
           final List offersList = decoded['data'];
@@ -34,8 +29,6 @@ class OffersRemotDataSource {
 
           final result =
           offersList.map((e) => OffersModel.fromJson(e)).toList();
-
-          print('PARSED MODELS: $result');
 
           return result;
         } else {

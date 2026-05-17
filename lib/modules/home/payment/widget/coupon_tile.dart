@@ -130,7 +130,7 @@ class _CouponTileState extends State<CouponTile> {
                           textStyle: AppTypography.buttonRed14(context),
                           iconColor: buttonRedColor(context),
                           border: Border.all(
-                            color: buttonRedColor(context).withOpacity(.5),
+                            color: buttonRedColor(context).withValues(alpha: .5),
                             width: 1.5.w,
                           ),
                         ),

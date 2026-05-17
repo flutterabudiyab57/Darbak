@@ -188,7 +188,7 @@ class _LeftBadge extends StatelessWidget {
     return Container(
       width: 100.w,
       decoration: BoxDecoration(
-        color: buttonPrimaryBG_Light.withOpacity(.1),
+        color: buttonPrimaryBG_Light.withValues(alpha: .1),
 
       ),
       child:  Container(

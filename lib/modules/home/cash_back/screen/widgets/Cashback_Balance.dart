@@ -322,7 +322,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                             padding: EdgeInsets.symmetric(
                                 horizontal: 20.w, vertical: 15.hs(context)),
                             decoration: ShapeDecoration(
-                              color: buttonGreenColor(context).withOpacity(.15),
+                              color: buttonGreenColor(context).withValues(alpha: .15),
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(
                                   width: 1.5.w,
@@ -435,12 +435,12 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                                               vertical: 10.hs(context)),
                                           decoration: BoxDecoration(
                                             color: buttonGreenColor(context)
-                                                .withOpacity(.10),
+                                                .withValues(alpha: .10),
                                             borderRadius:
                                                 BorderRadius.circular(10.r),
                                             border: Border.all(
                                               color: buttonGreenColor(context)
-                                                  .withOpacity(.3),
+                                                  .withValues(alpha: .3),
                                               width: 1.w,
                                             ),
                                           ),
@@ -518,7 +518,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                                               vertical: 10.hs(context)),
                                           decoration: BoxDecoration(
                                             color: buttonRedColor(context)
-                                                .withOpacity(.1),
+                                                .withValues(alpha: .1),
                                             borderRadius:
                                                 BorderRadius.circular(8.r),
                                             border: Border.all(

@@ -130,10 +130,10 @@ class _CarsInformationState extends State<CarsInformation> {
                               // Container(
                               //   height: 35.h,
                               //   decoration: BoxDecoration(
-                              //       color: Color(0xffA70003).withOpacity(0.15),
+                              //       color: Color(0xffA70003).withValues(alpha: 0.15),
                               //       borderRadius: BorderRadius.circular(10.sp),
                               //     border: Border.all(
-                              //       color: Color(0xffA70003).withOpacity(0.5),
+                              //       color: Color(0xffA70003).withValues(alpha: 0.5),
                               //       width:1.w,
                               //     ),                        ),
                               //   child: Padding(
@@ -161,7 +161,7 @@ class _CarsInformationState extends State<CarsInformation> {
                               //                 isScrollControlled: true,
                               //                 backgroundColor: Colors.white,
                               //                 constraints: const BoxConstraints(maxWidth: double.infinity,),
-                              //                 barrierColor: Colors.black.withOpacity(0.5),
+                              //                 barrierColor: Colors.black.withValues(alpha: 0.5),
                               //                 shape: RoundedRectangleBorder(
                               //                   borderRadius: BorderRadius.vertical(
                               //                     top: Radius.circular(20.r),
@@ -434,7 +434,7 @@ class _CarsInformationState extends State<CarsInformation> {
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
+                                  color: Colors.grey.withValues(alpha: 0.2),
                                   blurRadius: 4.r,
                                   offset: Offset(0, 3),
                                 ),

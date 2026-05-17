@@ -18,8 +18,8 @@ class ManufactoriesRemoteDataSource {
       );
       final manuData = manufactoriesFromMap(response.data);
       return manuData;
-    } on DioError catch (dioError) {
-      throw Failure.fromDioError(dioError);
+    } on DioException catch (DioException) {
+      throw Failure.fromDioError(DioException);
     } catch (error) {
       throw '..Oops $error';
     }

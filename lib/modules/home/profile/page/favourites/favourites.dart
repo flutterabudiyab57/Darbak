@@ -109,7 +109,7 @@ class VerticalDividerWidget extends StatelessWidget {
     return Container(
       height: 14.h,
       width: 1,
-      color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.3),
+      color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.3),
       margin: EdgeInsets.symmetric(horizontal: 6.w),
     );
   }

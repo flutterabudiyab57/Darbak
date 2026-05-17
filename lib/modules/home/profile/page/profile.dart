@@ -24,7 +24,7 @@ import '../../cash_back/screen/CashBackScreen.dart';
 import '../../complaints/screen/complaint_screen.dart';
 import '../../complaints/cubit/complaint_cubit.dart';
 import '../../complaints/data/complaint_repository.dart';
-import '../../search_screen/presentaion/widget/shimmer_list.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../selectLanguage/selectLanguage.dart';
 import '../blocs/profile_cubit/profile_cubit.dart';
 import 'edit_profile/presentaion/page/edit_profile.dart';
@@ -57,13 +57,40 @@ class MyProfile extends StatelessWidget {
       body: BlocBuilder<AuthStatusCubit, bool?>(
         builder: (context, isAuthenticated) {
           if (isAuthenticated == null) {
-            return Center(child: ShimmerLoadingList());
+            return const _ProfileSkeleton();
           }
           if (!isAuthenticated) {
             return LoginNoAuth();
           }
           return _ProfileContent();
         },
+      ),
+    );
+  }
+}
+
+class _ProfileSkeleton extends StatelessWidget {
+  const _ProfileSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer.zone(
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            SizedBox(height: 12.h),
+            for (int i = 0; i < 8; i++)
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
+                child: Bone(
+                  height: 55.h,
+                  width: double.infinity,
+                  borderRadius: BorderRadius.all(Radius.circular(16.r)),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

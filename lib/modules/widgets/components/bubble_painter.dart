@@ -12,7 +12,7 @@ class BubbleEffect extends CustomPainter {
     final centerY = size.height;
     final radius = min(centerX, centerY)-30;
 
-    final Paint circlePaint = Paint()..color = Theme.of(context).colorScheme.secondary.withOpacity(0.2);
+    final Paint circlePaint = Paint()..color = Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2);
     // left circle
     const Offset leftCircleOffSet = Offset(-50.0, 70.0);
     canvas.drawCircle(leftCircleOffSet, radius, circlePaint);

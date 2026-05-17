@@ -123,7 +123,7 @@ class _BranchSelectionBottomSheetState
                     padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? mainTypographyColor(context).withOpacity(0.1)
+                          ? mainTypographyColor(context).withValues(alpha: 0.1)
                           : backgroundColor(context),
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(

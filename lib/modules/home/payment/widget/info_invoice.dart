@@ -163,7 +163,7 @@ class _InfoInvoiceWidgetState extends State<InfoInvoiceWidget> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
           decoration: BoxDecoration(
-            color: mainTypographyColor(context).withOpacity(0.15),
+            color: mainTypographyColor(context).withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(50.r),
             border: Border.all(color: mainTypographyColor(context)),
           ),
@@ -207,7 +207,7 @@ class _InfoInvoiceWidgetState extends State<InfoInvoiceWidget> {
                 width: 28.w,
                 height: 28.w,
                 decoration: BoxDecoration(
-                  color: bgColor.withOpacity(.12),
+                  color: bgColor.withValues(alpha: .12),
                   borderRadius: BorderRadius.circular(24.r),
                   border: Border.all(color: borderColor),
                 ),

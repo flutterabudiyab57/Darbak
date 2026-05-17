@@ -61,7 +61,7 @@ class _TextFormFieldBlurState extends State<TextFormFieldBlur> {
         child: Container(
           height: 40,
           decoration: BoxDecoration(
-              color: Colors.white12.withOpacity(0.2),
+              color: Colors.white12.withValues(alpha: 0.2),
               borderRadius: widget.borderRadius == null
                   ? BorderRadius.circular(12)
                   : widget.borderRadius),
