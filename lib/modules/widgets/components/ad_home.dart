@@ -1,9 +1,8 @@
 ﻿import 'package:darbak/language/locale.dart';
-import 'package:darbak/modules/shell/app_shell.dart';
-import 'package:darbak/shared/commponents.dart';
 import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/assets/app_colors.dart';
 
@@ -21,8 +20,7 @@ class AdHomeButton extends StatelessWidget {
     return Padding(
       padding:   EdgeInsets.all(8.sp),
       child:  Bounce(
-          onTap: isBackHandled ? onPressed : () =>
-              navigateAndFinish(context, const AppShell()),
+          onTap: isBackHandled ? onPressed : () => context.go('/shell?tab=0'),
           child: Container(
             padding: EdgeInsets.only(
                 left: locale!.isDirectionRTL(context) ? 8.w : 8.w,

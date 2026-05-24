@@ -58,7 +58,7 @@ class _ClasicState extends State<Clasic> {
                   if (state is SearchInvalid) {
                     HelperFunctions.dialog(
                       context: context,
-                      title: locale!.dateInvalid,
+                      title: locale.dateInvalid,
                       body: state.props.first.toString(),
                     );
                   } else if (state is SearchValidate) {

@@ -38,7 +38,7 @@ class _NewOffersState extends State<NewOffers> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        locale.ourOffers!,
+                        locale.ourOffers,
                         style: GoogleFonts.almarai(
                           color: Colors.white,
                           fontSize: 16.sp,

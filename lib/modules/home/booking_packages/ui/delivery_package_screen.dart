@@ -117,7 +117,7 @@ class _DeliveryPackageScreenState extends State<DeliveryPackageScreen> {
                       "No matching branch found for the selected receive branch: ${context.read<SearchCubit>().selectedReceiveBranch}");
                   HelperFunctions.dialog(
                     context: context,
-                    title: locale!.branchError,
+                    title: locale.branchError,
                     body: locale.invalidBranchSelected,
                   );
                 }

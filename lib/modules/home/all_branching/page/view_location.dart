@@ -21,7 +21,6 @@ class ViewLocation extends StatefulWidget {
 }
 
 class _ViewLocationState extends State<ViewLocation> {
-  late GoogleMapController _mapController;
   late LatLng _branchLocation;
   Set<Marker> _markers = {};
 
@@ -67,9 +66,7 @@ class _ViewLocationState extends State<ViewLocation> {
         myLocationButtonEnabled: true,
         zoomControlsEnabled: true,
         mapToolbarEnabled: true,
-        onMapCreated: (GoogleMapController controller) {
-          _mapController = controller;
-        },
+        onMapCreated: (GoogleMapController controller) {},
       ),
     );
   }

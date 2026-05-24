@@ -1,12 +1,11 @@
 import 'dart:ui';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:country_picker/country_picker.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
-import '../../../../../core/constants/langCode.dart';
 import '../../../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../../../core/helpers/validation/form_validator.dart';
 import '../../../../../core/style/style.dart';
@@ -14,7 +13,6 @@ import '../../../../../language/locale.dart';
 import '../../../../../service_locator.dart';
 import '../../../../home/all_bookings/presentaion/bloc/allbooking_cubit.dart';
 import '../../../../home/profile/blocs/profile_cubit/profile_cubit.dart';
-import '../../../../shell/app_shell.dart';
 import '../../../../widgets/components/ad_gradient_btn.dart';
 import '../../../../widgets/components/ad_prim_text_form/DynamicPhoneField_WithCountry.dart';
 import '../../../../widgets/components/ad_prim_text_form/ad_prim_text_form.dart';
@@ -174,12 +172,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       Navigator.of(context).pop(true);
                     });
                   } else {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (_) => const AppShell(
-                                  skipLoginCheckInSearch: true,
-                                )),
-                            (route) => false);
+                    context.go('/shell?tab=0&skipLogin=true');
                   }
                 }
               }
@@ -331,12 +324,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (_) => const AppShell(
-                                                skipLoginCheckInSearch: true,
-                                              )),
-                                          (_) => false);
+                                  context.go('/shell?tab=0&skipLogin=true');
                                 },
                                 child: ADGradientButton(
                                   locale.continueAsGuest!,
@@ -410,7 +398,6 @@ class _SignInScreenState extends State<SignInScreen> {
       BlocProvider.of<SignInBloc>(context).add(SignIn(
         email: loginValue,
         password: controllerPassword.text,
-        device_token: deviceToken.toString(),
       ));
     }
   }

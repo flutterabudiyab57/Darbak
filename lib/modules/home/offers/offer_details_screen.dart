@@ -31,15 +31,10 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
   Future<void> _loadOfferDetails() async {
     try {
       final offerData = await _offerService.fetchOfferDetails(widget.offerId);
-      if (offerData is OfferModel) {
-        setState(() {
-          offer = offerData;
-          errorMessage = null;
-        });
-      } else {
-        // Handle unexpected data type
-        throw Exception('Unexpected data format');
-      }
+      setState(() {
+        offer = offerData;
+        errorMessage = null;
+      });
     } catch (error) {
       print("Failed to load offer details: $error");
       setState(() {

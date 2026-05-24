@@ -225,7 +225,7 @@ class _InvoiceUIState extends State<InvoiceUI> {
           ),
         ),
         appBar: CustomAppBar(
-          title: locale!.invoice.toString(),
+          title: locale.invoice.toString(),
           showBackButton: true,
           // showThemeToggle: true,
         ),

@@ -53,9 +53,7 @@ class _DailyRentBodyState extends State<DailyRentBody> {
 
         print("Received: " + receiveDate.toString());
         print("Derive: " + driveDate.toString());
-        if (receiveDate != null && driveDate != null) {
-          context.read<SearchCubit>().updateDates(receiveDate, driveDate);
-        }
+        context.read<SearchCubit>().updateDates(receiveDate, driveDate);
         final differenceInDays = context.read<SearchCubit>().differenceInDays;
 
         return Center(

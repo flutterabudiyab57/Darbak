@@ -16,7 +16,7 @@ import '../../../../widgets/components/showResponsive_Flushbar.dart';
 import '../../../payment/blocs/invoice_cubit.dart';
 import '../../bloc/cashback__cubit.dart';
 
-class DaraksonBalanceWidget extends StatefulWidget {
+class DarbakBalanceWidget extends StatefulWidget {
   final double availableBalance;
   final double pendingCredit;
   final bool isEnabled;
@@ -24,7 +24,7 @@ class DaraksonBalanceWidget extends StatefulWidget {
   final VoidCallback? onTap;
   final String orderId;
 
-  const DaraksonBalanceWidget({
+  const DarbakBalanceWidget({
     Key? key,
     required this.availableBalance,
     this.pendingCredit = 0,
@@ -35,10 +35,10 @@ class DaraksonBalanceWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<DaraksonBalanceWidget> createState() => _DaraksonBalanceWidgetState();
+  State<DarbakBalanceWidget> createState() => _DarbakBalanceWidgetState();
 }
 
-class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
+class _DarbakBalanceWidgetState extends State<DarbakBalanceWidget>
     with SingleTickerProviderStateMixin {
   late bool _isToggled;
   final TextEditingController controller = TextEditingController();
@@ -249,7 +249,7 @@ class _DaraksonBalanceWidgetState extends State<DaraksonBalanceWidget>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          locale.darksonBalance,
+                          locale.darbakBalance,
                           style: AppTypography.headingColor16(context),
                         ),
                         Row(

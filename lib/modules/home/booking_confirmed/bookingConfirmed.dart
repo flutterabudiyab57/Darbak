@@ -1,10 +1,10 @@
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/all_bookings/presentaion/bloc/allbooking_cubit.dart';
 import 'package:darbak/modules/home/blocs/booking_cubit/booking_cubit.dart';
-import 'package:darbak/modules/shell/app_shell.dart';
 import 'package:darbak/modules/widgets/components/ad_gradient_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darbak/core/style/style.dart';
 import 'package:darbak/core/constants/assets/app_colors.dart';
@@ -108,11 +108,7 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
                   await BlocProvider.of<AllBookingCubit>(context)
                       .getAllBooking(state: 'running');
 
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                        builder: (context) => const AppShell(initialTab: 2)),
-                        (Route<dynamic> route) => false,
-                  );
+                  context.go('/shell?tab=2');
                 },
                 child: ADGradientButton(
                   locale.goToBookings,
@@ -126,11 +122,7 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
                   await BlocProvider.of<AllBookingCubit>(context)
                       .getAllBooking(state: 'running');
 
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                        builder: (context) => const AppShell(initialTab: 0)),
-                    (Route<dynamic> route) => false,
-                  );
+                  context.go('/shell?tab=0');
                 },
                 child: ADGradientButton(
                   locale.goToHome,

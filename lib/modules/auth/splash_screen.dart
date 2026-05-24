@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/constants/assets/app_colors.dart';
 import '../../core/helpers/SharedPreference/pereferences.dart';
 import '../home/profile/blocs/profile_cubit/profile_cubit.dart';
-import '../home/selectLanguage/selectLanguage.dart';
-import '../compose_ui.dart';
 
 class SplashScreenOld extends StatefulWidget {
   @override
@@ -36,22 +35,10 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
 
     bool isLanguageSelected = isLanguageSelectedStr == "true";
 
-    Widget startWidget;
-
-    if (!isLanguageSelected) {
-      startWidget = SelectLanguage(true);
-    } else {
-      startWidget = ComposeUi();
-    }
-
     await Future.delayed(const Duration(seconds: 4));
 
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => startWidget),
-      );
-    }
+    if (!mounted) return;
+    context.go(isLanguageSelected ? '/shell?tab=0' : '/language');
   }
 
   Widget _buildScreen({required bool gradient, required Key key}) {

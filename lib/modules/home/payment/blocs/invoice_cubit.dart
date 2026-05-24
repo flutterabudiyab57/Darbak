@@ -30,7 +30,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
     try {
 
       final additionsCubit = BlocProvider.of<AdditionsCubit>(context);
-      final additions = additionsCubit.additions ?? [];
+      final additions = additionsCubit.additions;
 
       final paymentType =
           BlocProvider.of<BookingCubit>(context).selectedPaymentMethods?.wire ?? '';

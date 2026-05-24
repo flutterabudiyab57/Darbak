@@ -44,23 +44,6 @@ class BookDetails extends StatelessWidget  {
     final size = MediaQuery.of(context).size;
     var locale = AppLocalizations.of(context)!;
 
-    String getPaymentImage(String paymentType) {
-      switch (paymentType.toLowerCase()) {
-        case 'madfou':
-          return 'assets/icons/madfu_ar_logo.svg';
-        case 'visa':
-          return 'assets/icons/visa.svg';
-        case 'cash':
-          return 'assets/icons/riyal_cash.svg';
-        case 'points':
-          return 'assets/icons/points_pay.svg';
-        case 'tamara':
-          return 'assets/icons/riyal_cash.svg';
-        default:
-          return 'assets/icons/riyal_cash.svg';
-      }
-    }
-
     return BlocConsumer<AllBookingCubit, AllBookingState>(
       listener: (context, state) {
         if (state is CancelError) {

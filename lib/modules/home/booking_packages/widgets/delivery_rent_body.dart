@@ -381,9 +381,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
         final receiveDate = searchCubit.receiveDateValue;
         final driveDate = searchCubit.driveDateValue;
 
-        if (receiveDate != null && driveDate != null) {
-          searchCubit.updateDates(receiveDate, driveDate);
-        }
+        searchCubit.updateDates(receiveDate, driveDate);
         final differenceInDays = searchCubit.differenceInDays;
 
         if (_savedPickupAddress != null && pickupController.text.isEmpty) {

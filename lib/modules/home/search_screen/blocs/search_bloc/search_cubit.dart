@@ -212,9 +212,7 @@ class SearchCubit extends Cubit<SearchState> {
       }
 
 
-      if (selectedReceiveModel == null ||
-          receiveDateValue == null ||
-          driveDateValue == null) {
+      if (selectedReceiveModel == null) {
         emit(SearchInvalid(
             "Please select both a receiving and delivery branch and date."));
         print("Validation failed: Missing receive/delivery data.");
@@ -261,13 +259,6 @@ class SearchCubit extends Cubit<SearchState> {
       final DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
       String formatDateTime(DateTime date) {
         return dateFormat.format(date);
-      }
-
-      // Validation for missing inputs
-      if (selectedReceiveModel == null || receiveDateValue == null || driveDateValue == null) {
-        emit(SearchInvalid("Please select both a receiving and delivery branch and date."));
-        print("Validation failed: Missing receive/delivery data.");
-        return;
       }
 
       String receivingId = selectedDriveModel!.id.toString();

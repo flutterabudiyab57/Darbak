@@ -96,12 +96,12 @@ class _ServicesState extends State<Services> {
             onTap: () async {
               final messages = {
                 "Shield": {
-                  "ar": "درع دراكسون:\n"
+                  "ar": "درع دربك:\n"
                       "تأمين شامل بدون دفع قسط التحمل.\n"
                       "دفع رسوم إضافية عن كل يوم.\n"
                       "يشمل تغطية الأضرار: الإطارات، الزجاج، الواجهة الأمامية (السافي).\n"
                       "تطبق الشروط والأحكام.",
-                  "en": "Darakson Shield Insurance:\n"
+                  "en": "Darbak Shield Insurance:\n"
                       "Full coverage with no deductible.\n"
                       "Extra daily charges apply.\n"
                       "Covers damages: tires, glass, and front body (safi).\n"

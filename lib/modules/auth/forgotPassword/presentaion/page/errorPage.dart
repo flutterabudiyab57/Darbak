@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../../language/locale.dart';
 import '../../../../../shared/commponents.dart';
 import '../../../../widgets/components/ad_gradient_btn.dart';
-import '../../../signin/presentation/pages/signin_screen.dart';
 
 class ErrorPage extends StatelessWidget {
   const ErrorPage({Key? key}) : super(key: key);
@@ -29,7 +29,7 @@ class ErrorPage extends StatelessWidget {
                   style: defaultTextStyle(34, FontWeight.w700, Colors.black),),
                 SizedBox(height: size.height*0.05,),
                 GestureDetector(onTap:(){
-                  navigateAndFinish(context, SignInScreen());
+                  context.go('/signin');
                 },child: ADGradientButton(locale.goToHome)),
 
               ],

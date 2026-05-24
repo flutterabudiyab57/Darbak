@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-`darbak` is a Flutter car-rental mobile app (Android/iOS, with web/desktop folders also generated). The product brand is "Darakson" / "Darbak" — launcher icon source is `assets/images/Darbak_logoo.png` (note the double `oo`). Dart SDK `^3.5.3`. App targets a `390x844` design size via `flutter_screenutil`.
+`darbak` is a Flutter car-rental mobile app (Android/iOS, with web/desktop folders also generated). The product brand is "Darbak" — launcher icon source is `assets/images/Darbak_logoo.png` (note the double `oo`). Dart SDK `^3.5.3`. App targets a `390x844` design size via `flutter_screenutil`.
 
 The on-disk project folder is `E:\projects\darbak`. It was previously `E:\projects\fast-rent`; the Dart package, Android `applicationId`, iOS bundle id, and folder were all renamed to `darbak` (`com.example.darbak`). Do not change `package:darbak/...` imports back; do not rename the folder casually (Gradle, IDE, and pub cache references would all break). A sibling `~/.claude/projects/E--projects-fast-rent/memory/` slug still exists from the old name and holds older memories (e.g. `feedback_powershell_utf8.md`); new memories live under `E--projects-darbak/`.
 
@@ -21,6 +21,7 @@ flutter build apk                # Android release
 flutter build ios                # iOS release
 dart run build_runner build --delete-conflicting-outputs   # regenerate Hive .g.dart adapters
 dart run flutter_launcher_icons  # regenerate launcher icons (config in pubspec.yaml)
+flutter clean                    # nuke build/ — fixes stale AssetManifest.bin hot-reload errors
 ```
 
 `test/widget_test.dart` is still the default Flutter counter sample and does not match `App()` — treat it as scaffolding, not a real suite.
@@ -54,7 +55,7 @@ If you add a feature-level cubit that should be globally available, register it 
 
 ### Networking
 
-- A single `Dio` is registered as a lazy singleton in `service_locator.dart`. **`AppInterceptors`** (in `lib/core/helpers/interceptors/app_interceptor.dart`) is attached to that `Dio` once at the end of `setup()` — so every `sl<Dio>()` call inherits `baseUrl = mainApi`, the `Accept-Language` header, and the `Authorization: Bearer <token>` header (token pulled from `SharedPreferencesHelper` on every request). Do **not** call `sl<Dio>().interceptors.add(AppInterceptors(...))` again from feature code — it would double-fire the request hook. There is also a `NetworkHelper.instanceDio` wrapper at `lib/core/helpers/helper/network_helper.dart` that re-adds `AppInterceptors` + `PrettyDioLogger` on every call; it has zero call sites and would now double-add the interceptor — treat it as dead code, do not start using it.
+- A single `Dio` is registered as a lazy singleton in `service_locator.dart`. **`AppInterceptors`** (in `lib/core/helpers/interceptors/app_interceptor.dart`) is attached to that `Dio` once at the end of `setup()` — so every `sl<Dio>()` call inherits `baseUrl = mainApi`, the `Accept-Language` header, and the `Authorization: Bearer <token>` header (token pulled from `SharedPreferencesHelper` on every request). Do **not** call `sl<Dio>().interceptors.add(AppInterceptors(...))` again from feature code — it would double-fire the request hook.
 - All endpoints are constants in `lib/core/constants/api_path.dart`. Active base URL is `productionApi = "https://api.daraksonksa.com/api"` (controlled by the `mainApi` const). Many endpoint constants are pre-prefixed with `mainApi`, so do not double-prefix when composing requests.
 
 ### Persistence
@@ -64,7 +65,7 @@ If you add a feature-level cubit that should be globally available, register it 
 
 ### App shell and tab navigation
 
-The 4-tab bottom-nav app structure lives in `lib/modules/shell/`, **not** in a `HomeScreen` (the old `lib/modules/home/home_screen/home_screen.dart` was deleted).
+The 4-tab bottom-nav app structure lives in `lib/modules/shell/`, **not** in a `HomeScreen` — no `home_screen.dart` exists in `lib/modules/home/home_screen/`; tabs are mounted from `app_shell.dart`.
 
 - **`AppShell`** (`app_shell.dart`) is the root tabbed widget. It renders an `IndexedStack` of the 4 root pages — index `0=SearchScreen`, `1=AllCarsScreen`, `2=AllBookingScreen`, `3=MyProfile` — with `ShellBottomNavBar` underneath. Hosts `SettingsCubit`, `TabNavigationCubit`, and a `TabScrollRegistry` (via a private `InheritedWidget`). Runs `_checkVersion` and `ProfileCubit.getProfile()` once on mount.
 - **`ShellBottomNavBar`** (`bottom_nav_bar.dart`) is the `CurvedNavigationBar` instance — same visuals as before. It is the *only* place the nav appears.
@@ -120,17 +121,19 @@ Color tokens and gradients live in `lib/core/constants/assets/app_colors.dart`. 
 
 ### Push notifications (removed)
 
-Firebase / FCM has been removed from the codebase: `main.dart` no longer calls `Firebase.initializeApp()`, `lib/fcm_service/` does not exist, and `grep -r FirebaseMessaging lib/` returns no hits. `google-services.json` is absent from `android/app/`, and the `com.google.gms.google-services` Gradle plugin is not declared in `android/app/build.gradle.kts` or `android/settings.gradle.kts`. iOS `GoogleService-Info.plist` is similarly absent. To reintroduce push, restore the platform config files, re-add the Gradle plugin, add `firebase_core` + `firebase_messaging` to `pubspec.yaml`, re-add `Firebase.initializeApp()` in `main.dart`, and wire `deviceToken` (see the gotcha below).
+Firebase / FCM has been removed from the codebase: `main.dart` no longer calls `Firebase.initializeApp()`, `lib/fcm_service/` does not exist, and `grep -r FirebaseMessaging lib/` returns no hits. `google-services.json` is absent from `android/app/`, and the `com.google.gms.google-services` Gradle plugin is not declared in `android/app/build.gradle.kts` or `android/settings.gradle.kts`. iOS `GoogleService-Info.plist` is similarly absent. To reintroduce push, restore the platform config files, re-add the Gradle plugin, add `firebase_core` + `firebase_messaging` to `pubspec.yaml`, re-add `Firebase.initializeApp()` in `main.dart`, and re-add a device-token wire: introduce a top-level `String? deviceToken;` (was previously in `lib/core/constants/langCode.dart`), assign it from `FirebaseMessaging.instance.getToken()` at boot and listen to `onTokenRefresh`, then thread it back through `SignInModel.toMap()` (add a `device_token` field) and the `SignIn` event in `signin_event.dart` — all three were removed in the dead-code sweep when the global was found to be unassigned and the call site was sending the literal string `"null"`.
 
 ## Conventions and gotchas
 
-- **Folder name `presentaion`** is misspelled across the codebase — keep the misspelling so imports resolve.
+- **Known misspellings to preserve** — these are baked into imports across the codebase, fixing them is a large unrelated change:
+  - Folder name `presentaion/` (every feature's UI layer uses this; should be `presentation/`)
+  - `lib/core/helpers/SharedPreference/pereferences.dart` (should be `preferences.dart`)
+  - `lib/modules/home/home_screen/clasic.dart` exporting class `Clasic` (should be `classic.dart` / `Classic`) — imported by `search_Screen.dart`
 - **Code-generation:** any change to a `@HiveType` class (currently only `BranchModel` and friends in `lib/modules/home/all_branching/data/models/branch_model.dart`) requires re-running `build_runner`.
 - **`dependency_overrides`** in `pubspec.yaml` pins `intl: any` and `package_info_plus: ^8.3.1` — check for compatibility before bumping `intl` or any dep that depends on it.
 - **Print statements** are commented out throughout `main.dart` and elsewhere; keep new logs gated similarly or remove before committing.
 - **Service locator double-init guard:** `setup()` checks `sl.isRegistered<SignInBloc>()` and returns early. If you intentionally need to re-register, reset GetIt first (`sl.reset()`).
 - **Bulk regex over Dart strings**: `[^'"]+` truncates at apostrophes inside double-quoted English (e.g. `"Let's"`). Use `"((?:[^"\\]|\\.)*)"` or two passes (one per quote style). After bulk substitutions always run `flutter analyze` and look for `Unterminated string literal` — that's the signature of mid-string truncation.
 - **`SplashScreenOld` is the active splash**, not deprecated despite the name. Wired up in `bloc_providers.dart` (`home: SplashScreenOld()`); source at `lib/modules/auth/splash_screen.dart`. Cross-fades between two states (`gradient1` background → white) over `Darbak_logo.png`, then navigates to `SelectLanguage` (first run) or `ComposeUi` based on the `isLanguageSelected` flag in `SharedPreferences`. `ComposeUi` then renders `AppShell` — that is how the shell first mounts.
-- **`deviceToken` global is dead.** `String? deviceToken;` declared in `lib/core/constants/langCode.dart:9` is never assigned anywhere in the codebase. `signin_screen.dart:422` does `device_token: deviceToken.toString()`, which sends the literal string `"null"` to `/login` in `SignInModel.toMap()`. There is no separate "register device" / token-refresh endpoint. Reintroducing push means assigning this global from `FirebaseMessaging.instance.getToken()` at boot and listening to `onTokenRefresh`.
 - **Stale `AssetManifest.bin` causes hot-reload `PathNotFoundException`.** If hot reload fails with `Cannot open file ... assets/<name>` for a path that doesn't exist anywhere in source (sometimes referencing the old `fast-rent` folder name), the cause is a stale `build/app/intermediates/.../AssetManifest.bin` from a previous build. Fix: `android\gradlew.bat --stop`, then `flutter clean && flutter pub get`, then re-run.
 - **Asset folder convention.** `assets/icons/` holds SVGs; `assets/images/` holds raster images and a few Lottie JSONs (most Lottie files live in `assets/anim/`). Code uniformly references `assets/icons/<name>.svg` for SVGs — do not duplicate SVG icons into `assets/images/`. The `assets:` block in `pubspec.yaml` declares directories (not individual files), so dropping a file into a declared directory is enough to ship it; no manifest entry needed. After a recent cleanup, ~75 unreferenced files were deleted across both folders; `git log --diff-filter=D -- assets/` will show what was removed.

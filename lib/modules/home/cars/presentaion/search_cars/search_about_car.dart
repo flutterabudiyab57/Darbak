@@ -25,7 +25,6 @@ class _SearchCarScreenState extends State<SearchCarScreen> {
   final CarService _carService = CarService();
   List<DataCars> _carsList = [];
   Timer? _debounceTimer;
-  bool _isLoading = false;
 
   void _onSearchChanged(String searchTerm) {
     _debounceTimer?.cancel();
@@ -42,14 +41,11 @@ class _SearchCarScreenState extends State<SearchCarScreen> {
   }
 
   Future<void> _searchCars(String searchTerm) async {
-    setState(() => _isLoading = true);
     try {
       final cars = await _carService.searchCars(searchTerm);
       setState(() => _carsList = cars);
     } catch (e) {
       if (e.toString().contains('cancelled')) return;
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 

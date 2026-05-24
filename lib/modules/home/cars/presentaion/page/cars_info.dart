@@ -1,6 +1,5 @@
 import 'package:darbak/core/style/style.dart';
 import 'package:darbak/language/locale.dart';
-import 'package:darbak/modules/auth/signin/presentation/pages/signin_screen.dart';
 import 'package:darbak/modules/home/additions/presentaion/blocs/addition_cubit/additions_cubit.dart';
 import 'package:darbak/modules/home/additions/presentaion/pages/additions_screen.dart';
 import 'package:darbak/modules/home/booking_from_cars/presentaion/view/branchs_with_car_screan.dart';
@@ -8,11 +7,11 @@ import 'package:darbak/modules/home/cars/data/models/cars_model.dart';
 import 'package:darbak/modules/home/cars/presentaion/widget/car_icon_info.dart';
 import 'package:darbak/modules/home/search_screen/data/models/filter_model.dart';
 import 'package:darbak/modules/widgets/components/ad_gradient_btn.dart';
-import 'package:darbak/shared/commponents.dart';
 import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
@@ -265,7 +264,7 @@ class _CarsInformationState extends State<CarsInformation> {
                           Row(
                             children: [
                               Text(
-                                locale!.pricewithtax.toString(),
+                                locale.pricewithtax.toString(),
                                 style: AppTypography.headingColor20(context),
                               ),
                               SizedBox(width: 5.w),
@@ -549,8 +548,7 @@ class _CarsInformationState extends State<CarsInformation> {
                                         print("error:  ${state.error}");
                                         if (state.error.contains(
                                             "Error Please LOGIN To Continue")) {
-                                          navigateAndFinish(
-                                              context, SignInScreen());
+                                          context.go('/signin');
                                         }
                                       }
                                     },
@@ -578,8 +576,7 @@ class _CarsInformationState extends State<CarsInformation> {
                                               print("AdditionsFailed 00 00 00");
                                               if (state.error.contains(
                                                   "Error Please LOGIN To Continue")) {
-                                                navigateAndFinish(
-                                                    context, SignInScreen());
+                                                context.go('/signin');
                                               }
                                             }
                                           }

@@ -11,6 +11,7 @@ import 'package:darbak/modules/home/profile/page/widget/card_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
@@ -315,15 +316,7 @@ class _ProfileContentState extends State<_ProfileContent> {
                         context.read<AllBookingCubit>().booking = null;
                         context.read<AuthStatusCubit>().markSignedOut();
 
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const AppShell(
-                              skipLoginCheckInSearch: false,
-                            ),
-                          ),
-                          (route) => false,
-                        );
+                        context.go('/shell?tab=0');
                       },
                       child: ADGradientButton(
                         locale.yes,

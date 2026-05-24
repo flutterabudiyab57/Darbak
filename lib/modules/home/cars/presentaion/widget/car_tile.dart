@@ -72,7 +72,7 @@ class _CarTileState extends State<CarTile> {
       }
     }
 
-    isFavorite = widget.isFavouritePage ? true : (carData.isFavorite ?? false);
+    isFavorite = widget.isFavouritePage ? true : carData.isFavorite;
   }
 
   @override
@@ -219,7 +219,7 @@ class _CarTileState extends State<CarTile> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               AutoSizeText(
-                                _trimText(carData.name ?? ''),
+                                _trimText(carData.name),
                                 style: AppTypography.mainTypographyColor16(
                                     context),
                               ),

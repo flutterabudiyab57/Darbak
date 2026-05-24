@@ -25,7 +25,6 @@ import '../../booking_packages/ui/airboart_package_screen.dart';
 import '../../booking_packages/ui/monthly_package_screen.dart';
 import '../../cars/presentaion/search_cars/search_about_car.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 import '../../../shell/app_shell.dart';
 import '../../../shell/tab_navigation_cubit.dart';
 import '../../../shell/tab_scroll_registry.dart';
@@ -60,8 +59,6 @@ class _SearchState extends State<SearchScreen>
 
   @override
   bool get wantKeepAlive => true;
-  bool _locationPermissionGranted = false;
-
   @override
   void initState() {
     super.initState();
@@ -152,62 +149,6 @@ class _SearchState extends State<SearchScreen>
       print("Points fetching Successfully: $points");
     } catch (e) {
       print("Points fetching Error: $e");
-    }
-  }
-
-  Future<void> _checkPermission() async {
-    PermissionStatus status = await Permission.location.request();
-
-    if (status.isGranted) {
-      setState(() {
-        _locationPermissionGranted = true;
-      });
-    } else if (status.isDenied) {
-      final locale = AppLocalizations.of(context)!;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(locale.locationPermissionDenied),
-          content: Text(locale.locationPermissionDeniedBody),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _checkPermission();
-              },
-              child: Text(locale.tryAgain),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(locale.cancel!),
-            ),
-          ],
-        ),
-      );
-    } else if (status.isPermanentlyDenied) {
-      final locale = AppLocalizations.of(context)!;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(locale.permissionRequired),
-          content: Text(locale.permissionPermanentlyDeniedBody),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                openAppSettings();
-              },
-              child: Text(locale.openSettings),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(locale.cancel!),
-            ),
-          ],
-        ),
-      );
     }
   }
 

@@ -201,8 +201,6 @@ class _PreviousOrdersState extends State<PreviousOrders> {
         if (state is AllBookingLoading) {
           return const _PreviousBookingSkeleton();
         } else if (BlocProvider.of<AllBookingCubit>(context).booking != null &&
-            BlocProvider.of<AllBookingCubit>(context).filteredBookings !=
-                null &&
             state is AllBookingLoaded) {
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),

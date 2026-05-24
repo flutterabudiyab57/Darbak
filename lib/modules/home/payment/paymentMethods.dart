@@ -66,8 +66,6 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
   bool? _couponPointsActive;
   bool? _couponMadfouActive;
   bool? _couponTamaraActive;
-  bool? _couponAppleActive;
-  bool? _couponMispayActive;
   bool _isOpeningCoupons = false;
 
   bool _isActive(bool? couponValue, bool? originalValue) {
@@ -114,12 +112,6 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
 
     final bookingCubit = BlocProvider.of<BookingCubit>(context);
     bookingCubit.resetPaymentMethod();
-
-    final additionsCubit = BlocProvider.of<AdditionsCubit>(context);
-    Feature? featureToRemove;
-    if (featureToRemove != null) {
-      additionsCubit.removeAddition(context, featureToRemove);
-    }
 
     BlocProvider.of<InvoiceCubit>(context).getInvoice(context);
     BlocProvider.of<CashbackCubit>(context).getCashbackBalance();
@@ -185,8 +177,6 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                       _couponPointsActive = state.pointsActive;
                       _couponMadfouActive = state.madfouActive;
                       _couponTamaraActive = state.tamaraActive;
-                      _couponAppleActive = state.appleActive;
-                      _couponMispayActive = state.mispayActive;
                     }
                     if (state is PaymentMethodsRestoredAfterDeleteCoupon) {
                       _couponVisaActive = null;
@@ -194,8 +184,6 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                       _couponPointsActive = null;
                       _couponMadfouActive = null;
                       _couponTamaraActive = null;
-                      _couponAppleActive = null;
-                      _couponMispayActive = null;
                     }
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,7 +275,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                             }
                             final expectedCashback =
                                 _getExpectedCashbackAmount();
-                            return DaraksonBalanceWidget(
+                            return DarbakBalanceWidget(
                               availableBalance: availableBalance,
                               pendingCredit: expectedCashback,
                               isEnabled: false,

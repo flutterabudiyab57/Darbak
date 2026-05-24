@@ -38,9 +38,7 @@ class _AirPortRentBodyState extends State<AirPortRentBody> {
 
         print("Received: " + receiveDate.toString());
         print("Derive: " + driveDate.toString());
-        if (receiveDate != null && driveDate != null) {
-          context.read<SearchCubit>().updateDates(receiveDate, driveDate);
-        }
+        context.read<SearchCubit>().updateDates(receiveDate, driveDate);
         final differenceInDays = context.read<SearchCubit>().differenceInDays;
 
         final airportBranchesList = searchCubit.airportBranchesData

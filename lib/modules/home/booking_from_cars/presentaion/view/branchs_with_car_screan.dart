@@ -14,10 +14,9 @@ import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../../../service_locator.dart';
-import '../../../../../shared/commponents.dart';
-import '../../../../auth/signin/presentation/pages/signin_screen.dart';
 import '../../../../widgets/Dashed_divider.dart';
 import '../../../../widgets/components/appbar.dart';
 import '../../../../widgets/show_error_dailog.dart';
@@ -84,9 +83,7 @@ class _BranchWithCarScreenState extends State<BranchWithCarScreen> {
                           final receiveDate = cubit.receiveDateValue;
                           final driveDate   = cubit.driveDateValue;
 
-                          if (receiveDate != null && driveDate != null) {
-                            cubit.updateDates(receiveDate, driveDate);
-                          }
+                          cubit.updateDates(receiveDate, driveDate);
 
                           return RentalSummaryCard(
                             receiveDate: receiveDate,
@@ -103,7 +100,7 @@ class _BranchWithCarScreenState extends State<BranchWithCarScreen> {
                         listener: (context, addState) {
                           if (addState is AdditionsFailed &&
                               addState.error.contains("Error Please LOGIN To Continue")) {
-                            navigateAndFinish(context, SignInScreen());
+                            context.go('/signin');
                           }
                         },
                         builder: (context, addState) {

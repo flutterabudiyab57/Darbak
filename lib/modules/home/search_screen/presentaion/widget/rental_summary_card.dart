@@ -44,39 +44,3 @@ class RentalSummaryCard extends StatelessWidget {
   }
 }
 
-class _DateRow extends StatelessWidget {
-  final String label;
-  final String dateStr;
-  final BuildContext context;
-
-  const _DateRow({
-    required this.label,
-    required this.dateStr,
-    required this.context,
-  });
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTypography.mainTypographyColor18(context)
-        ),
-
-        SizedBox(width: 6.w),
-
-        Text(
-          "/",
-          style: AppTypography.paragraphColor18(context),
-        ),
-        SizedBox(width: 4.w),
-
-        Text(
-          dateStr,
-          style: AppTypography.paragraphColor18(context),
-        ),
-      ],
-    );
-  }
-}

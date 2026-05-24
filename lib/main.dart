@@ -32,7 +32,7 @@ Future<void> main() async {
      await initializeHive();
 
     await di.setup();
-  } catch (e, stackTrace) {
+  } catch (e) {
   }
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

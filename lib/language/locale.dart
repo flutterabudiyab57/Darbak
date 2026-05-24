@@ -104,11 +104,6 @@ class AppLocalizations {
   String get selectModel =>
       _localizedValues[locale.languageCode]!['selectModel']!;
 
-  String get moreMembershipDetails =>
-      _localizedValues[locale.languageCode]!['moreMembershipDetails']!;
-
-  String get clickHere => _localizedValues[locale.languageCode]!['clickHere']!;
-
   String get rentalDiscount =>
       _localizedValues[locale.languageCode]!['rentalDiscount']!;
 
@@ -119,9 +114,6 @@ class AppLocalizations {
       _localizedValues[locale.languageCode]!['extraHours']!;
 
   String get hour => _localizedValues[locale.languageCode]!['hour']!;
-
-  String get regionsDiscount =>
-      _localizedValues[locale.languageCode]!['regionsDiscount']!;
 
   String get ratioPoints =>
       _localizedValues[locale.languageCode]!['ratioPoints']!;
@@ -234,8 +226,8 @@ class AppLocalizations {
       _localizedValues[locale.languageCode]!['ourOffers']!;
   String get offerDetails =>
       _localizedValues[locale.languageCode]!['offerDetails']!;
-  String get welcomeToDarakson =>
-      _localizedValues[locale.languageCode]!['welcomeToDarakson']!;
+  String get welcomeToDarbak =>
+      _localizedValues[locale.languageCode]!['welcomeToDarbak']!;
   String get chooseYourLanguage =>
       _localizedValues[locale.languageCode]!['chooseYourLanguage']!;
   String get trackBalanceAndPayments =>
@@ -507,8 +499,8 @@ class AppLocalizations {
       _localizedValues[locale.languageCode]!['amountExceedsBalance']!;
   String get failedToLoadInvoice =>
       _localizedValues[locale.languageCode]!['failedToLoadInvoice']!;
-  String get darksonBalance =>
-      _localizedValues[locale.languageCode]!['darksonBalance']!;
+  String get darbakBalance =>
+      _localizedValues[locale.languageCode]!['darbakBalance']!;
   String get pendingCashbackPrefix =>
       _localizedValues[locale.languageCode]!['pendingCashbackPrefix']!;
   String get amountToBeUsed =>

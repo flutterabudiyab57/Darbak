@@ -6,11 +6,11 @@ import 'package:darbak/modules/home/additions/presentaion/widgets/services_notCo
 import 'package:darbak/modules/home/all_bookings/presentaion/bloc/allbooking_cubit.dart';
 import 'package:darbak/modules/home/blocs/booking_cubit/booking_cubit.dart';
 import 'package:darbak/modules/home/cars/data/models/cars_model.dart';
-import 'package:darbak/modules/shell/app_shell.dart';
 import 'package:darbak/modules/widgets/components/ad_gradient_btn.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
 import '../../../../../core/helpers/SharedPreference/pereferences.dart';
@@ -158,12 +158,7 @@ class _AdditionsScreenState extends State<AdditionsScreen>
                                             context)
                                         .getAllBooking(state: 'running');
 
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const AppShell(initialTab: 2)),
-                                      (Route<dynamic> route) => false,
-                                    );
+                                    context.go('/shell?tab=2');
                                   },
                                   child: ADGradientButton(
                                     locale.goToBookings,

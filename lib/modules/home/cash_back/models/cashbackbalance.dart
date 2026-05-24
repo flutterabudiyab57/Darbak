@@ -35,7 +35,7 @@ class BalanceData {
 
   factory BalanceData.fromMap(Map<String, dynamic> map) {
     return BalanceData(
-      availableBalance: _parseDouble(map['available_balance']) ?? 0.0,
+      availableBalance: _parseDouble(map['available_balance']),
       currency: map['currency'] ?? '',
       summary: Summary.fromMap(map['summary']),
     );
@@ -102,7 +102,7 @@ class Pending {
   factory Pending.fromMap(Map<String, dynamic> map) {
     return Pending(
       count: map['count'] ?? 0,
-      total: _parseDouble(map['total']) ?? 0.0,
+      total: _parseDouble(map['total']),
     );
   }
 
@@ -134,7 +134,7 @@ class Available {
   factory Available.fromMap(Map<String, dynamic> map) {
     return Available(
       count: map['count'] ?? 0,
-      total: _parseDouble(map['total']) ?? 0.0,
+      total: _parseDouble(map['total']),
     );
   }
 

@@ -64,9 +64,7 @@ class _MonthlyRentBodyState extends State<MonthlyRentBody> {
         final receiveDate = cubit.receiveDateValue;
         final driveDate = cubit.driveDateValue;
 
-        if (receiveDate != null && driveDate != null) {
-          cubit.updateDates(receiveDate, driveDate);
-        }
+        cubit.updateDates(receiveDate, driveDate);
         final differenceInDays = cubit.differenceInDays;
 
         return Padding(

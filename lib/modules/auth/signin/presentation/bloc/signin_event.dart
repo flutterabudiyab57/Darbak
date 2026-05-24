@@ -9,11 +9,10 @@ abstract class SignInEvent extends Equatable {
 class SignIn extends SignInEvent {
   final String email;
   final String password;
-  final String device_token;
 
-  SignIn({required this.email, required this.password,required this.device_token});
+  SignIn({required this.email, required this.password});
   @override
-  List<Object> get props => [email, password,device_token];
+  List<Object> get props => [email, password];
 
 }
 class ShowPasswordEvent extends SignInEvent{}

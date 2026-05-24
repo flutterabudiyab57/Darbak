@@ -7,8 +7,8 @@ import '../../constants/langCode.dart';
 
 final SettingsModel _kFallbackSettings = SettingsModel(
   app: AppInfo(
-    name: 'Darakson',
-    copyright: 'All Rights reserved to Darakson Copyright © 2025',
+    name: 'Darbak',
+    copyright: 'All Rights reserved to Darbak Copyright © 2025',
     logo: 'https://ui-avatars.com/api/?name=darakson&bold=true',
   ),
   contacts: ContactsInfo(

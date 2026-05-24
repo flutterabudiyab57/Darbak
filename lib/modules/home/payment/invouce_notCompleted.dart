@@ -6,11 +6,11 @@ import 'package:darbak/modules/home/booking_confirmed/bookingConfirmed.dart';
 import 'package:darbak/modules/home/cars/data/models/cars_model.dart';
 import 'package:darbak/modules/home/payment/data/models/credit_card_model.dart';
 import 'package:darbak/modules/home/payment/widget/info_invoice_notCompleted.dart';
-import 'package:darbak/modules/home/payment/widget/web_payment.dart';
 import 'package:darbak/modules/widgets/components/ad_gradient_btn.dart';
 import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../../core/helpers/interceptors/loading_indicator.dart';
@@ -121,11 +121,10 @@ class _InvoiceNotCompletedUIState extends State<InvoiceNotCompletedUI> {
             if (state is PaymentSuccess) {
               if (context.read<BookingCubit>().selectedPaymentMethods ==
                   PaymentMethod.visa) {
-                navigateAndFinish(
-                    context,
-                    WebPayment(
-                      url: state.paymentStepModel.paymentUrl,
-                    ));
+                context.go(
+                  '/web-payment',
+                  extra: state.paymentStepModel.paymentUrl,
+                );
               } else {
                 BookingConfirmedBottomSheet.show(
                   context,

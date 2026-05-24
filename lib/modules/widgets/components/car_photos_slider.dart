@@ -25,7 +25,6 @@ class CarImageCarousel extends StatefulWidget {
 }
 
 class _CarImageCarouselState extends State<CarImageCarousel> {
-  int _currentIndex = 0;
   final CarouselSliderController _carouselController =
       CarouselSliderController();
 
@@ -51,11 +50,7 @@ class _CarImageCarouselState extends State<CarImageCarousel> {
                 enableInfiniteScroll: allImages.length > 1,
                 autoPlay: false,
                 enlargeCenterPage: false,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
+                onPageChanged: (index, reason) {},
               ),
               itemBuilder: (context, index, realIndex) {
                 return GestureDetector(

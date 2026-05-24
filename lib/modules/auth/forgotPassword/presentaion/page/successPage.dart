@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/style/style.dart';
 import '../../../../../language/locale.dart';
-import '../../../../../core/constants/assets/app_colors.dart';
 import '../../../../widgets/components/ad_gradient_btn.dart';
 import '../../../signin/presentation/pages/signin_screen.dart';
 

@@ -24,7 +24,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     final userData = SignInModel(
         email: event.email,
         password: event.password,
-        device_token: event.device_token
     );
 
     try {

@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/constants/assets/app_colors.dart';
-import '../../../core/fade_route.dart';
 import '../../../core/helpers/SharedPreference/pereferences.dart';
-import '../../auth/on_boarding/on_boarding.dart';
-import '../../shell/app_shell.dart';
 import '../../widgets/components/ad_gradient_btn.dart';
 
 class SelectLanguage extends StatefulWidget {
@@ -62,7 +60,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
               ),
               Image.asset("assets/images/selc_language.png"),
               SizedBox(height: size.height * 0.07,),
-              Text(locale.welcomeToDarakson,
+              Text(locale.welcomeToDarbak,
                   style: AppTypography.headingColor26(context)
               ),
               SizedBox(
@@ -170,13 +168,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                     }
 
                     if (widget.isStart) {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        FadeRoute(
-                          builder: (BuildContext context) =>
-                          token != null ? const AppShell() : OnBoarding(),
-                        ),
-                            (route) => false,
-                      );
+                      context.go(token != null ? '/shell?tab=0' : '/onboarding');
                     } else {
                       Navigator.pop(context);
                     }

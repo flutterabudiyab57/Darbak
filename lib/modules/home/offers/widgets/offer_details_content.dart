@@ -26,7 +26,7 @@ class OfferDetailsContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                offer.image != null && offer.image.isNotEmpty
+                offer.image.isNotEmpty
                     ? ClipRRect(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(25.r),

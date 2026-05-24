@@ -4,6 +4,7 @@ import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui';
@@ -54,16 +55,12 @@ class _RegisterPageState extends State<RegisterPage> {
   int _selectedCard = 0;
   TextInputType selectedInputType = TextInputType.number;
 
-  String? _dynamicValidationMessage;
-  Color _validationMessageColor = Colors.grey;
-
   late List<IdentityTypeOption> _identityOptions;
 
   @override
   void initState() {
     super.initState();
     _initializeCountry();
-    idNumberController.addListener(_updateDynamicValidation);
   }
 
   @override
@@ -109,84 +106,6 @@ class _RegisterPageState extends State<RegisterPage> {
         validator: (ctx, val) => _specialCharValidate(ctx, val),
       ),
     ];
-  }
-
-  void _updateDynamicValidation() {
-    setState(() {
-      String value = idNumberController.text;
-      var locale = AppLocalizations.of(context)!;
-
-      if (value.isEmpty) {
-        _dynamicValidationMessage = null;
-        return;
-      }
-
-      switch (_selectedCard) {
-        case 0:
-          _validateNationalID(value, locale);
-          break;
-        case 1:
-          _validateIqama(value, locale);
-          break;
-        case 2:
-          _validatePassport(value, locale);
-          break;
-      }
-    });
-  }
-
-  void _validateNationalID(String value, AppLocalizations locale) {
-    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-      _dynamicValidationMessage = locale.pleaseEnterNumbersOnly;
-      _validationMessageColor = Colors.red;
-    } else if (value.length < 10) {
-      _dynamicValidationMessage = locale.mustBe10DigitsValueLength;
-      _validationMessageColor = Colors.orange;
-    } else if (value.length == 10 && value.startsWith('1')) {
-      _dynamicValidationMessage = locale.validNationalId;
-      _validationMessageColor = Colors.green;
-    } else if (value.length == 10 && !value.startsWith('1')) {
-      _dynamicValidationMessage = locale.idMustStartWith1;
-      _validationMessageColor = Colors.red;
-    } else {
-      _dynamicValidationMessage = locale.invalidIdNumber;
-      _validationMessageColor = Colors.red;
-    }
-  }
-
-  void _validateIqama(String value, AppLocalizations locale) {
-    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-      _dynamicValidationMessage = locale.pleaseEnterNumbersOnly;
-      _validationMessageColor = Colors.red;
-    } else if (value.length < 10) {
-      _dynamicValidationMessage = locale.mustBe10DigitsValueLength;
-      _validationMessageColor = Colors.orange;
-    } else if (value.length == 10 && value.startsWith('2')) {
-      _dynamicValidationMessage = locale.validIqamaNumber;
-      _validationMessageColor = Colors.green;
-    } else if (value.length == 10 && !value.startsWith('2')) {
-      _dynamicValidationMessage = locale.iqamaMustStartWith2;
-      _validationMessageColor = Colors.red;
-    } else {
-      _dynamicValidationMessage = locale.invalidIqamaNumber;
-      _validationMessageColor = Colors.red;
-    }
-  }
-
-  void _validatePassport(String value, AppLocalizations locale) {
-    String pattern = r'^(?!^0+$)[a-zA-Z0-9]{3,15}$';
-    RegExp regExp = RegExp(pattern);
-
-    if (value.length < 6) {
-      _dynamicValidationMessage = locale.mustBeAtLeast6Characters;
-      _validationMessageColor = Colors.orange;
-    } else if (regExp.hasMatch(value)) {
-      _dynamicValidationMessage = locale.validPassportNumber;
-      _validationMessageColor = Colors.green;
-    } else {
-      _dynamicValidationMessage = locale.mustContainOnlyLettersAndNumbers;
-      _validationMessageColor = Colors.red;
-    }
   }
 
   String _getLabelText(BuildContext context) {
@@ -376,15 +295,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               );
             } else if (state is RegisterSuccess) {
-              widget.pushAddition
-                  ? Navigator.of(context).pop(true)
-                  : Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => SignInScreen(),
-                ),
-                ModalRoute.withName('/'),
-              );
+              if (widget.pushAddition) {
+                Navigator.of(context).pop(true);
+              } else {
+                context.go('/signin');
+              }
 
               Fluttertoast.showToast(
                 msg: locale.accountHasBeenCreatedSuccessfully,
@@ -510,7 +425,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               setState(() {
                                 _selectedCard = index;
                                 idNumberController.clear();
-                                _dynamicValidationMessage = null;
                                 selectedInputType = (_selectedCard == 2)
                                     ? TextInputType.text
                                     : TextInputType.number;
@@ -783,7 +697,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
-    idNumberController.removeListener(_updateDynamicValidation);
     idNumberController.dispose();
     userNameController.dispose();
     passwordController.dispose();

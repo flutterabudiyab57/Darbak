@@ -30,7 +30,14 @@
       "Bash(Select-Object Name)",
       "Bash(flutter pub *)",
       "Bash(Select-String -Pattern \"issues found|issue found|No issues\")",
-      "Bash(Select-Object -Last 5)"
+      "Bash(Select-Object -Last 5)",
+      "Bash(Get-ChildItem *)",
+      "Bash(xargs -I {} basename {})",
+      "Bash(cat)",
+      "Bash(bash /tmp/find_orphans.sh)",
+      "Bash(sed 's/[[:space:]]*//g')",
+      "Bash(sed 's/:$//')",
+      "Bash(sed 's/[\"\\\\047]//g')"
     ]
   }
 }

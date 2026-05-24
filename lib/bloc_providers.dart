@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/app_life_cycle_manager.dart';
+import 'core/router/app_router.dart';
 import 'core/style/style.dart';
 import 'core/theme.dart';
 import 'modules/home/selectLanguage/languageCubit.dart';
 import 'language/locale.dart';
-import 'modules/auth/splash_screen.dart';
 import 'service_locator.dart';
 import 'modules/auth/blocs/auth_status_cubit.dart';
 import 'modules/home/additions/presentaion/blocs/addition_cubit/additions_cubit.dart';
@@ -35,7 +35,7 @@ MultiBlocProvider CreateBlocProviders(BuildContext context) {
         return BlocBuilder<ThemeCubit, ThemeMode>(
           builder: (context, themeMode) {
             return AppLifeCycleManager(
-              child: MaterialApp(
+              child: MaterialApp.router(
                 debugShowCheckedModeBanner: false,
                 localizationsDelegates: [
                   const AppLocalizationsDelegate(),
@@ -59,7 +59,7 @@ MultiBlocProvider CreateBlocProviders(BuildContext context) {
                     child: child!,
                   );
                  },
-                home: SplashScreenOld(),
+                routerConfig: appRouter,
               ),
             );
           },

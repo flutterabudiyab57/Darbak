@@ -60,7 +60,7 @@ class OfferCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            imageUrl != null && imageUrl.isNotEmpty
+            imageUrl.isNotEmpty
                 ? Container(
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
