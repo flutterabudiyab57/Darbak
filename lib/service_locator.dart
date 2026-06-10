@@ -4,6 +4,9 @@ import 'package:get_it/get_it.dart';
 import 'core/helpers/SharedPreference/pereferences.dart';
 import 'core/helpers/helper/date_helper.dart';
 import 'core/helpers/interceptors/app_interceptor.dart';
+import 'core/helpers/notifications/push_notification_service.dart';
+import 'modules/notifications/data/datasources/notifications_remote_datasource.dart';
+import 'modules/notifications/presentaion/bloc/notifications_cubit.dart';
 import 'modules/auth/forgotPassword/data/datasources/forget_password_data_sourse.dart';
 import 'modules/auth/forgotPassword/presentaion/bloc/forget_password_cubit.dart';
 import 'modules/auth/register/presentaion/bloc/register_cubit.dart';
@@ -86,6 +89,9 @@ Future<void> setup() async {
   sl.registerFactory(() => BookingFromCarsCubit(sl()));
   sl.registerFactory(() => AllCarsCubit(sl()));
 
+  // Notifications: factory cubit (per-screen), DI Dio for the datasource.
+  sl.registerFactory(() => NotificationsCubit(sl()));
+
   // ==================== Repositories ====================
   sl.registerLazySingleton(() => SignInRepositoryImpl(sl(), sl()));
   sl.registerLazySingleton(() => AdditionRepository(sl(), sl()));
@@ -130,6 +136,7 @@ Future<void> setup() async {
   sl.registerLazySingleton(() => CancelBookingDataSources(sl(), sl()));
   sl.registerLazySingleton(() => CouponRemoteDatasource(sl()));
   sl.registerLazySingleton(() => AreasRemoteDatasource(sl()));
+  sl.registerLazySingleton(() => NotificationsRemoteDataSource(sl<Dio>()));
 
   // ✅ NEW: Branch Local DataSource
   sl.registerLazySingleton<BranchLocalDataSource>(
@@ -139,6 +146,7 @@ Future<void> setup() async {
   // ==================== External ====================
   sl.registerLazySingleton(() => SharedPreferencesHelper());
   sl.registerLazySingleton(() => DateHandler());
+  sl.registerLazySingleton(() => PushNotificationService());
   sl.registerLazySingleton(() => Dio());
   sl<Dio>().interceptors.add(AppInterceptors(sl<SharedPreferencesHelper>()));
 

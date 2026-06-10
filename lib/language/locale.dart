@@ -36,6 +36,15 @@ class AppLocalizations {
   String get checkOut => _localizedValues[locale.languageCode]!['checkOut']!;
   String get retry => _localizedValues[locale.languageCode]!['retry']!;
 
+  String get notificationsTitle =>
+      _localizedValues[locale.languageCode]!['notificationsTitle']!;
+  String get notificationsEmpty =>
+      _localizedValues[locale.languageCode]!['notificationsEmpty']!;
+  String get markAllAsRead =>
+      _localizedValues[locale.languageCode]!['markAllAsRead']!;
+  String get notificationsError =>
+      _localizedValues[locale.languageCode]!['notificationsError']!;
+
   String get availableBalance =>
       _localizedValues[locale.languageCode]!['availableBalance'] ?? "";
 

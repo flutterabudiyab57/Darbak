@@ -63,6 +63,13 @@ const String cancelOrder = mainApi + '/order/cancel';
 const String deleteOrder = mainApi + '/orders/delete-order';
 const String editOrder = mainApi + '/orders/';
 const String allMemberShip = mainApi + "/memberships";
+// ////////////////// NOTIFICATIONS ///////////////////
+// TODO(api): fill in the real paths once the backend confirms them.
+// List is paginated via ?per_page= (appended by the datasource).
+const String notificationsList = mainApi + '/notifications'; // TODO(api): confirm path + method (assumed GET)
+const String notificationsMarkAllRead = mainApi + '/notifications/read-all'; // TODO(api): confirm path (assumed POST, no body)
+const String notificationsMarkOneRead = mainApi + '/notifications/read'; // TODO(api): confirm path (assumed POST, datasource appends /{id})
+
 const String cashbackbalance = mainApi + '/cashback/balance';
 const String cashbacktransactions = mainApi + '/cashback/transactions';
 const String applycashback = mainApi + '/cashback/apply-to-order';

@@ -12,6 +12,9 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:darbak/core/router/routes.dart';
 import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/assets/app_colors.dart';
@@ -344,27 +347,83 @@ class _SearchState extends State<SearchScreen>
           ),
           SizedBox(width: 7.w),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AutoSizeText(
-                  '${locale.welcome}$profileName',
-                  style: AppTypography.headingColor16(context),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AutoSizeText(
+                      '${locale.welcome}$profileName',
+                      style: AppTypography.headingColor16(context),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    AutoSizeText(
+                      '${locale.letsBookCar}',
+                      style: AppTypography.paragraphColor16(context),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
-                AutoSizeText(
-                  '${locale.letsBookCar}',
-                  style: AppTypography.paragraphColor16(context),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                _buildNotificationButton(),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+  Widget _buildNotificationButton() {
+    return Bounce(
+      onTap: () => context.pushNamed(Routes.notifications),
+      child: Container(
+      width: 45.w,
+      height: 45.w,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(
+          color: strokeGrayColor(context),
+          width: 1.5.w,
+        ),
+      ),
+      child: Center(
+        child: SizedBox(
+          width: 23.w,
+          height: 24.h,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                left: 0,
+                top: 1.h,
+                child: SvgPicture.asset(
+                  'assets/icons/notifications_Icon.svg',
+                  color:Colors.blue,
+                  width: 21.w,
+                  height: 23.h,
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: Container(
+                  width: 8.w,
+                  height: 8.w,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFB2C36),
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 1.11, color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       ),
     );
   }
