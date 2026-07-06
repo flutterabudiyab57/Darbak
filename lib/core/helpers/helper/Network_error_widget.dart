@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../language/locale.dart';
+import '../../constants/assets/app_colors.dart';
 import '../../style/style.dart';
 
 class NetworkErrorWidget extends StatelessWidget {
@@ -28,13 +29,16 @@ class NetworkErrorWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Lottie.asset(
-            "assets/anim/Network error.json",
-            width: 350.w,
-            fit: BoxFit.cover,
-          ),
-
-          SizedBox(height: 14.h),
+          // Lottie.asset(
+          //   "assets/anim/Network error.json",
+          //   width: 350.w,
+          //   fit: BoxFit.cover,
+          // ),
+          Icon(
+            Icons.signal_wifi_statusbar_connected_no_internet_4_sharp,
+            size: 60.sp,
+            color: mainTypographyColor(context),
+          ),          SizedBox(height: 14.h),
 
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w),

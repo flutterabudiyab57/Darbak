@@ -37,7 +37,12 @@
       "Bash(bash /tmp/find_orphans.sh)",
       "Bash(sed 's/[[:space:]]*//g')",
       "Bash(sed 's/:$//')",
-      "Bash(sed 's/[\"\\\\047]//g')"
+      "Bash(sed 's/[\"\\\\047]//g')",
+      "Bash(chmod +x /tmp/check_unused.sh)",
+      "Bash(grep -v \"\\\\.g\\\\.dart\" -exec grep -h \"^import \" {} \\\\;)",
+      "Bash(xargs grep \"^import \")",
+      "Bash(chmod +x /tmp/find_unused_imports.sh)",
+      "Bash(flutter test *)"
     ]
   }
 }
