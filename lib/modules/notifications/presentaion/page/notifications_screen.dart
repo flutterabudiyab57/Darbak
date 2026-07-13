@@ -3,6 +3,7 @@ import 'package:darbak/core/helpers/helper/Network_error_widget.dart';
 import 'package:darbak/core/router/notification_router.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/service_locator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -70,12 +71,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               return const NotificationsSkeleton();
             }
             if (state is NotificationsNoInternet) {
+              if (kDebugMode) {
+                debugPrint('[Notifications] no internet');
+              }
               return NetworkErrorWidget(
                 onRetry: () =>
                     context.read<NotificationsCubit>().getNotifications(),
               );
             }
             if (state is NotificationsError) {
+              if (kDebugMode) {
+                debugPrint('[Notifications] error: ${state.message}');
+              }
               return _ErrorView(
                 message: locale.notificationsError,
                 onRetry: () =>

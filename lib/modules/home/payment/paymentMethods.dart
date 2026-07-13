@@ -414,13 +414,13 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                   height: 26.h,
                                   decoration: BoxDecoration(
                                     color: _isAgreeTerms
-                                        ? buttonPrimaryBgColor(context)
+                                        ? buttonBlueColor(context)
                                         : Colors.transparent,
                                     borderRadius: BorderRadius.circular(12.r),
                                     border: Border.all(
                                       width: 1.5.w,
                                       color: _isAgreeTerms
-                                          ? buttonPrimaryBgColor(context)
+                                          ? buttonBlueColor(context)
                                           : strokeGrayColor(context),
                                     ),
                                   ),

@@ -268,11 +268,11 @@ class _ServicesState extends State<Services> {
                       border: Border.all(
                         width: 1.5.w,
                         color: selectedInsuranceIndex == index
-                            ? buttonPrimaryBgColor(context)
+                            ? buttonBlueColor(context)
                             : strokeGrayColor(context),
                       ),
                       color: selectedInsuranceIndex == index
-                          ? buttonPrimaryBgColor(context)
+                          ? buttonBlueColor(context)
                           : Colors.transparent,
                     ),
                     child: selectedInsuranceIndex == index
@@ -391,11 +391,11 @@ class _ServicesState extends State<Services> {
                     border: Border.all(
                       width: 1.5.w,
                       color: selectedAdditionsIndexes.contains(index)
-                          ? buttonPrimaryBgColor(context)
+                          ? buttonBlueColor(context)
                           : strokeGrayColor(context),
                     ),
                     color: selectedAdditionsIndexes.contains(index)
-                        ? buttonPrimaryBgColor(context)
+                        ? buttonBlueColor(context)
                         : Colors.transparent,
                   ),
                   child: selectedAdditionsIndexes.contains(index)

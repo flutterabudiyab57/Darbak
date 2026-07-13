@@ -172,6 +172,10 @@ class _SignInScreenState extends State<SignInScreen> {
                       Navigator.of(context).pop(true);
                     });
                   } else {
+                    context.read<ProfileCubit>().getProfile();
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    }
                     context.go('/shell?tab=0&skipLogin=true');
                   }
                 }

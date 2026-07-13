@@ -187,14 +187,14 @@ class _PaymentMethodCardState extends State<PaymentMethodCard> {
                     decoration: BoxDecoration(
                       color: BlocProvider.of<BookingCubit>(context)
                           .selectedPaymentMethods == widget.method
-                          ? buttonPrimaryBgColor(context)
+                          ? buttonBlueColor(context)
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(50.r),
                       border: Border.all(
                         width: 1.5.w,
                         color: BlocProvider.of<BookingCubit>(context)
                             .selectedPaymentMethods == widget.method
-                            ? buttonPrimaryBgColor(context)
+                            ? buttonBlueColor(context)
                             : strokeGrayColor(context),
                       ),
                     ),

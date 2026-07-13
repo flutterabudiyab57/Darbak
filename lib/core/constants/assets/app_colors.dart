@@ -12,7 +12,7 @@ const Color headingDark = Color(0xFFFFFFFF);
 const Color paragraphLight = Color(0xFF3B3B3B);
 const Color paragraphDark = Color(0xFFCFCFCF);
 const Color typographyMainLight = Color(0xFF06479B);
-const Color typographyMainDark = Color(0xFF06479B);
+const Color typographyMainDark = Color(0xFF0A5AC1);
 const Color typographySecondaryLight = Color(0xFF009966);
 const Color typographySecondaryDark = Color(0xFF009966);
 

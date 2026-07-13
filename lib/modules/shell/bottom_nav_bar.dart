@@ -26,7 +26,7 @@ class ShellBottomNavBar extends StatelessWidget {
       key: navKey,
       index: selectedIndex,
       backgroundColor: Colors.transparent,
-      color: buttonTextColor(context),
+      color: buttonWhiteColor(context),
       buttonBackgroundColor: Colors.transparent,
       height: 80.hs(context),
       animationDuration: const Duration(milliseconds: 300),
