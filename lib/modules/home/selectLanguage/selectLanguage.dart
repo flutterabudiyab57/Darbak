@@ -88,17 +88,17 @@ class _SelectLanguageState extends State<SelectLanguage> {
                       });
                     },
                     child: Container(
-                      width: size.width * 0.37,
-                      height: size.height * 0.065,
+                      width: 145.w,
+                      height: 55.h,
                       decoration: BoxDecoration(
                           border: Border.all(
                               color: en_Selected == true
-                                  ? Colors.transparent
-                                  : strokeMainColor(context),
+                                  ? strokeMainColor(context)
+                                  :   strokeGrayColor(context),
                               width: 2.w),
-                          borderRadius: BorderRadius.circular(10.sp),
+                          borderRadius: BorderRadius.circular(24.sp),
                           color: en_Selected == true
-                              ? buttonPrimaryBgColor(context)
+                              ? buttonSecondaryColor(context)
                               : Colors.transparent),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -107,7 +107,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                             width: 26.w,),
                           Text(
                             'English',
-                            style:en_Selected?AppTypography.buttonText16(context):AppTypography.headingColor16(context),
+                            style:AppTypography.headingColor16(context),
                           ),
                         ],
                       ),
@@ -125,15 +125,15 @@ class _SelectLanguageState extends State<SelectLanguage> {
                       });
                     },
                     child: Container(
-                      width: size.width * 0.37,
-                      height: size.height * 0.065,
+                      width: 145.w,
+                      height: 55.h,
                       decoration: BoxDecoration(
                           border: Border.all(
                               color: ar_Selected == true
-                                  ? Colors.transparent
-                                  : strokeMainColor(context),
+                                  ? strokeMainColor(context)
+                            :   strokeGrayColor(context),
                               width: 2.w),
-                          borderRadius: BorderRadius.circular(10.sp),
+                          borderRadius: BorderRadius.circular(24.sp),
                           color: ar_Selected == true
                               ? buttonPrimaryBgColor(context)
                               : Colors.transparent),
@@ -144,7 +144,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                             width: 26.w,),
                           Text(
                             'العربية',
-                            style:ar_Selected?AppTypography.buttonText16(context):AppTypography.headingColor16(context),
+                            style:AppTypography.headingColor16(context),
 
                           ),
                         ],

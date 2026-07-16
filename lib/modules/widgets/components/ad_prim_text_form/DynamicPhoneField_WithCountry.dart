@@ -215,7 +215,7 @@ class _DynamicPhoneFieldWithCountryState
                     style: TextStyle(
                       color: _messageColor,
                       fontSize: 12.sp,
-                      fontFamily: "IBMPlexSansArabic",
+                      fontFamily: "ThmanyahSans",
                       fontWeight: FontWeight.w500,
                     ),
                   ),
