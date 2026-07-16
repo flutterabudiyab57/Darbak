@@ -76,7 +76,7 @@ class _DailyRentBodyState extends State<DailyRentBody> {
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
                           color: headingColor(context),
-                          fontFamily: "IBMPlexSansArabic",
+                          fontFamily: "ThmanyahSans",
                         ),
                       ),
                       Text(

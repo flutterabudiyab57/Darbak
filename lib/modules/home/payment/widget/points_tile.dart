@@ -199,7 +199,7 @@ class _PointsTileState extends State<PointsTile> {
                 color: Color(0xff327B5B),
                 fontSize: 10.sp,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'IBMPlexSansArabic',
+                fontFamily: 'ThmanyahSans',
               ),
             ),
           ),
@@ -231,7 +231,7 @@ class _PointsTileState extends State<PointsTile> {
               style:  TextStyle(
                 color: Theme.of(context).colorScheme.onPrimary,
                 fontSize: 14.0,
-                fontFamily: 'IBMPlexSansArabic',
+                fontFamily: 'ThmanyahSans',
                 fontWeight: FontWeight.w500,
               ),
               onChanged: (value) {
@@ -272,7 +272,7 @@ class _PointsTileState extends State<PointsTile> {
                 style: TextStyle(
                   color: _controller.text.isNotEmpty ? Theme.of(context).colorScheme.onPrimary : Colors.white,
                   fontSize: 12.sp,
-                  fontFamily: 'IBMPlexSansArabic',
+                  fontFamily: 'ThmanyahSans',
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -267,7 +267,7 @@ class _InvoiceNotCompletedUIState extends State<InvoiceNotCompletedUI> {
                                   Text(
                                     locale.additions.toString(),
                                     style: TextStyle(
-                                      fontFamily: 'IBMPlexSansArabic',
+                                      fontFamily: 'ThmanyahSans',
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w500,
                                       color: Theme.of(context)

@@ -70,8 +70,8 @@ class PendingCardWidget extends StatelessWidget {
                             : "Pending Balance",
                         style: TextStyle(
                           fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'IBMPlexSansArabic',
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'ThmanyahSans',
                           color: const Color(0xFF2D6A3E),
                         ),
                         overflow: TextOverflow.ellipsis,

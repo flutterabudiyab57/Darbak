@@ -85,7 +85,7 @@ class OfferDetailsContent extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'IBMPlexSansArabic',
+                                fontFamily: 'ThmanyahSans',
                                 color: buttonTextColor(context),
                               ),
                               overflow: TextOverflow.ellipsis,

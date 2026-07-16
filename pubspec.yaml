@@ -103,12 +103,15 @@ flutter:
     - assets/anim/
 
   fonts:
-    - family: IBMPlexSansArabic
+    - family: ThmanyahSans
       fonts:
-        - asset: assets/fonts/IBMPlexSansArabic-Bold.ttf
-        - asset: assets/fonts/IBMPlexSansArabic-ExtraLight.ttf
-        - asset: assets/fonts/IBMPlexSansArabic-Light.ttf
-        - asset: assets/fonts/IBMPlexSansArabic-Medium.ttf
-        - asset: assets/fonts/IBMPlexSansArabic-Regular.ttf
-        - asset: assets/fonts/IBMPlexSansArabic-SemiBold.ttf
-        - asset: assets/fonts/IBMPlexSansArabic-Thin.ttf
+        - asset: assets/fonts/ThmanyahSans-Light.otf
+          weight: 300
+        - asset: assets/fonts/ThmanyahSans-Regular.otf
+          weight: 400
+        - asset: assets/fonts/ThmanyahSans-Medium.otf
+          weight: 500
+        - asset: assets/fonts/ThmanyahSans-Bold.otf
+          weight: 700
+        - asset: assets/fonts/ThmanyahSans-Black.otf
+          weight: 900

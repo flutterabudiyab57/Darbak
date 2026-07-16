@@ -216,7 +216,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                                     style: TextStyle(
                                       color: Colors.red,
                                       fontSize: 12.sp,
-                                      fontFamily: "IBMPlexSansArabic",
+                                      fontFamily: "ThmanyahSans",
                                     ),
                                   ),
                                 ],

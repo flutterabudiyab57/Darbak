@@ -357,7 +357,7 @@ class _LocationPickerFullState extends State<LocationPickerFull>
           Expanded(
             child: Text(msg,
                 style: TextStyle(
-                    fontFamily: 'IBMPlexSansArabic', fontSize: 13.sp)),
+                    fontFamily: 'ThmanyahSans', fontSize: 13.sp)),
           ),
         ],
       ),
@@ -550,9 +550,9 @@ class _LocationPickerFullState extends State<LocationPickerFull>
                       overflow: TextOverflow.ellipsis,
                       textDirection: TextDirection.rtl,
                       style: TextStyle(
-                        fontFamily: 'IBMPlexSansArabic',
+                        fontFamily: 'ThmanyahSans',
                         fontSize: 13.sp,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                         color: headingColor(context),
                       ),
                     ),
@@ -562,7 +562,7 @@ class _LocationPickerFullState extends State<LocationPickerFull>
                       overflow: TextOverflow.ellipsis,
                       textDirection: TextDirection.rtl,
                       style: TextStyle(
-                        fontFamily: 'IBMPlexSansArabic',
+                        fontFamily: 'ThmanyahSans',
                         fontSize: 11.sp,
                         color: Colors.grey.shade500,
                       ),
@@ -661,7 +661,7 @@ class _LocationPickerFullState extends State<LocationPickerFull>
           Text(
             locale.loading,
             style: TextStyle(
-              fontFamily: 'IBMPlexSansArabic',
+              fontFamily: 'ThmanyahSans',
               fontSize: 13.sp,
               color: mainTypographyColor(context),
             ),

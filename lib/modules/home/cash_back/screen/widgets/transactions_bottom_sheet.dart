@@ -500,8 +500,8 @@ class _TransactionItem extends StatelessWidget {
               "${transaction.sign}${transaction.amount.toStringAsFixed(0)}",
               style: TextStyle(
                 fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'IBMPlexSansArabic',
+                fontWeight: FontWeight.w500,
+                fontFamily: 'ThmanyahSans',
                 color: _getTransactionColor(transaction.eventType),
               ),
             ),

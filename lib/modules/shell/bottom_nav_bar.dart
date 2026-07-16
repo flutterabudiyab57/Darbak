@@ -26,7 +26,7 @@ class ShellBottomNavBar extends StatelessWidget {
       key: navKey,
       index: selectedIndex,
       backgroundColor: Colors.transparent,
-      color: buttonTextColor(context),
+      color: buttonWhiteColor(context),
       buttonBackgroundColor: Colors.transparent,
       height: 80.hs(context),
       animationDuration: const Duration(milliseconds: 300),
@@ -94,7 +94,7 @@ class ShellBottomNavBar extends StatelessWidget {
       ),
       label: label,
       labelStyle: TextStyle(
-        fontFamily: 'IBMPlexSansArabic',
+        fontFamily: 'ThmanyahSans',
         color: isSelected ? buttonBlueColor(context) : iconGrayColor(context),
         fontSize: 12.sps(context),
         fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,

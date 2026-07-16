@@ -204,7 +204,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
           Expanded(
             child: Text(msg,
                 style: TextStyle(
-                    fontFamily: 'IBMPlexSansArabic', fontSize: 13.sp)),
+                    fontFamily: 'ThmanyahSans', fontSize: 13.sp)),
           ),
         ],
       ),

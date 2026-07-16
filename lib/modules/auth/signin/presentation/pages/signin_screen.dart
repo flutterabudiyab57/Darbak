@@ -172,6 +172,10 @@ class _SignInScreenState extends State<SignInScreen> {
                       Navigator.of(context).pop(true);
                     });
                   } else {
+                    context.read<ProfileCubit>().getProfile();
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    }
                     context.go('/shell?tab=0&skipLogin=true');
                   }
                 }
@@ -215,7 +219,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
                                   color: headingColor(context),
-                                  fontFamily: "IBMPlexSansArabic",
+                                  fontFamily: "ThmanyahSans",
                                 ),
                               ),
                               SizedBox(height: 8.h),

@@ -88,7 +88,7 @@ class InfoCar extends StatelessWidget {
                       child: StrikethroughText(
                         text: '${carModel.priceBefore}',
                         style: TextStyle(
-                          fontFamily: "IBMPlexSansArabic",
+                          fontFamily: "ThmanyahSans",
                           fontSize: 14.sp,
                           color: paragraphColor(context),
                         ),

@@ -23,7 +23,7 @@ class NotificationsEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: paragraphColor(context),
-                fontFamily: 'IBMPlexSansArabic',
+                fontFamily: 'ThmanyahSans',
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w400,
               ),

@@ -463,7 +463,7 @@ class _PreviousOrdersState extends State<PreviousOrders> {
                   style: TextStyle(
                     color: mainTypographyColor(context),
                     fontSize: 20.sp,
-                    fontFamily: 'IBMPlexSansArabic',
+                    fontFamily: 'ThmanyahSans',
                     fontWeight: FontWeight.w700,
                   ),
                 ),

@@ -210,7 +210,7 @@ class _BranchSelectionBottomSheetState
                                           ? "منطقة توصيل محددة"
                                           : "Defined delivery zone",
                                       style: TextStyle(
-                                        fontFamily: 'IBMPlexSansArabic',
+                                        fontFamily: 'ThmanyahSans',
                                         fontSize: 11.sp,
                                         color:
                                         iconDefaultColor(context),

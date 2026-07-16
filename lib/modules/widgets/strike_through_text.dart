@@ -24,7 +24,7 @@ class StrikethroughText extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: style ??
               TextStyle(
-                fontFamily: "IBMPlexSansArabic",
+                fontFamily: "ThmanyahSans",
                 fontSize: 14.sp,
                 color: paragraphColor(context),
               ),

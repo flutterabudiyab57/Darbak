@@ -146,7 +146,7 @@ class _ServicesNotCompetedState extends State<ServicesNotCompeted> {
                   style: TextStyle(
                       color: Colors.grey[400],
                       fontSize: 34.sp,
-                      fontFamily: "IBMPlexSansArabic",
+                      fontFamily: "ThmanyahSans",
                       letterSpacing: 1.5),
                 ),
               ),

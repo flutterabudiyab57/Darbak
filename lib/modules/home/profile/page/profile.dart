@@ -247,7 +247,7 @@ class _ProfileContentState extends State<_ProfileContent> {
                     Text(
                       locale.logout.toString(),
                       style: TextStyle(
-                        fontFamily: 'IBMPlexSansArabic',
+                        fontFamily: 'ThmanyahSans',
                         fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
                         color: Color(0xffFF0004),

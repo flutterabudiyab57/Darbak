@@ -334,7 +334,7 @@ class _DarbakBalanceWidgetState extends State<DarbakBalanceWidget>
                             child: RichText(
                               text: TextSpan(
                                 style: TextStyle(
-                                  fontFamily: 'IBMPlexSansArabic',
+                                  fontFamily: 'ThmanyahSans',
                                   color: buttonGreenColor(context),
                                   fontSize: 12.sps(context),
                                   fontWeight: FontWeight.bold,
@@ -454,7 +454,7 @@ class _DarbakBalanceWidgetState extends State<DarbakBalanceWidget>
                                                   text: TextSpan(
                                                     style: TextStyle(
                                                       fontFamily:
-                                                          'IBMPlexSansArabic',
+                                                          'ThmanyahSans',
                                                       color: buttonGreenColor(
                                                           context),
                                                       fontSize: 13.sp,

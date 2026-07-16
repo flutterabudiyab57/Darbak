@@ -170,7 +170,7 @@ class _SearchState extends State<SearchScreen>
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           toolbarHeight: 80.hs(context),
-          leadingWidth: 400.ws(context),
+          leadingWidth: 1.sw,
           leading: BlocBuilder<ProfileCubit, ProfileState>(
             builder: (context, state) {
               if (state is ProfileLoading) {
@@ -179,6 +179,10 @@ class _SearchState extends State<SearchScreen>
 
               if (state is ProfileSuccess || state is ProfileFailed) {
                 return _buildProfileHeader(state, locale);
+              }
+
+              if (state is ProfileLogout || state is ProfileInitial) {
+                return _buildLoadingHeader(locale);
               }
               return const SizedBox.shrink();
             },
@@ -267,7 +271,7 @@ class _SearchState extends State<SearchScreen>
                   AutoSizeText(
                     '${locale.welcome2}',
                     style: TextStyle(
-                      fontFamily: 'IBMPlexSansArabic',
+                      fontFamily: 'ThmanyahSans',
                       color: headingColor(context),
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,
@@ -280,9 +284,9 @@ class _SearchState extends State<SearchScreen>
                     '${locale.letsBookCar}',
                     style: TextStyle(
                       color: paragraphColor(context),
-                      fontFamily: 'IBMPlexSansArabic',
+                      fontFamily: 'ThmanyahSans',
                       fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -319,11 +323,15 @@ class _SearchState extends State<SearchScreen>
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Bounce(
-            onTap: () {
-              context.jumpToShellTab(3);
+            onTap: () async {
+              final prefs = await SharedPreferences.getInstance();
+              final token = prefs.getString('token');
+              if (token != null) {
+                context.pushNamed(Routes.editProfile);
+              }
             },
             child: DottedBorder(
               borderType: BorderType.Circle,
@@ -369,7 +377,8 @@ class _SearchState extends State<SearchScreen>
                     ),
                   ],
                 ),
-                _buildNotificationButton(),
+                Spacer(),
+              //  _buildNotificationButton(),
               ],
             ),
           ),

@@ -274,7 +274,7 @@ class _CarsInformationState extends State<CarsInformation> {
                                   fontSize: 20.sp,
                                   fontWeight: FontWeight.w500,
                                   color: mainTypographyColor(context),
-                                  fontFamily: 'IBMPlexSansArabic',
+                                  fontFamily: 'ThmanyahSans',
                                 ),
                               ),
                               SizedBox(width: 4.w),
@@ -284,7 +284,7 @@ class _CarsInformationState extends State<CarsInformation> {
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.grey,
-                                  fontFamily: 'IBMPlexSansArabic',
+                                  fontFamily: 'ThmanyahSans',
                                 ),
                               ),                      SizedBox(width: 6.w),
                               SvgPicture.asset(

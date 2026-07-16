@@ -268,11 +268,11 @@ class _ServicesState extends State<Services> {
                       border: Border.all(
                         width: 1.5.w,
                         color: selectedInsuranceIndex == index
-                            ? buttonPrimaryBgColor(context)
+                            ? buttonBlueColor(context)
                             : strokeGrayColor(context),
                       ),
                       color: selectedInsuranceIndex == index
-                          ? buttonPrimaryBgColor(context)
+                          ? buttonBlueColor(context)
                           : Colors.transparent,
                     ),
                     child: selectedInsuranceIndex == index
@@ -391,11 +391,11 @@ class _ServicesState extends State<Services> {
                     border: Border.all(
                       width: 1.5.w,
                       color: selectedAdditionsIndexes.contains(index)
-                          ? buttonPrimaryBgColor(context)
+                          ? buttonBlueColor(context)
                           : strokeGrayColor(context),
                     ),
                     color: selectedAdditionsIndexes.contains(index)
-                        ? buttonPrimaryBgColor(context)
+                        ? buttonBlueColor(context)
                         : Colors.transparent,
                   ),
                   child: selectedAdditionsIndexes.contains(index)
@@ -492,7 +492,7 @@ class _ServicesState extends State<Services> {
                           child: Text(
                             locale.additions!,
                             style: TextStyle(
-                              fontFamily: "IBMPlexSansArabic",
+                              fontFamily: "ThmanyahSans",
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w700,
                               color: mainTypographyColor(context),
@@ -518,7 +518,7 @@ class _ServicesState extends State<Services> {
                 style: TextStyle(
                     color: Colors.grey[400],
                     fontSize: 34.sp,
-                    fontFamily: "IBMPlexSansArabic",
+                    fontFamily: "ThmanyahSans",
                     letterSpacing: 1.5),
               ),
             ),

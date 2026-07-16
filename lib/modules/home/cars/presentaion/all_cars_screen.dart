@@ -125,7 +125,7 @@ class _AllCarsScreenState extends State<AllCarsScreen>
         toolbarHeight: 80.hs(context),
         title: AutoSizeText(
           widget.filterModel?.selectedBranch?.name ?? locale.allCar.toString(),
-          style: AppTypography.headingColor22(context),
+          style: AppTypography.mainTypographyColor22(context),
         ),
         elevation: 0.0,
         actions: [

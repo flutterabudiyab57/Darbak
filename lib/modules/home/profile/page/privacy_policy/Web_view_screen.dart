@@ -80,7 +80,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     Text(
                       'تعذّر تحميل الصفحة',
                       style: TextStyle(
-                        fontFamily: 'IBMPlexSansArabic',
+                        fontFamily: 'ThmanyahSans',
                         fontSize: 18.sp,
                         color: Colors.grey,
                       ),

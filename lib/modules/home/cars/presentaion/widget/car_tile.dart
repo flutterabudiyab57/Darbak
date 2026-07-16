@@ -105,7 +105,7 @@ class _CarTileState extends State<CarTile> {
               }
             },
             child: Container(
-              margin: EdgeInsets.all(6.h),
+              margin: EdgeInsets.all(4.h),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15.r),
                 color: backgroundColor(context),
@@ -193,23 +193,19 @@ class _CarTileState extends State<CarTile> {
                             ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Center(
-                        child: CachedNetworkImage(
-                          imageUrl: carData.photo,
-                          fit: BoxFit.contain,
-                          width: 300.w,
-                          height: 180.h,
-                          errorWidget: (context, url, error) =>
-                              Lottie.asset("assets/anim/empty.json"),
-                        ),
-                      ),
-                    ],
+                  Center(
+                    child: CachedNetworkImage(
+                      imageUrl: carData.photo,
+                      fit: BoxFit.contain,
+                      width: 300.w,
+                      height: 180.h,
+                      errorWidget: (context, url, error) =>
+                          Lottie.asset("assets/anim/empty.json"),
+                    ),
                   ),
+
                   Padding(
-                    padding: EdgeInsets.all(4.sp),
+                    padding: EdgeInsets.all(8.sp),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -239,7 +235,7 @@ class _CarTileState extends State<CarTile> {
                                   StrikethroughText(
                                     text: "${carData.priceBefore}",
                                     style: TextStyle(
-                                      fontFamily: 'IBMPlexSansArabic',
+                                      fontFamily: 'ThmanyahSans',
                                       color: mainTypographyColor(context),
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w400,

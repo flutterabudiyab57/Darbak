@@ -413,7 +413,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               fontSize: 13.sp,
                               fontWeight: FontWeight.bold,
                               color: headingColor(context),
-                              fontFamily: "IBMPlexSansArabic",
+                              fontFamily: "ThmanyahSans",
                             ),
                           ),
                           SizedBox(height: 8.h),

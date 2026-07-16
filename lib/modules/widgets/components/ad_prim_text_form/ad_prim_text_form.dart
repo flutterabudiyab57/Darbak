@@ -205,7 +205,7 @@ class _ADPrimTextFormState extends State<ADPrimTextForm> {
             ),
             errorStyle: TextStyle(
               fontSize: 12.sp,
-              fontFamily: "IBMPlexSansArabic",
+              fontFamily: "ThmanyahSans",
               fontWeight: FontWeight.w500,
               color: widget.auth
                   ? (isDark ? Colors.white70 : Colors.red)
@@ -282,7 +282,7 @@ class _ADPrimTextFormState extends State<ADPrimTextForm> {
                     style: TextStyle(
                       color: _messageColor,
                       fontSize: 12.sp,
-                      fontFamily: "IBMPlexSansArabic",
+                      fontFamily: "ThmanyahSans",
                       fontWeight: FontWeight.w500,
                     ),
                   ),

@@ -22,7 +22,7 @@ class TextTileWidget extends StatelessWidget {
         AutoSizeText(
           title,
           style: TextStyle(
-            fontFamily: "IBMPlexSansArabic",
+            fontFamily: "ThmanyahSans",
             fontSize: 13.sp,
             color: paragraphColor(context),
             fontWeight: FontWeight.w500,
@@ -32,9 +32,9 @@ class TextTileWidget extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontFamily: "IBMPlexSansArabic",
+              fontFamily: "ThmanyahSans",
               color: headingColor(context),
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               fontSize: 14.sp,
             ))
       ],
