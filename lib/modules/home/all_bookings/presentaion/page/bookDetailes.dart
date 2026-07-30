@@ -10,11 +10,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
 import '../../../../../core/constants/assets/assets.dart';
 import '../../../../../core/helpers/helper_fun.dart';
 import '../../../../../core/helpers/interceptors/loading_indicator.dart';
+import '../../../../../core/router/app_router.dart';
 import '../../../../../core/style/style.dart';
 import '../../../../../language/locale.dart';
 import '../../../../widgets/Dashed_divider.dart';
@@ -201,22 +203,18 @@ class BookDetails extends StatelessWidget  {
                                 .checkOrderStep(
                                     orderId: bookingData.id.toString());
                             if (bookingData.step == 2) {
-                              BlocProvider.of<AdditionsCubit>(context)
-                                          .stepModel !=
-                                      null
-                                  ? navigateTo(
-                                      context,
-                                      AdditionsScreen(
-                                        datum: bookingData.car,
-                                        fromNotCompleted: true,
-                                        bookDetails: bookingData,
-                                        checkOrderStepModel:
-                                            BlocProvider.of<AdditionsCubit>(
-                                                    context)
-                                                .stepModel,
-                                      ))
-                                  : null;
-                            } else if (bookingData.step == 3) {
+                              if (BlocProvider.of<AdditionsCubit>(context).stepModel != null) {
+                                context.push(
+                                  '/additions',
+                                  extra: AdditionsArgs(
+                                    datum: bookingData.car,
+                                    fromNotCompleted: true,
+                                    bookDetails: bookingData,
+                                    checkOrderStepModel: BlocProvider.of<AdditionsCubit>(context).stepModel,
+                                  ),
+                                );
+                              }
+                            }                            else if (bookingData.step == 3) {
                               BlocProvider.of<AdditionsCubit>(context)
                                           .stepModel !=
                                       null

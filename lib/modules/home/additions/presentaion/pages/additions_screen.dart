@@ -152,10 +152,11 @@ class _AdditionsScreenState extends State<AdditionsScreen>
                                 SizedBox(height: 20.sp),
                                 GestureDetector(
                                   onTap: () async {
+                                    print('BTN_TAP_FIRED');   // <-- ضيف السطر ده بس
                                     BlocProvider.of<BookingCubit>(context)
                                         .reset();
                                     await BlocProvider.of<AllBookingCubit>(
-                                            context)
+                                        context)
                                         .getAllBooking(state: 'running');
 
                                     context.go('/shell?tab=2');

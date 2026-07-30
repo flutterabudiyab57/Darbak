@@ -196,13 +196,13 @@ class _SearchState extends State<SearchScreen>
               _buildTripCard(locale),
               SizedBox(height: 20.h,),
                Branches_Card(),
-              SizedBox(height: 20.h,),
-               Image.asset(
-                 "assets/images/main-card.png",
-                 width: 78.w,
-                 height: 50.h,
-                 fit: BoxFit.fill,
-               ),
+              // SizedBox(height: 20.h,),
+              //  Image.asset(
+              //    "assets/images/main-card.png",
+              //    width: 78.w,
+              //    height: 50.h,
+              //    fit: BoxFit.fill,
+              //  ),
 
                SizedBox(height: 20.h,),
                MonthlyPackageWidget(
@@ -223,7 +223,7 @@ class _SearchState extends State<SearchScreen>
                   );
                 },
               ),
-              SizedBox(height: 100.h),
+              SizedBox(height: 60.h),
             ],
           ),
         ),

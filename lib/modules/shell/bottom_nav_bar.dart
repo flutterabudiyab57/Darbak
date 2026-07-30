@@ -96,7 +96,7 @@ class ShellBottomNavBar extends StatelessWidget {
       labelStyle: TextStyle(
         fontFamily: 'ThmanyahSans',
         color: isSelected ? buttonBlueColor(context) : iconGrayColor(context),
-        fontSize: 12.sps(context),
+        fontSize: isSelected ?16.sps(context):14.sps(context),
         fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,
       ),
     );

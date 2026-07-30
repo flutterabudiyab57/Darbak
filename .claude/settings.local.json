@@ -42,7 +42,11 @@
       "Bash(grep -v \"\\\\.g\\\\.dart\" -exec grep -h \"^import \" {} \\\\;)",
       "Bash(xargs grep \"^import \")",
       "Bash(chmod +x /tmp/find_unused_imports.sh)",
-      "Bash(flutter test *)"
+      "Bash(flutter test *)",
+      "Read(//c/Users/flutt/AppData/Local/Temp/claude/E--projects-darbak/362fb523-96e8-4303-baa7-1b9660c4bc84/scratchpad/**)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(ls \"E:\\\\projects\\\\darakson-master\\\\darakson-master\" 2>&1 | head -30)"
     ]
   }
 }

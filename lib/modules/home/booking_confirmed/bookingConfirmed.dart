@@ -10,6 +10,8 @@ import 'package:darbak/core/style/style.dart';
 import 'package:darbak/core/constants/assets/app_colors.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../core/constants/assets/assets.dart';
+import '../../../shared/commponents.dart';
+import '../../shell/app_shell.dart';
 
 class BookingConfirmedBottomSheet extends StatelessWidget {
   final String? orderId;
@@ -108,7 +110,7 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
                   await BlocProvider.of<AllBookingCubit>(context)
                       .getAllBooking(state: 'running');
 
-                  context.go('/shell?tab=2');
+                  navigateAndFinish(context, const AppShell(initialTab: 0));
                 },
                 child: ADGradientButton(
                   locale.goToBookings,
@@ -122,9 +124,8 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
                   await BlocProvider.of<AllBookingCubit>(context)
                       .getAllBooking(state: 'running');
 
-                  context.go('/shell?tab=0');
-                },
-                child: ADGradientButton(
+                  navigateAndFinish(context, const AppShell(initialTab: 0));
+                },                child: ADGradientButton(
                   locale.goToHome,
                   backgroundColor: buttonWhiteColor(context),
                   border: Border.all(

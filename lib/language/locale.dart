@@ -552,6 +552,7 @@ class AppLocalizations {
   String? get deliverAnotherBranch =>
       _localizedValues[locale.languageCode]!['deliverAnotherBranch'];
   String? get toTime => _localizedValues[locale.languageCode]!['toTime'];
+  String? get time => _localizedValues[locale.languageCode]!['time'];
 
   String? get search => _localizedValues[locale.languageCode]!['search'];
 

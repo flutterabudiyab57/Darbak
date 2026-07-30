@@ -190,6 +190,7 @@ class _InfoInvoiceWidgetState extends State<InfoInvoiceWidget> {
         isActive ? const Color(0xFFC61919) : const Color(0xFF34C441);
     final bgColor =
         isActive ? const Color(0xffC71A1A) : const Color(0xff34C441);
+    final locale = AppLocalizations.of(context);
 
     return Container(
       padding: EdgeInsets.all(12.w),
@@ -225,11 +226,11 @@ class _InfoInvoiceWidgetState extends State<InfoInvoiceWidget> {
             ],
           ),
           SizedBox(height: 10.h),
-          _infoRow(context, "الموقع", location, Icons.location_on_outlined),
+          _infoRow(context, locale!.location.toString(), location, Icons.location_on_outlined),
           SizedBox(height: 6.h),
-          _infoRow(context, "الوقت", time, Icons.access_time),
+          _infoRow(context, locale.time.toString(), time, Icons.access_time),
           SizedBox(height: 6.h),
-          _infoRow(context, "التاريخ", date, Icons.calendar_month),
+          _infoRow(context, locale.dateLabel, date, Icons.calendar_month),
         ],
       ),
     );
@@ -401,7 +402,7 @@ class _InfoInvoiceWidgetState extends State<InfoInvoiceWidget> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        isRTL ? 'الإضافات' : 'Additions',
+                        locale.additions.toString(),
                         style: AppTypography.headingColor16(context),
                       ),
                     ),

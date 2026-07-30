@@ -548,13 +548,19 @@ class _InvoiceUIState extends State<InvoiceUI> {
                           SizedBox(height: 8.h),
                           Row(
                             children: [
-                              Text(
-                                  locale.helpOnRoad,
-                                  style: AppTypography.headingColor15(context)),
+                              Expanded(
+                                flex : 1,
+                                child: Text(
+                                    locale.helpOnRoad,
+                                    style: AppTypography.headingColor15(context)),
+                              ),
                               Spacer(),
-                              Text(
-                                  locale.receiveFullReturnFull,
-                                  style: AppTypography.headingColor15(context)),
+                              Expanded(
+                                flex : 3,
+                                child: Text(
+                                    locale.receiveFullReturnFull,
+                                    style: AppTypography.headingColor15(context)),
+                              ),
                             ],
                           ),
                           SizedBox(height: 8.h),
