@@ -1,10 +1,8 @@
-import 'package:darbak/modules/home/booking_packages/cars_monthly_screan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:darbak/modules/home/search_screen/blocs/search_bloc/search_cubit.dart';
 import 'package:darbak/modules/home/search_screen/blocs/search_bloc/search_state.dart';
 import 'package:darbak/modules/home/search_screen/data/models/filter_model.dart';
@@ -12,6 +10,7 @@ import 'package:darbak/core/helpers/enums.dart';
 import 'package:darbak/core/helpers/helper_fun.dart';
 
 import '../../../../core/constants/assets/app_colors.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../language/locale.dart';
 import '../../../widgets/components/appbar.dart';
 import '../../all_branching/bloc/all_branching_cubit.dart';
@@ -106,8 +105,7 @@ class _MonthlyPackageScreenState extends State<MonthlyPackageScreen> {
                           castClass:
                               context.read<ProfileCubit>().custClass.toString())
                       .then((value) {
-                    PersistentNavBarNavigator.pushNewScreen(context,
-                        screen: CarsMonthlyScreen.entry(filterModel: filterModel));
+                    context.pushNamed(Routes.carsMonthly, extra: filterModel);
                   });
                 } else {
                   print(

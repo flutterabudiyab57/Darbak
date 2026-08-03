@@ -1,6 +1,6 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:darbak/modules/home/search_screen/blocs/search_bloc/search_cubit.dart';
 import 'package:darbak/modules/home/search_screen/blocs/search_bloc/search_state.dart';
 import 'package:darbak/modules/home/search_screen/data/models/filter_model.dart';
@@ -11,12 +11,12 @@ import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/assets/app_colors.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../language/locale.dart';
 import '../../../widgets/components/appbar.dart';
 import '../../cars/presentaion/bloc/cubit/cars_cubit.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
-import '../cars_list_package.dart';
 import '../widgets/airbort_rent_body.dart';
 import 'package:darbak/service_locator.dart';
 
@@ -104,8 +104,7 @@ class _AirportPackagesState extends State<AirportPackageScreen> {
                             castClass:
                                 context.read<ProfileCubit>().custClass.toString())
                         .then((value) {
-                      PersistentNavBarNavigator.pushNewScreen(context,
-                          screen: CarsListPackage.entry(filterModel: filterModel));
+                      context.pushNamed(Routes.carsListPackage, extra: filterModel);
                     });
                   } else {
                     print(

@@ -22,6 +22,8 @@ import '../../modules/home/all_branching/page/branches_screen.dart';
 import '../../modules/home/all_branching/page/view_location.dart';
 import '../../modules/home/booking_confirmed/bookingConfirmed.dart';
 import '../../modules/home/booking_from_cars/presentaion/view/branchs_with_car_screan.dart';
+import '../../modules/home/booking_packages/cars_list_package.dart';
+import '../../modules/home/booking_packages/cars_monthly_screan.dart';
 import '../../modules/home/booking_packages/ui/airboart_package_screen.dart';
 import '../../modules/home/booking_packages/ui/daily_package_screen.dart';
 import '../../modules/home/booking_packages/ui/delivery_package_screen.dart';
@@ -266,6 +268,16 @@ final appRouter = GoRouter(
       path: '/delivery-package',
       name: Routes.deliveryPackage,
       builder: (_, __) => DeliveryPackageScreen.entry(),
+    ),
+    GoRoute(
+      path: '/package-cars',
+      name: Routes.carsListPackage,
+      builder: (_, s) => CarsListPackage.entry(filterModel: s.extra as FilterModel?),
+    ),
+    GoRoute(
+      path: '/monthly-cars',
+      name: Routes.carsMonthly,
+      builder: (_, s) => CarsMonthlyScreen.entry(filterModel: s.extra as FilterModel?),
     ),
     GoRoute(
       path: '/additions',

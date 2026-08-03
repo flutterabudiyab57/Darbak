@@ -46,6 +46,8 @@ class Routes {
   static const monthlyPackage = 'monthlyPackage';
   static const airportPackage = 'airportPackage';
   static const deliveryPackage = 'deliveryPackage';
+  static const carsListPackage = 'carsListPackage'; // /package-cars
+  static const carsMonthly = 'carsMonthly'; //        /monthly-cars
   static const additions = 'additions';
   static const bookDetails = 'bookDetails';
   static const bookingConfirmed = 'bookingConfirmed';

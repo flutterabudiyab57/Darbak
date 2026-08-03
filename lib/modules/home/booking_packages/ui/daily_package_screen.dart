@@ -1,8 +1,8 @@
 
 import 'package:darbak/modules/home/booking_packages/widgets/daily_rent_body.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:darbak/modules/home/search_screen/blocs/search_bloc/search_cubit.dart';
 import 'package:darbak/modules/home/search_screen/blocs/search_bloc/search_state.dart';
 import 'package:darbak/modules/home/search_screen/data/models/filter_model.dart';
@@ -12,13 +12,13 @@ import 'package:darbak/core/helpers/helper_fun.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/router/routes.dart';
 import '../../../../language/locale.dart';
 import '../../../widgets/components/appbar.dart';
 import '../../all_branching/bloc/all_branching_cubit.dart';
 import '../../cars/presentaion/bloc/cubit/cars_cubit.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
-import '../cars_list_package.dart';
 
 
 class DailyPackages extends StatefulWidget {
@@ -107,8 +107,7 @@ class _DailyPackagesState extends State<DailyPackages> {
                           .custClass
                           .toString())
                       .then((value) {
-                    PersistentNavBarNavigator.pushNewScreen(context,
-                        screen: CarsListPackage(filterModel: filterModel));
+                    context.pushNamed(Routes.carsListPackage, extra: filterModel);
                   });
                 } else {
                   print(

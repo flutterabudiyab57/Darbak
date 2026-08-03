@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 import '../../../../core/helpers/enums.dart';
 import '../../../../core/helpers/helper_fun.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../language/locale.dart';
 import '../../../widgets/components/appbar.dart';
 import '../../cars/presentaion/bloc/cubit/cars_cubit.dart';
@@ -16,7 +17,6 @@ import '../../search_screen/blocs/search_bloc/search_cubit.dart';
 import '../../search_screen/blocs/search_bloc/search_state.dart';
 import '../../search_screen/data/models/filter_model.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
-import '../cars_list_package.dart';
 import '../widgets/delivery_rent_body.dart';
 import 'package:darbak/service_locator.dart';
 
@@ -109,8 +109,7 @@ class _DeliveryPackageScreenState extends State<DeliveryPackageScreen> {
                         .toString(),
                   )
                       .then((value) {
-                    PersistentNavBarNavigator.pushNewScreen(context,
-                        screen: CarsListPackage.entry(filterModel: filterModel));
+                    context.pushNamed(Routes.carsListPackage, extra: filterModel);
                   });
                 } else {
                   print(
