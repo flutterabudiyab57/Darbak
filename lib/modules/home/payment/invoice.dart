@@ -4,26 +4,26 @@ import 'package:bounce/bounce.dart';
 import 'package:darbak/core/style/style.dart';
 import 'package:darbak/modules/home/payment/widget/info_invoice.dart';
 import 'package:darbak/modules/home/payment/widget/info_invoice_notCompleted.dart';
-import 'package:darbak/modules/home/payment/widget/web_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import '../../../core/constants/assets/app_colors.dart';
 import '../../../core/constants/assets/assets.dart';
 import '../../../core/helpers/helper_fun.dart';
+import '../../../core/router/app_router.dart';
+import '../../../core/router/routes.dart';
 import '../../../language/locale.dart';
 import '../../../shared/commponents.dart';
 import '../../widgets/Dashed_divider.dart';
 import '../../widgets/components/ad_gradient_btn.dart';
 import '../../widgets/components/appbar.dart';
 import '../additions/presentaion/blocs/addition_cubit/additions_cubit.dart';
-import '../additions/presentaion/pages/additions_screen.dart';
 import '../all_bookings/data/model/booking_model.dart';
 import '../all_bookings/data/model/check_order_step_model.dart';
 import '../blocs/booking_cubit/booking_cubit.dart';
-import '../booking_confirmed/bookingConfirmed.dart';
 import '../cars/data/models/cars_model.dart';
 import '../cars/presentaion/widget/car_tile.dart';
 import '../profile/blocs/profile_cubit/profile_cubit.dart';
@@ -254,14 +254,16 @@ class _InvoiceUIState extends State<InvoiceUI> {
               final isForceCash = invoiceData?.forceCashPayment == true;
 
               if (isForceCash) {
-                BookingConfirmedBottomSheet.show(
-                  context,
-                  orderId: widget.orderID.toString(),
-                  carName: widget.carModel?.name,
-                  total: BlocProvider.of<InvoiceCubit>(context)
-                      .data
-                      ?.total
-                      ?.toString(),
+                context.pushNamed(
+                  Routes.bookingConfirmed,
+                  extra: BookingConfirmedArgs(
+                    orderId: widget.orderID.toString(),
+                    carName: widget.carModel?.name,
+                    total: BlocProvider.of<InvoiceCubit>(context)
+                        .data
+                        ?.total
+                        ?.toString(),
+                  ),
                 );
                 return;
               }
@@ -269,20 +271,21 @@ class _InvoiceUIState extends State<InvoiceUI> {
               if (selectedPaymentMethod == PaymentMethod.visa ||
                   selectedPaymentMethod == PaymentMethod.madfou ||
                   selectedPaymentMethod == PaymentMethod.tamara) {
-                navigateTo(
-                    context,
-                    WebPayment(
-                      url: state.paymentStepModel.paymentUrl,
-                    ));
+                context.pushNamed(
+                  Routes.webPayment,
+                  extra: state.paymentStepModel.paymentUrl,
+                );
               } else {
-                BookingConfirmedBottomSheet.show(
-                  context,
-                  orderId: widget.orderID.toString(),
-                  carName: widget.carModel?.name,
-                  total: BlocProvider.of<InvoiceCubit>(context)
-                      .data
-                      ?.total
-                      ?.toString(),
+                context.pushNamed(
+                  Routes.bookingConfirmed,
+                  extra: BookingConfirmedArgs(
+                    orderId: widget.orderID.toString(),
+                    carName: widget.carModel?.name,
+                    total: BlocProvider.of<InvoiceCubit>(context)
+                        .data
+                        ?.total
+                        ?.toString(),
+                  ),
                 );
               }
             } else if (state is InvoiceFailed) {
@@ -339,17 +342,18 @@ class _InvoiceUIState extends State<InvoiceUI> {
                                                     .order!
                                                     .id
                                                     .toString());
-                                        navigateTo(
-                                            context,
-                                            AdditionsScreen(
-                                              fromAddAdditions: true,
-                                              datum: widget.carModel,
-                                              fromNotCompleted: true,
-                                              checkOrderStepModel: BlocProvider
-                                                      .of<AdditionsCubit>(
-                                                          context)
-                                                  .stepModel,
-                                            ));
+                                        context.pushNamed(
+                                          Routes.additions,
+                                          extra: AdditionsArgs(
+                                            fromAddAdditions: true,
+                                            datum: widget.carModel,
+                                            fromNotCompleted: true,
+                                            checkOrderStepModel: BlocProvider
+                                                    .of<AdditionsCubit>(
+                                                        context)
+                                                .stepModel,
+                                          ),
+                                        );
                                         setState(() {
                                           widget.isNotCompletedOrder == false;
                                         });

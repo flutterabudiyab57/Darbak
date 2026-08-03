@@ -22,8 +22,9 @@ import '../../../../widgets/components/identity_type_selector.dart';
 import '../../../blocs/auth_bloc/onboarding_cubt_cubit.dart';
 import '../../../forgotPassword/presentaion/widgets/forgotPassword.dart';
 import '../../../signin/presentation/pages/signin_screen.dart';
+import '../../../../../core/router/app_router.dart';
+import '../../../../../core/router/routes.dart';
 import '../bloc/register_cubit.dart';
-import 'otp_register.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? isLogin;
@@ -285,14 +286,9 @@ class _RegisterPageState extends State<RegisterPage> {
         child: BlocConsumer<RegisterCubit, RegisterState>(
           listener: (context, state) {
             if (state is RegisterRequiresVerification) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => OtpVerifyScreen(
-                    userId: state.userId,
-                    phone: state.phone,
-                  ),
-                ),
+              context.pushNamed(
+                Routes.otp,
+                extra: OtpArgs(userId: state.userId, phone: state.phone),
               );
             } else if (state is RegisterSuccess) {
               if (widget.pushAddition) {

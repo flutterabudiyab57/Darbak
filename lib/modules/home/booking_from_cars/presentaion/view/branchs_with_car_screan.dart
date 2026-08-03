@@ -2,7 +2,6 @@ import 'package:darbak/core/constants/assets/app_colors.dart';
 import 'package:darbak/core/helpers/helper_fun.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/additions/presentaion/blocs/addition_cubit/additions_cubit.dart';
-import 'package:darbak/modules/home/additions/presentaion/pages/additions_screen.dart';
 import 'package:darbak/modules/home/all_branching/data/models/branch_model.dart';
 import 'package:darbak/modules/home/booking_from_cars/presentaion/bloc/booking_cars_cubit.dart';
 import 'package:darbak/modules/home/booking_from_cars/presentaion/bloc/booking_cars_state.dart';
@@ -16,6 +15,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../core/helpers/interceptors/loading_indicator.dart';
+import '../../../../../core/router/app_router.dart';
+import '../../../../../core/router/routes.dart';
 import '../../../../../service_locator.dart';
 import '../../../../widgets/Dashed_divider.dart';
 import '../../../../widgets/components/appbar.dart';
@@ -198,9 +199,8 @@ class _BranchWithCarScreenState extends State<BranchWithCarScreen> {
       return;
     } else if (state is SearchValidate) {
       additionsCubit.getCarFeatures(context, widget.carModel.id.toString(), null);
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => AdditionsScreen(datum: widget.carModel)),
-      );
+      context.pushNamed(Routes.additions,
+          extra: AdditionsArgs(datum: widget.carModel));
     } else {
       print("BranchWithCarScreen: unexpected state $state");
     }

@@ -1,8 +1,6 @@
 import 'package:darbak/core/style/style.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/additions/presentaion/blocs/addition_cubit/additions_cubit.dart';
-import 'package:darbak/modules/home/additions/presentaion/pages/additions_screen.dart';
-import 'package:darbak/modules/home/booking_from_cars/presentaion/view/branchs_with_car_screan.dart';
 import 'package:darbak/modules/home/cars/data/models/cars_model.dart';
 import 'package:darbak/modules/home/cars/presentaion/widget/car_icon_info.dart';
 import 'package:darbak/modules/home/search_screen/data/models/filter_model.dart';
@@ -14,7 +12,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
 import '../../../../../core/constants/assets/assets.dart';
 import '../../../../../core/helpers/interceptors/loading_indicator.dart';
@@ -22,9 +19,10 @@ import '../../../../widgets/Dashed_divider.dart';
 import '../../../../widgets/components/appbar.dart';
 import '../../../../widgets/components/car_photos_slider.dart';
  import '../../../../widgets/strike_through_text.dart';
+import '../../../../../core/router/app_router.dart';
+import '../../../../../core/router/routes.dart';
 import '../../../search_screen/blocs/search_bloc/search_cubit.dart';
 import '../../../search_screen/presentaion/widget/monthly_package_widget.dart';
-import 'image_car_page.dart';
 
 class CarsInformation extends StatefulWidget {
   CarsInformation(
@@ -104,13 +102,9 @@ class _CarsInformationState extends State<CarsInformation> {
                       mainPhoto: widget.datum!.photo,
                       photos: widget.datum!.photos,
                       onImageTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (context) => ImageCarPage(
-                              photo: widget.datum!.photos,
-                            ),
-                          ),
+                        context.pushNamed(
+                          Routes.imageCarPage,
+                          extra: widget.datum!.photos,
                         );
                       },
                     ),
@@ -496,14 +490,11 @@ class _CarsInformationState extends State<CarsInformation> {
                   Bounce(
                     onTap: () {
                       if (widget.filterModel == null) {
-                        PersistentNavBarNavigator.pushNewScreen(context,
-                            screen:
-                            BranchWithCarScreen(carModel: widget.datum!));
+                        context.pushNamed(Routes.branchWithCar,
+                            extra: widget.datum!);
                       } else {
-                        PersistentNavBarNavigator.pushNewScreen(context,
-                            screen: AdditionsScreen(
-                              datum: widget.datum,
-                            ));
+                        context.pushNamed(Routes.additions,
+                            extra: AdditionsArgs(datum: widget.datum));
                       }
                     },
                     child: Bounce(
@@ -559,18 +550,13 @@ class _CarsInformationState extends State<CarsInformation> {
                                               .getCarFeatures(context, widget.datum!.id.toString(), widget.filterModel);
                                           if (widget.filterModel == null && lookLike == true) {
                                             BlocProvider.of<SearchCubit>(context).resetBranches();
-                                            PersistentNavBarNavigator
-                                                .pushNewScreen(context,
-                                                screen: BranchWithCarScreen(
-                                                    carModel: widget.datum!));} else {
+                                            context.pushNamed(Routes.branchWithCar,
+                                                extra: widget.datum!);} else {
                                             Navigator.pop(context);
                                             if (state is AdditionsSuccess ||
                                                 state is AdditionsInitial) {
-                                              PersistentNavBarNavigator
-                                                  .pushNewScreen(context,
-                                                  screen: AdditionsScreen(
-                                                    datum: widget.datum,
-                                                  ));
+                                              context.pushNamed(Routes.additions,
+                                                  extra: AdditionsArgs(datum: widget.datum));
                                             }
                                             if (state is AdditionsFailed) {
                                               print("AdditionsFailed 00 00 00");

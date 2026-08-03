@@ -265,6 +265,10 @@ class _ProfileContentState extends State<_ProfileContent> {
   }
 
   void _showLogoutDialog(BuildContext context, AppLocalizations locale) {
+    // Captured from the profile-branch context (an ancestor of the shell),
+    // before showDialog pushes the dialog onto the root navigator where the
+    // shell is no longer an ancestor.
+    final shell = StatefulNavigationShell.of(context);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -316,7 +320,10 @@ class _ProfileContentState extends State<_ProfileContent> {
                         context.read<AllBookingCubit>().booking = null;
                         context.read<AuthStatusCubit>().markSignedOut();
 
-                        context.go('/shell?tab=0');
+                        // Clean slate: switch to the home tab AND reset that
+                        // branch to its initial location so a logged-out user
+                        // never lands on the previous user's branch state.
+                        shell.goBranch(0, initialLocation: true);
                       },
                       child: ADGradientButton(
                         locale.yes,

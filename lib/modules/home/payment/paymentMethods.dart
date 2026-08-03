@@ -11,9 +11,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../core/constants/assets/app_colors.dart';
+import '../../../core/router/routes.dart';
 import '../../../core/constants/assets/assets.dart';
 import '../../../core/helpers/helper_fun.dart';
 import '../../../language/locale.dart';
@@ -24,7 +26,6 @@ import '../blocs/booking_cubit/booking_cubit.dart';
 import '../cars/data/models/cars_model.dart';
 import '../cash_back/bloc/cashback__cubit.dart';
 import '../cash_back/screen/widgets/Cashback_Balance.dart';
-import '../profile/page/privacy_policy/privacy_policy.dart';
 import 'blocs/invoice_cubit.dart';
 import 'data/datasources/remote/all_coupons_service.dart';
 import 'data/models/credit_card_model.dart';
@@ -435,11 +436,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                 SizedBox(width: 10.w),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              PrivacyPolicyScreen()),
-                                    );
+                                    context.pushNamed(Routes.privacyPolicy);
                                   },
                                   child: Text(
                                     locale.agreeTerms.toString(),

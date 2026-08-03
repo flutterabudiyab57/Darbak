@@ -5,12 +5,14 @@ import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../../../../core/helpers/helper_fun.dart';
 import '../../../../../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../../../../../language/locale.dart';
+import '../../../../../../../core/router/app_router.dart';
+import '../../../../../../../core/router/routes.dart';
 import '../../../../../../../shared/commponents.dart';
 import '../../../bloc/allbooking_cubit.dart';
-import '../../bookDetailes.dart';
 
 class NotCompletedOrder extends StatefulWidget {
   const NotCompletedOrder({super.key});
@@ -229,10 +231,13 @@ class _NotCompletedOrderState extends State<NotCompletedOrder> {
                                 onTap:()async{
                                   // await BlocProvider.of<AllBookingCubit>(context).checkOrderStep(orderId: BlocProvider.of<AllBookingCubit>(context).booking!.data![index]!.id);
                                   //  print(BlocProvider.of<AllBookingCubit>(context).stepModel!.order!.car.toString()+"gggg");
-                                  navigateTo(context, BookDetails(
-                                    dataCars:  carData,
-                                    bookingData: bookingData,
-                                  ));
+                                  context.pushNamed(
+                                    Routes.bookDetails,
+                                    extra: BookDetailsArgs(
+                                      dataCars: carData,
+                                      bookingData: bookingData,
+                                    ),
+                                  );
                                 },
                                 child: Padding(
                                   padding:  EdgeInsets.symmetric(horizontal: size.width*0.03),

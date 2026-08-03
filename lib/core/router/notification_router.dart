@@ -22,8 +22,8 @@ void routeFromNotification(
       break;
 
     case NotificationType.booking:
-      // Bookings live on shell tab index 2.
-      context.go('/shell?tab=2');
+      // Bookings tab (shell branch 2).
+      context.go('/bookings');
       break;
 
     case NotificationType.offer:
@@ -42,8 +42,8 @@ void routeFromNotification(
   }
 }
 
-/// Home/main = shell tab 0. Used for `update` and any unmapped type.
-void _goHome(BuildContext context) => context.go('/shell?tab=0');
+/// Home/main = shell branch 0. Used for `update` and any unmapped type.
+void _goHome(BuildContext context) => context.go('/home');
 
 int? _asIntOrNull(dynamic v) {
   if (v is int) return v;

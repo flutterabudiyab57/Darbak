@@ -38,7 +38,7 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
     await Future.delayed(const Duration(seconds: 4));
 
     if (!mounted) return;
-    context.go(isLanguageSelected ? '/shell?tab=0' : '/language');
+    context.go(isLanguageSelected ? '/home' : '/language');
   }
 
   Widget _buildScreen({required bool gradient, required Key key}) {

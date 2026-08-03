@@ -1,14 +1,16 @@
 // this is our main endpoints
-// https://abudiyab-soft.com/api
-// https://darakson.abudiyabksa.com/
-const String productionApi = "https://api.daraksonksa.com/api";
-const String stagApi = "https://stage-darakson.abudiyabksa.com/api";
 
+const String productionApi = "https://api.darbakksa.com/api";
+const String stagApi = "https://stage-api.darbakksa.com/api";
+
+//darakson URl to test
+const String productionApi_darakson = "https://api.daraksonksa.com/api";
+const String stagApi_darakson = "https://stage-darakson.daraksonksa.com/api";
 // const String productionApi = "https://abudiyab-soft.com/api";
 
 const String devEnvApi = "https://sa.abudiyab.com.sa/api";
 const String testApi = "https://api-darakson.abudiyabksa.com/api";
-const String mainApi = productionApi;
+const String mainApi = stagApi_darakson;
 const String oracleApi = "http://oracle.abudiyab-soft.com/api";
 ////////////////// AUTH
 // Endpoint for login request`

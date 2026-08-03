@@ -1,25 +1,25 @@
 import 'dart:io';
 
-import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:darbak/core/constants/api_path.dart';
 import 'package:darbak/core/helpers/settings/settings__cubit.dart';
 import 'package:darbak/core/helpers/settings/settings_repository.dart';
-import 'package:darbak/modules/home/all_bookings/presentaion/page/all_booking_screen.dart';
-import 'package:darbak/modules/home/cars/presentaion/all_cars_screen.dart';
 import 'package:darbak/modules/home/profile/blocs/profile_cubit/profile_cubit.dart';
-import 'package:darbak/modules/home/profile/page/profile.dart';
-import 'package:darbak/modules/home/search_screen/presentaion/search_Screen.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:darbak/modules/shell/bottom_nav_bar.dart';
-import 'package:darbak/modules/shell/tab_navigation_cubit.dart';
 import 'package:darbak/modules/shell/tab_scroll_registry.dart';
 import 'package:darbak/modules/shell/update_dialog.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:version/version.dart';
 
+/// Exposes the shell's [TabScrollRegistry] to the four tab pages so a same-tab
+/// re-tap can scroll that tab's list back to the top. Root tab pages register
+/// their [ScrollController] in `didChangeDependencies` via
+/// [shellScrollRegistryOf] and unregister in `dispose`.
 class _ShellScrollRegistryProvider extends InheritedWidget {
   const _ShellScrollRegistryProvider({
     required this.registry,
@@ -42,57 +42,47 @@ class _ShellScrollRegistryProvider extends InheritedWidget {
 TabScrollRegistry? shellScrollRegistryOf(BuildContext context) =>
     _ShellScrollRegistryProvider.maybeOf(context);
 
-class AppShell extends StatelessWidget {
-  const AppShell({
-    super.key,
-    this.initialTab = 0,
-    this.skipLoginCheckInSearch = false,
-  });
+/// The tabbed app shell, now built as the `builder` of the root
+/// `StatefulShellRoute.indexedStack`. It wraps go_router's [navigationShell]
+/// (the IndexedStack of the four branch navigators) with the persistent
+/// bottom-nav chrome. Each tab is its own branch with its own navigator and
+/// preserved state; switching tabs is `navigationShell.goBranch(index)`.
+///
+/// The bottom nav appears only here — every detail route stays top-level (on
+/// the root navigator), so pushing one covers this scaffold and hides the nav.
+class ShellScaffold extends StatelessWidget {
+  const ShellScaffold({super.key, required this.navigationShell});
 
-  final int initialTab;
-  final bool skipLoginCheckInSearch;
+  final StatefulNavigationShell navigationShell;
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<SettingsCubit>(
-          create: (_) => SettingsCubit(SettingsRepository())..loadSettings(),
-        ),
-        BlocProvider<TabNavigationCubit>(
-          create: (_) => TabNavigationCubit(initialTab: initialTab),
-        ),
-      ],
-      child: _AppShellBody(
-        skipLoginCheckInSearch: skipLoginCheckInSearch,
-      ),
+    return BlocProvider<SettingsCubit>(
+      create: (_) => SettingsCubit(SettingsRepository())..loadSettings(),
+      child: _ShellScaffoldBody(navigationShell: navigationShell),
     );
   }
 }
 
-class _AppShellBody extends StatefulWidget {
-  const _AppShellBody({required this.skipLoginCheckInSearch});
+class _ShellScaffoldBody extends StatefulWidget {
+  const _ShellScaffoldBody({required this.navigationShell});
 
-  final bool skipLoginCheckInSearch;
+  final StatefulNavigationShell navigationShell;
 
   @override
-  State<_AppShellBody> createState() => _AppShellBodyState();
+  State<_ShellScaffoldBody> createState() => _ShellScaffoldBodyState();
 }
 
-class _AppShellBodyState extends State<_AppShellBody> {
+class _ShellScaffoldBodyState extends State<_ShellScaffoldBody> {
   final GlobalKey<CurvedNavigationBarState> _bottomKey = GlobalKey();
   final TabScrollRegistry _scrollRegistry = TabScrollRegistry();
-  late final List<Widget> _pages;
 
   @override
   void initState() {
     super.initState();
-    _pages = [
-      SearchScreen.entry(skipLoginCheck: widget.skipLoginCheckInSearch),
-      AllCarsScreen.entry(fromFilter: false, filterModel: null),
-      AllBookingScreen(),
-      const MyProfile(),
-    ];
+    // One-time shell side effects — run once when the shell first mounts, not
+    // on every branch switch (the branch navigators persist, this State does
+    // not rebuild across goBranch).
     BlocProvider.of<ProfileCubit>(context).getProfile();
     _checkVersion();
   }
@@ -146,34 +136,28 @@ class _AppShellBodyState extends State<_AppShellBody> {
   }
 
   void _handleNavTap(int index) {
-    final cubit = context.read<TabNavigationCubit>();
-    if (cubit.state == index) {
+    // Same-tab re-tap scrolls that tab to the top; otherwise switch branch.
+    // goBranch restores the target branch's existing stack (preserves state).
+    if (index == widget.navigationShell.currentIndex) {
       _scrollRegistry.scrollToTop(index);
       return;
     }
-    cubit.go(index);
+    widget.navigationShell.goBranch(index);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TabNavigationCubit, int>(
-      builder: (context, selectedIndex) {
-        return _ShellScrollRegistryProvider(
-          registry: _scrollRegistry,
-          child: Scaffold(
-            extendBody: true,
-            body: IndexedStack(
-              index: selectedIndex,
-              children: _pages,
-            ),
-            bottomNavigationBar: ShellBottomNavBar(
-              navKey: _bottomKey,
-              selectedIndex: selectedIndex,
-              onTap: _handleNavTap,
-            ),
-          ),
-        );
-      },
+    return _ShellScrollRegistryProvider(
+      registry: _scrollRegistry,
+      child: Scaffold(
+        extendBody: true,
+        body: widget.navigationShell,
+        bottomNavigationBar: ShellBottomNavBar(
+          navKey: _bottomKey,
+          selectedIndex: widget.navigationShell.currentIndex,
+          onTap: _handleNavTap,
+        ),
+      ),
     );
   }
 }

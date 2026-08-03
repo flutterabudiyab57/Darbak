@@ -29,7 +29,7 @@ class _AllBookingScreenState extends State<AllBookingScreen> {
   }
 
   void _navigateToHome() {
-    context.go('/shell?tab=0&skipLogin=true');
+    context.go('/home');
   }
 
   @override

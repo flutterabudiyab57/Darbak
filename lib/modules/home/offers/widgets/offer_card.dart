@@ -5,8 +5,9 @@ import 'package:darbak/core/style/style.dart';
 import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
-import '../offer_details_screen.dart';
+import '../../../../core/router/routes.dart';
 
 class OfferCard extends StatelessWidget {
   final int id;
@@ -47,12 +48,7 @@ class OfferCard extends StatelessWidget {
         await facebookAppEvents.logViewContent();
         await facebookAppEvents.flush();
         print('logViewContent');
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => OfferDetailsScreen(offerId: id),
-          ),
-        );
+        context.pushNamed(Routes.offerDetails, extra: id);
       },
       child: Card(
         elevation: 3,

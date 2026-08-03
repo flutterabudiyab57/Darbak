@@ -1,8 +1,6 @@
 import 'package:darbak/language/locale.dart';
-import 'package:darbak/modules/home/additions/presentaion/pages/additions_screen.dart';
 import 'package:darbak/modules/home/all_bookings/data/model/check_order_step_model.dart';
 import 'package:darbak/modules/home/blocs/booking_cubit/booking_cubit.dart';
-import 'package:darbak/modules/home/booking_confirmed/bookingConfirmed.dart';
 import 'package:darbak/modules/home/cars/data/models/cars_model.dart';
 import 'package:darbak/modules/home/payment/data/models/credit_card_model.dart';
 import 'package:darbak/modules/home/payment/widget/info_invoice_notCompleted.dart';
@@ -14,6 +12,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../../core/helpers/interceptors/loading_indicator.dart';
+import '../../../core/router/app_router.dart';
+import '../../../core/router/routes.dart';
 import '../../../shared/commponents.dart';
 import '../../widgets/components/appbar.dart';
  import '../../widgets/strike_through_text.dart';
@@ -126,14 +126,16 @@ class _InvoiceNotCompletedUIState extends State<InvoiceNotCompletedUI> {
                   extra: state.paymentStepModel.paymentUrl,
                 );
               } else {
-                BookingConfirmedBottomSheet.show(
-                  context,
-                  orderId: widget.orderID.toString(),
-                  carName: widget.carModel?.name,
-                  total: BlocProvider.of<InvoiceCubit>(context)
-                      .data
-                      ?.total
-                      ?.toString(),
+                context.pushNamed(
+                  Routes.bookingConfirmed,
+                  extra: BookingConfirmedArgs(
+                    orderId: widget.orderID.toString(),
+                    carName: widget.carModel?.name,
+                    total: BlocProvider.of<InvoiceCubit>(context)
+                        .data
+                        ?.total
+                        ?.toString(),
+                  ),
                 );
               }
             } else if (state is InvoiceFailed) {
@@ -247,17 +249,18 @@ class _InvoiceNotCompletedUIState extends State<InvoiceNotCompletedUI> {
                           builder: (context, state) {
                             return GestureDetector(
                               onTap: () async {
-                                navigateTo(
-                                    context,
-                                    AdditionsScreen(
-                                      fromAddAdditions: true,
-                                      datum: widget.carModel,
-                                      fromNotCompleted: true,
-                                      checkOrderStepModel:
-                                      BlocProvider.of<AdditionsCubit>(
-                                          context)
-                                          .stepModel,
-                                    ));
+                                context.pushNamed(
+                                  Routes.additions,
+                                  extra: AdditionsArgs(
+                                    fromAddAdditions: true,
+                                    datum: widget.carModel,
+                                    fromNotCompleted: true,
+                                    checkOrderStepModel:
+                                        BlocProvider.of<AdditionsCubit>(
+                                                context)
+                                            .stepModel,
+                                  ),
+                                );
                                 setState(() {
                                   widget.isNotCompletedOrder == false;
                                 });

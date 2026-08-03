@@ -159,7 +159,7 @@ class _AdditionsScreenState extends State<AdditionsScreen>
                                         context)
                                         .getAllBooking(state: 'running');
 
-                                    context.go('/shell?tab=2');
+                                    context.go('/bookings');
                                   },
                                   child: ADGradientButton(
                                     locale.goToBookings,

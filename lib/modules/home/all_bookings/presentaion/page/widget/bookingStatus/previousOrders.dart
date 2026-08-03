@@ -6,15 +6,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:widget_zoom/widget_zoom.dart';
 import '../../../../../../../core/constants/assets/assets.dart';
 import '../../../../../../../language/locale.dart';
-import '../../../../../../../shared/commponents.dart';
+import '../../../../../../../core/router/app_router.dart';
+import '../../../../../../../core/router/routes.dart';
 import '../../../../../../widgets/components/ad_gradient_btn.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../../bloc/allbooking_cubit.dart';
 import '../../../bloc/allbooking_state.dart';
-import '../../bookDetailes.dart';
 
 class PreviousOrders extends StatefulWidget {
   const PreviousOrders({super.key});
@@ -217,7 +218,10 @@ class _PreviousOrdersState extends State<PreviousOrders> {
                   padding: EdgeInsets.only(bottom: 12.h),
                   child: Bounce(
                     onTap: () {
-                      navigateTo(context, BookDetails(bookingData: bookingData));
+                      context.pushNamed(
+                        Routes.bookDetails,
+                        extra: BookDetailsArgs(bookingData: bookingData),
+                      );
                     },
                     child: Container(
                       width: size.width,

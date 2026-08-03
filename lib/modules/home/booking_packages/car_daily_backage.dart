@@ -2,16 +2,17 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:darbak/core/constants/assets/assets.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/cars/presentaion/bloc/cubit/cars_cubit.dart';
-import 'package:darbak/modules/home/cars/presentaion/page/cars_info.dart';
 import 'package:darbak/modules/home/search_screen/data/models/filter_model.dart';
 import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
+import '../../../core/router/app_router.dart';
+import '../../../core/router/routes.dart';
 import '../../../service_locator.dart';
 
 import '../../../core/constants/assets/app_colors.dart';
@@ -63,9 +64,9 @@ class _CarDailyPackageState extends State<CarDailyPackage> {
         builder: (context, state) {
           return Bounce(
             onTap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: CarsInformation(
+              context.pushNamed(
+                Routes.carsInformation,
+                extra: CarsInformationArgs(
                   datum: widget.cubit.data[widget.index],
                   filterModel: widget.filterModel,
                 ),

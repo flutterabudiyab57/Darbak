@@ -20,7 +20,7 @@ class AdHomeButton extends StatelessWidget {
     return Padding(
       padding:   EdgeInsets.all(8.sp),
       child:  Bounce(
-          onTap: isBackHandled ? onPressed : () => context.go('/shell?tab=0'),
+          onTap: isBackHandled ? onPressed : () => context.go('/home'),
           child: Container(
             padding: EdgeInsets.only(
                 left: locale!.isDirectionRTL(context) ? 8.w : 8.w,

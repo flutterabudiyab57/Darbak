@@ -117,7 +117,7 @@ class _OnBoardingState extends State<OnBoarding> {
               curve: Curves.easeInOut,
             );
           } else {
-            context.go('/shell?tab=0');
+            context.go('/home');
           }
         },
         child:ADGradientButton(
@@ -132,7 +132,7 @@ class _OnBoardingState extends State<OnBoarding> {
   Widget buildSkipButton(BuildContext context, AppLocalizations? locale) {
     return GestureDetector(
       onTap: () {
-        context.go('/shell?tab=0');
+        context.go('/home');
       },
       child: Container(
         height: 50.h,

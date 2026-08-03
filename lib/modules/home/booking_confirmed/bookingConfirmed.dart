@@ -10,8 +10,6 @@ import 'package:darbak/core/style/style.dart';
 import 'package:darbak/core/constants/assets/app_colors.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../core/constants/assets/assets.dart';
-import '../../../shared/commponents.dart';
-import '../../shell/app_shell.dart';
 
 class BookingConfirmedBottomSheet extends StatelessWidget {
   final String? orderId;
@@ -25,28 +23,12 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
     this.total,
   }) : super(key: key);
 
-  static void show(BuildContext context,
-      {String? orderId, String? carName, String? total}) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      constraints: const BoxConstraints(
-        maxWidth: double.infinity,
-      ),
-      isDismissible: false,
-      enableDrag: false,
-      builder: (context) => WillPopScope(
-        onWillPop: () async => false,
-        child: BookingConfirmedBottomSheet(
-            orderId: orderId, carName: carName, total: total),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
+    // Guards against double-tap while reset()/getAllBooking() are in flight,
+    // before the sheet is popped. Not reset — the sheet is dismissed right after.
+    bool isNavigating = false;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 27.h),
@@ -106,11 +88,14 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () async {
+                  if (isNavigating) return;
+                  isNavigating = true;
+
                   BlocProvider.of<BookingCubit>(context).reset();
                   await BlocProvider.of<AllBookingCubit>(context)
                       .getAllBooking(state: 'running');
 
-                  navigateAndFinish(context, const AppShell(initialTab: 0));
+                  context.go('/bookings');
                 },
                 child: ADGradientButton(
                   locale.goToBookings,
@@ -120,12 +105,16 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () async {
+                  if (isNavigating) return;
+                  isNavigating = true;
+
                   BlocProvider.of<BookingCubit>(context).reset();
                   await BlocProvider.of<AllBookingCubit>(context)
                       .getAllBooking(state: 'running');
 
-                  navigateAndFinish(context, const AppShell(initialTab: 0));
-                },                child: ADGradientButton(
+                  context.go('/home');
+                },
+                child: ADGradientButton(
                   locale.goToHome,
                   backgroundColor: buttonWhiteColor(context),
                   border: Border.all(

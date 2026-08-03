@@ -168,7 +168,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                     }
 
                     if (widget.isStart) {
-                      context.go(token != null ? '/shell?tab=0' : '/onboarding');
+                      context.go(token != null ? '/home' : '/onboarding');
                     } else {
                       Navigator.pop(context);
                     }

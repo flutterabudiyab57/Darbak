@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../../core/helpers/Maps/map_select_location.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../../core/style/style.dart';
 import '../../../../language/locale.dart';
@@ -164,15 +167,12 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
     bool hasPermission = await _checkLocationPermission();
     if (!hasPermission) return;
 
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => LocationPickerFull(
-          bounds:
-              isPickup ? _buildBoundsFromBranch() : _buildBoundsFromRegion(),
-          centerOverride:
-              isPickup ? _getCenterFromBranch() : _getCenterFromRegion(),
-        ),
+    final result = await context.pushNamed(
+      Routes.locationPicker,
+      extra: LocationPickerArgs(
+        bounds: isPickup ? _buildBoundsFromBranch() : _buildBoundsFromRegion(),
+        centerOverride:
+            isPickup ? _getCenterFromBranch() : _getCenterFromRegion(),
       ),
     );
 

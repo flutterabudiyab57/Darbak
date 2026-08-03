@@ -20,31 +20,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../widgets/components/ad_gradient_btn.dart';
 import '../../booking_from_cars/presentaion/view/widget/branches_card.dart';
-import '../../home_screen/clasic.dart';
 import '../../../../core/constants/api_path.dart';
 import '../../../../core/constants/langCode.dart';
 import '../../all_branching/bloc/all_branching_cubit.dart';
-import '../../booking_packages/ui/airboart_package_screen.dart';
-import '../../booking_packages/ui/monthly_package_screen.dart';
-import '../../cars/presentaion/search_cars/search_about_car.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../shell/app_shell.dart';
-import '../../../shell/tab_navigation_cubit.dart';
+import '../../../shell/tab_jump.dart';
 import '../../../shell/tab_scroll_registry.dart';
-import '../../offers/offers_tap_screen.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../../auth/signin/presentation/pages/signin_screen.dart';
 import 'package:darbak/service_locator.dart';
 
 
 class SearchScreen extends StatefulWidget {
-  SearchScreen({Key? key, this.skipLoginCheck = false}) : super(key: key);
-  final bool skipLoginCheck;
+  SearchScreen({Key? key}) : super(key: key);
 
-  static Widget entry({bool skipLoginCheck = false}) =>
-      BlocProvider<AllBranchCubit>(
+  static Widget entry() => BlocProvider<AllBranchCubit>(
         create: (_) => sl<AllBranchCubit>(),
-        child: SearchScreen(skipLoginCheck: skipLoginCheck),
+        child: SearchScreen(),
       );
 
   @override
@@ -70,9 +63,10 @@ class _SearchState extends State<SearchScreen>
     BlocProvider.of<SearchCubit>(context).getOffers();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!widget.skipLoginCheck) {
-        _checkTokenAndShowLogin();
-      }
+      // The search branch mounts once and is kept alive; this check is
+      // token-guarded and runs at most once, so after sign-in the sheet
+      // won't re-appear (no skip flag needed).
+      _checkTokenAndShowLogin();
     });
   }
 
@@ -207,20 +201,14 @@ class _SearchState extends State<SearchScreen>
                SizedBox(height: 20.h,),
                MonthlyPackageWidget(
                  onTap: () {
-                   Navigator.push(
-                     context,
-                     MaterialPageRoute(builder: (_) => MonthlyPackageScreen.entry()),
-                   );
+                   context.pushNamed(Routes.monthlyPackage);
                  },
                ),
                SizedBox(height: 20.h,),
 
                OffersSectionWidget(
                 onViewAllTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => OffersScreen()),
-                  );
+                  context.pushNamed(Routes.offers);
                 },
               ),
               SizedBox(height: 60.h),
@@ -482,10 +470,7 @@ class _SearchState extends State<SearchScreen>
                           () {
                         BlocProvider.of<SearchCubit>(context)
                             .clearAllDataSearched();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => Clasic.entry()),
-                        );
+                        context.pushNamed(Routes.classic);
                       },
                       Icon(
                         Icons.store_mall_directory,
@@ -512,11 +497,7 @@ class _SearchState extends State<SearchScreen>
                             .clearAllDataSearched();
                         BlocProvider.of<SearchCubit>(context)
                             .getAirPortBranches();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => AirportPackageScreen.entry()),
-                        );
+                        context.pushNamed(Routes.airportPackage);
                       },
                       Icon(
                         Icons.airplane_ticket_outlined,
@@ -534,14 +515,7 @@ class _SearchState extends State<SearchScreen>
           Center(
             child: InkWell(
               onTap: () {
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, _, __) => SearchCarScreen(),
-                    transitionsBuilder: (context, animation, _, child) =>
-                        FadeTransition(opacity: animation, child: child),
-                  ),
-                );
+                context.pushNamed(Routes.searchAboutCar);
               },
               child: ADGradientButton(
                 locale.searchCar,

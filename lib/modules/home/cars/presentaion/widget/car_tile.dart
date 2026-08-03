@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:darbak/core/constants/assets/assets.dart';
 import 'package:darbak/core/style/style.dart';
 import 'package:darbak/language/locale.dart';
-import 'package:darbak/modules/home/cars/presentaion/page/cars_info.dart';
 import 'package:darbak/modules/home/search_screen/data/models/filter_model.dart';
 import 'package:bounce/bounce.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
@@ -10,8 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import '../../../../../core/router/app_router.dart';
+import '../../../../../core/router/routes.dart';
 import '../../../../../service_locator.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
 import '../../../../widgets/components/ad_gradient_btn.dart';
@@ -90,18 +91,22 @@ class _CarTileState extends State<CarTile> {
           return Bounce(
             onTap: () {
               if (carData.availableBranches.isEmpty) {
-                PersistentNavBarNavigator.pushNewScreen(context,
-                    screen: CarsInformation(
-                      datum: carData,
-                      filterModel: widget.filterModel,
-                      stockStatus: 'نفذت الكميه',
-                    ));
+                context.pushNamed(
+                  Routes.carsInformation,
+                  extra: CarsInformationArgs(
+                    datum: carData,
+                    filterModel: widget.filterModel,
+                    stockStatus: 'نفذت الكميه',
+                  ),
+                );
               } else {
-                PersistentNavBarNavigator.pushNewScreen(context,
-                    screen: CarsInformation(
-                      datum: carData,
-                      filterModel: widget.filterModel,
-                    ));
+                context.pushNamed(
+                  Routes.carsInformation,
+                  extra: CarsInformationArgs(
+                    datum: carData,
+                    filterModel: widget.filterModel,
+                  ),
+                );
               }
             },
             child: Container(

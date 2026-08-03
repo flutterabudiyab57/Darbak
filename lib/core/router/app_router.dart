@@ -16,9 +16,11 @@ import '../../modules/auth/splash_screen.dart';
 import '../../modules/home/additions/presentaion/pages/additions_screen.dart';
 import '../../modules/home/all_bookings/data/model/booking_model.dart';
 import '../../modules/home/all_bookings/data/model/check_order_step_model.dart';
+import '../../modules/home/all_bookings/presentaion/page/all_booking_screen.dart';
 import '../../modules/home/all_bookings/presentaion/page/bookDetailes.dart';
 import '../../modules/home/all_branching/page/branches_screen.dart';
 import '../../modules/home/all_branching/page/view_location.dart';
+import '../../modules/home/booking_confirmed/bookingConfirmed.dart';
 import '../../modules/home/booking_from_cars/presentaion/view/branchs_with_car_screan.dart';
 import '../../modules/home/booking_packages/ui/airboart_package_screen.dart';
 import '../../modules/home/booking_packages/ui/daily_package_screen.dart';
@@ -45,17 +47,19 @@ import '../../modules/home/payment/widget/web_payment.dart';
 import '../../modules/home/profile/data/models/profile_model.dart';
 import '../../modules/home/profile/page/edit_profile/presentaion/page/edit_profile.dart';
 import '../../modules/home/profile/page/privacy_policy/privacy_policy.dart';
+import '../../modules/home/profile/page/profile.dart';
 import '../../modules/home/profile/page/reset_password/presentaion/page/reset_password.dart';
 import '../../modules/home/search_screen/data/models/filter_model.dart';
+import '../../modules/home/search_screen/presentaion/search_Screen.dart';
 import '../../modules/home/selectLanguage/selectLanguage.dart';
 import '../../modules/home/additions/data/models/step_one_order_model.dart' hide Icon, Photo;
 import '../../modules/shell/app_shell.dart';
 
+import 'bottom_sheet_page.dart';
 import 'routes.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
-  debugLogDiagnostics: false,
   routes: [
     // ───── auth ─────
     GoRoute(
@@ -135,18 +139,56 @@ final appRouter = GoRouter(
     ),
 
     // ───── shell ─────
-    // The bottom-nav-visibility rule says the nav appears only on this route;
-    // every detail route below is top-level so it covers the nav for free.
-    // initialTab / skipLoginCheckInSearch arrive as query params so that
-    // `context.go('/shell?tab=2')` works from anywhere outside the shell.
-    GoRoute(
-      path: '/shell',
-      name: Routes.shell,
-      builder: (_, s) {
-        final tab = int.tryParse(s.uri.queryParameters['tab'] ?? '0') ?? 0;
-        final skipLogin = s.uri.queryParameters['skipLogin'] == 'true';
-        return AppShell(initialTab: tab, skipLoginCheckInSearch: skipLogin);
-      },
+    // The 4-tab shell is a StatefulShellRoute: each tab is its own branch with
+    // its own navigator and preserved state. `ShellScaffold` wraps the branches
+    // with the bottom-nav chrome. The bottom nav appears ONLY here — every
+    // detail route below is top-level (root navigator), so pushing one covers
+    // this scaffold and hides the nav for free.
+    //
+    // Branch order MUST match the bottom-nav index and Routes.shellBranchPaths:
+    //   0 → /home (Search)  1 → /fleet (Cars)  2 → /bookings  3 → /profile
+    StatefulShellRoute.indexedStack(
+      builder: (_, __, navigationShell) =>
+          ShellScaffold(navigationShell: navigationShell),
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/home',
+              name: Routes.home,
+              builder: (_, __) => SearchScreen.entry(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/fleet',
+              name: Routes.fleet,
+              builder: (_, __) =>
+                  AllCarsScreen.entry(fromFilter: false, filterModel: null),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/bookings',
+              name: Routes.bookings,
+              builder: (_, __) => AllBookingScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/profile',
+              name: Routes.profile,
+              builder: (_, __) => const MyProfile(),
+            ),
+          ],
+        ),
+      ],
     ),
 
     // ───── cars / search ─────
@@ -249,6 +291,21 @@ final appRouter = GoRouter(
           dataCars: a.dataCars,
           checkOrderStepModel: a.checkOrderStepModel,
           isNotCompleted: a.isNotCompleted,
+        );
+      },
+    ),
+    GoRoute(
+      path: '/booking-confirmed',
+      name: Routes.bookingConfirmed,
+      pageBuilder: (_, s) {
+        final a = s.extra as BookingConfirmedArgs? ?? const BookingConfirmedArgs();
+        return BottomSheetPage(
+          key: s.pageKey,
+          child: BookingConfirmedBottomSheet(
+            orderId: a.orderId,
+            carName: a.carName,
+            total: a.total,
+          ),
         );
       },
     ),
@@ -464,6 +521,13 @@ class BookDetailsArgs {
     this.checkOrderStepModel,
     this.isNotCompleted,
   });
+}
+
+class BookingConfirmedArgs {
+  final String? orderId;
+  final String? carName;
+  final String? total;
+  const BookingConfirmedArgs({this.orderId, this.carName, this.total});
 }
 
 class PaymentMethodsArgs {

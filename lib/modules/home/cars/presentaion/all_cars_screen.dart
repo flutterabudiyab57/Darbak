@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/cars/presentaion/page/filter_cars.dart';
-import 'package:darbak/modules/home/cars/presentaion/search_cars/search_about_car.dart';
 import 'package:darbak/modules/home/cars/presentaion/widget/build_empty_car.dart';
 import 'package:darbak/modules/home/cars/presentaion/widget/filter_widget.dart';
 import 'package:darbak/modules/home/search_screen/data/models/filter_model.dart';
@@ -9,10 +8,12 @@ import 'package:darbak/modules/widgets/components/error_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../../core/helpers/interceptors/loading_indicator.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../core/style/style.dart';
 import '../../../shell/app_shell.dart';
 import '../../../shell/tab_scroll_registry.dart';
@@ -202,20 +203,7 @@ class _AllCarsScreenState extends State<AllCarsScreen>
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder: (context, animation,
-                                    secondaryAnimation) {
-                                  return SearchCarScreen();
-                                },
-                                transitionsBuilder: (context, animation,
-                                    secondaryAnimation, child) {
-                                  return FadeTransition(
-                                      opacity: animation, child: child);
-                                },
-                              ),
-                            );
+                            context.pushNamed(Routes.searchAboutCar);
                           },
                           child: Column(
                             children: [

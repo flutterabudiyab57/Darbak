@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import '../../../../../core/constants/api_path.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
 import '../../../../../core/helpers/interceptors/loading_indicator.dart';
+import '../../../../../core/router/routes.dart';
 import '../../../../../core/style/style.dart';
 import '../../../../../language/locale.dart';
 import '../../../../widgets/components/ad_gradient_btn.dart';
 import '../../../../widgets/components/appbar.dart';
-import '../../../signin/presentation/pages/signin_screen.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String userId;
@@ -57,10 +58,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
           msg: locale.accountVerifiedSuccessfully,
           textColor: Colors.green,
           fontSize: 14.sp);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => SignInScreen()),
-      );
+      context.pushReplacementNamed(Routes.signin);
     } else {
       try {
         final decoded =

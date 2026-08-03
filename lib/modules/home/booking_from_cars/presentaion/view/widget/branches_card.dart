@@ -3,10 +3,11 @@ import 'package:darbak/core/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../../../language/locale.dart';
+import '../../../../../../core/router/routes.dart';
 import '../../../../../widgets/components/ad_gradient_btn.dart';
-import '../../../../booking_packages/ui/delivery_package_screen.dart';
 import '../../../../search_screen/blocs/search_bloc/search_cubit.dart';
 
 class Branches_Card extends StatelessWidget {
@@ -20,10 +21,7 @@ class Branches_Card extends StatelessWidget {
       onTap: () {
         BlocProvider.of<SearchCubit>(context).clearAllDataSearched();
         BlocProvider.of<SearchCubit>(context).getAirPortBranches();
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => DeliveryPackageScreen.entry()),
-        );
+        context.pushNamed(Routes.deliveryPackage);
       },
       child: Container(
         width: double.infinity,

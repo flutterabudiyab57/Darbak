@@ -46,7 +46,15 @@
       "Read(//c/Users/flutt/AppData/Local/Temp/claude/E--projects-darbak/362fb523-96e8-4303-baa7-1b9660c4bc84/scratchpad/**)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(ls \"E:\\\\projects\\\\darakson-master\\\\darakson-master\" 2>&1 | head -30)"
+      "Bash(ls \"E:\\\\projects\\\\darakson-master\\\\darakson-master\" 2>&1 | head -30)",
+      "Read(//tmp/**)",
+      "Bash(flutter devices *)",
+      "Read(//e/.pub-cache/**)",
+      "Bash(GR=\"E:/.pub-cache/hosted/pub.dev/go_router-14.8.1/lib/src\"; grep -rn \"pageKey\" \"$GR\" | head -60)",
+      "Bash(GR=\"E:/.pub-cache/hosted/pub.dev/go_router-14.8.1/lib/src\"; echo \"=== StatefulShellBranch ctor ===\"; grep -n \"StatefulShellBranch\\(\" \"$GR/route.dart\"; sed -n '/class StatefulShellBranch extends ShellRouteBase/,/^  }\\);/p' \"$GR/route.dart\" | head -60; echo \"=== goBranch ===\"; grep -n \"void goBranch\\\\|goBranch\\(\" \"$GR/misc/stateful_navigation_shell.dart\" 2>/dev/null; sed -n '/void goBranch/,/^  }/p' \"$GR/misc/stateful_navigation_shell.dart\" 2>/dev/null | head -40)",
+      "Bash(grep -v \"///\")",
+      "Bash(grep -v \"// \")",
+      "Bash(grep -v \"^\\\\s*//\")"
     ]
   }
 }

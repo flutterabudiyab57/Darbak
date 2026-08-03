@@ -11,8 +11,26 @@ class Routes {
   static const changePassword = 'changePassword';
   static const errorPage = 'errorPage';
 
-  // shell
-  static const shell = 'shell'; // /shell?tab=N
+  // shell — StatefulShellRoute branches, one stable path per tab.
+  // Order matches the branch index used by the bottom nav (0..3).
+  static const home = 'home'; //      /home     — SearchScreen  (tab 0)
+  static const fleet = 'fleet'; //    /fleet    — AllCarsScreen (tab 1)
+  static const bookings = 'bookings'; // /bookings — AllBookingScreen (tab 2)
+  static const profile = 'profile'; // /profile  — MyProfile     (tab 3)
+
+  /// The branch root paths indexed by tab number. `pathForShellTab(n)` is the
+  /// single mapping used by every "jump to tab N" call site (splash, login,
+  /// notifications, booking-confirmed, jumpToShellTab, …) now that the old
+  /// `/shell?tab=N` query-param scheme is gone.
+  static const List<String> shellBranchPaths = [
+    '/home',
+    '/fleet',
+    '/bookings',
+    '/profile',
+  ];
+
+  static String pathForShellTab(int tab) =>
+      shellBranchPaths[(tab >= 0 && tab < shellBranchPaths.length) ? tab : 0];
 
   // cars / search
   static const allCars = 'allCars';
@@ -30,6 +48,7 @@ class Routes {
   static const deliveryPackage = 'deliveryPackage';
   static const additions = 'additions';
   static const bookDetails = 'bookDetails';
+  static const bookingConfirmed = 'bookingConfirmed';
 
   // payment
   static const paymentMethods = 'paymentMethods';
