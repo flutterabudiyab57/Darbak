@@ -47,6 +47,7 @@ class ErrorImage extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   final result = await showModalBottomSheet<bool>(
+                    useRootNavigator: true,
                     context: context,
                     isScrollControlled: true,
                     isDismissible: true,

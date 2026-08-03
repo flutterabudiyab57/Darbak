@@ -257,6 +257,7 @@ class _NotCompletedOrderState extends State<NotCompletedOrder> {
                                 //Delete Order
                                 onTap: () {
                                   showModalBottomSheet(
+                                    useRootNavigator: true,
                                     context: context,
                                     constraints: const BoxConstraints(maxWidth: double.infinity,),
                                     builder: (BuildContext context) {

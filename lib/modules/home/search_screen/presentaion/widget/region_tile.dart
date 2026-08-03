@@ -93,6 +93,7 @@ class _RegionTileState extends State<RegionTile> {
     final local = AppLocalizations.of(context);
 
     return showModalBottomSheet(
+      useRootNavigator: true,
       backgroundColor: Theme.of(context).brightness == Brightness.light
           ? Colors.white
           : Colors.black,

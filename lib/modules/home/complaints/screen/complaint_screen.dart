@@ -10,11 +10,18 @@ import '../../../widgets/components/ad_gradient_btn.dart';
 import '../../../widgets/components/ad_prim_text_form/DynamicPhoneField_WithCountry.dart';
 import '../../../widgets/components/appbar.dart';
 import '../../../widgets/components/ad_prim_text_form/ad_prim_text_form.dart';
+import 'package:dio/dio.dart';
 import '../cubit/complaint_cubit.dart';
 import '../cubit/complaint_state.dart';
+import '../data/complaint_repository.dart';
 
 class ComplaintScreen extends StatefulWidget {
   const ComplaintScreen({super.key});
+
+  static Widget entry() => BlocProvider<ComplaintCubit>(
+        create: (_) => ComplaintCubit(ComplaintRepository(Dio())),
+        child: const ComplaintScreen(),
+      );
 
   @override
   State<ComplaintScreen> createState() => _ComplaintScreenState();

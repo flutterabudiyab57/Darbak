@@ -105,6 +105,7 @@ class _SearchState extends State<SearchScreen>
     _loginSheetShown = true;
 
     showModalBottomSheet(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       isDismissible: true,

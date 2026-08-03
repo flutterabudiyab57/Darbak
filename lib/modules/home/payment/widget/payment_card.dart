@@ -48,6 +48,7 @@ class _PaymentMethodCardState extends State<PaymentMethodCard> {
           BlocProvider.of<BookingCubit>(context).setPaymentMethods(widget.method);
           if (widget.method == PaymentMethod.visa) {
             await showModalBottomSheet(
+            useRootNavigator: true,
             isScrollControlled: true,
             elevation: 0,
             isDismissible: true,

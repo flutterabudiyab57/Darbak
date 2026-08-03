@@ -41,6 +41,7 @@ class _SelectDayAndTimeWidgetState extends State<SelectDayAndTimeWidget> {
 
   void _showPicker(BuildContext context, bool isRTL) {
     showModalBottomSheet(
+      useRootNavigator: true,
       context: context,
       constraints: const BoxConstraints(maxWidth: double.infinity,),
       isScrollControlled: true,

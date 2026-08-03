@@ -14,7 +14,6 @@ import '../../../../../core/helpers/validation/form_validator.dart';
 import '../../../../../core/style/style.dart';
 import '../../../../../language/locale.dart';
 import '../../../../../service_locator.dart';
-import '../../../../home/profile/page/privacy_policy/privacy_policy.dart';
 import '../../../../widgets/components/ad_gradient_btn.dart';
 import '../../../../widgets/components/ad_prim_text_form/DynamicPhoneField_WithCountry.dart';
 import '../../../../widgets/components/ad_prim_text_form/ad_prim_text_form.dart';
@@ -237,6 +236,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   onTap: () {
                     Navigator.of(context).pop();
                     showModalBottomSheet(
+                      useRootNavigator: true,
                       context: context,
                       isScrollControlled: true,
                       isDismissible: true,
@@ -575,11 +575,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               Expanded(
                                 child: Bounce(
                                   onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (_) => PrivacyPolicyScreen(),
-                                      ),
-                                    );
+                                    context.pushNamed(Routes.privacyPolicy);
                                   },
                                   child: Text(
                                     locale.agreeTermsAndConditions.toString(),
@@ -653,6 +649,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   showModalBottomSheet(
+                                    useRootNavigator: true,
                                     context: context,
                                     isScrollControlled: true,
                                     isDismissible: true,

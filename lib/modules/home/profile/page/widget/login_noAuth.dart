@@ -1,20 +1,14 @@
 import 'dart:ui';
 import 'package:darbak/core/style/style.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../../core/constants/assets/assets.dart';
+import '../../../../../core/router/routes.dart';
 import '../../../../../language/locale.dart';
 import '../../../../auth/register/presentaion/pages/register_page.dart';
 import '../../../../auth/signin/presentation/pages/signin_screen.dart';
-import '../../../complaints/cubit/complaint_cubit.dart';
-import '../../../complaints/data/complaint_repository.dart';
-import '../../../complaints/screen/complaint_screen.dart';
-import '../../../selectLanguage/selectLanguage.dart';
-import '../privacy_policy/privacy_policy.dart';
 import 'card_tile.dart';
 class LoginNoAuth extends StatelessWidget {
   const LoginNoAuth({super.key});
@@ -49,6 +43,7 @@ class LoginNoAuth extends StatelessWidget {
               icon: Assets.icon_login,
               ontap: () {
                 showModalBottomSheet(
+                  useRootNavigator: true,
                   context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
@@ -70,6 +65,7 @@ class LoginNoAuth extends StatelessWidget {
               icon: Assets.icon_addAccount,
               ontap: () {
                 showModalBottomSheet(
+                  useRootNavigator: true,
                   context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
@@ -189,26 +185,18 @@ class LoginNoAuth extends StatelessWidget {
                 title: locale.changeLanguage.toString(),
                 icon: Assets.profile_language,
                 ontap: () {
-                  PersistentNavBarNavigator.pushNewScreen(context,
-                      screen: SelectLanguage());
+                  context.pushNamed(Routes.selectLanguage);
                 }),
              CardTileWidget(
                 title: locale.privacyPolicy.toString(),
                 icon: Assets.profile_privacy,
                 ontap: () {
-                  PersistentNavBarNavigator.pushNewScreen(context,
-                      screen: PrivacyPolicyScreen());
+                  context.pushNamed(Routes.privacyPolicy);
                 }),
             CardTileWidget(
               title: locale.complaint!,
               ontap: () {
-                PersistentNavBarNavigator.pushNewScreen(
-                  context,
-                  screen: BlocProvider(
-                    create: (_) => ComplaintCubit(ComplaintRepository(Dio())),
-                    child: ComplaintScreen(),
-                  ),
-                );
+                context.pushNamed(Routes.complaints);
               },
               icon: Assets.icon_complaint,
             ),

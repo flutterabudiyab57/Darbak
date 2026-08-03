@@ -1,4 +1,6 @@
-﻿import 'package:darbak/language/locale.dart';
+﻿import 'package:darbak/core/router/app_router.dart';
+import 'package:darbak/core/router/routes.dart';
+import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/cars/presentaion/bloc/filter_cubit/filter_cubit.dart';
 import 'package:darbak/modules/widgets/components/ad_colored_text_button.dart';
 import 'package:darbak/service_locator.dart';
@@ -6,8 +8,7 @@ import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../all_cars_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class FilterWidget extends StatelessWidget {
   const FilterWidget({Key? key}) : super(key: key);
@@ -144,8 +145,10 @@ class FilterWidget extends StatelessWidget {
                     SizedBox(height: 10),
                      Bounce(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => AllCarsScreen.entry(fromFilter: true)));
+                          context.pushNamed(
+                            Routes.allCars,
+                            extra: AllCarsArgs(fromFilter: true),
+                          );
                         },
                         child: Container(
                           height: size.height * 0.05,

@@ -127,6 +127,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
       final coupons = await couponService.fetchAllCoupons();
 
       await showModalBottomSheet(
+        useRootNavigator: true,
         isScrollControlled: true,
         context: context,
         backgroundColor: backgroundColor(context),
@@ -695,6 +696,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                         }
 
                                         showModalBottomSheet(
+                                          useRootNavigator: true,
                                           isScrollControlled: true,
                                           context: context,
                                           backgroundColor: Colors.white,

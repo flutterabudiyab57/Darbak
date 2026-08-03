@@ -1,12 +1,10 @@
-import 'package:dio/dio.dart';
+import 'package:darbak/core/router/routes.dart';
 import 'package:darbak/core/style/style.dart';
 import 'package:darbak/modules/home/profile/page/widget/login_noAuth.dart';
 import 'package:darbak/modules/shell/app_shell.dart';
 import 'package:darbak/modules/shell/tab_scroll_registry.dart';
-import 'package:darbak/modules/widgets/call_us.dart';
 import 'package:darbak/core/constants/assets/assets.dart';
 import 'package:darbak/language/locale.dart';
-import 'package:darbak/modules/home/profile/page/privacy_policy/privacy_policy.dart';
 import 'package:darbak/modules/home/profile/page/widget/card_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,23 +12,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../../core/helpers/SharedPreference/pereferences.dart';
 import '../../../widgets/components/ad_gradient_btn.dart';
 import '../../../widgets/components/appbar.dart';
 import '../../all_bookings/presentaion/bloc/allbooking_cubit.dart';
-import '../../all_branching/page/branches_screen.dart';
-import '../../cash_back/screen/CashBackScreen.dart';
-import '../../complaints/screen/complaint_screen.dart';
-import '../../complaints/cubit/complaint_cubit.dart';
-import '../../complaints/data/complaint_repository.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import '../../selectLanguage/selectLanguage.dart';
 import '../blocs/profile_cubit/profile_cubit.dart';
-import 'edit_profile/presentaion/page/edit_profile.dart';
 import '../../../auth/blocs/auth_status_cubit.dart';
-import 'favourites/favourites.dart';
 
 class MyProfile extends StatelessWidget {
   final bool showBackButton;
@@ -142,70 +131,48 @@ class _ProfileContentState extends State<_ProfileContent> {
             title: locale.editProfile.toString(),
             icon: Assets.prooff,
             ontap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: EditProfile(),
-              );
+              context.pushNamed(Routes.editProfile);
             },
           ),
           CardTileWidget(
             title: locale.wallet.toString(),
             icon: Assets.icon_wallet,
             ontap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: CashbackScreen(),
-              );
+              context.pushNamed(Routes.cashback);
             },
           ),
           CardTileWidget(
             title: locale.selectLanguage.toString(),
             icon: Assets.profile_language,
             ontap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: SelectLanguage(),
-              );
+              context.pushNamed(Routes.selectLanguage);
             },
           ),
           CardTileWidget(
             title: locale.branches!,
             icon: Assets.icon_picker,
             ontap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: BranchesScreen.entry(),
-              );
+              context.pushNamed(Routes.branches);
             },
           ),
           CardTileWidget(
             title: locale.privacyPolicy.toString(),
             icon: Assets.profile_privacy,
             ontap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: PrivacyPolicyScreen(),
-              );
+              context.pushNamed(Routes.privacyPolicy);
             },
           ),
           CardTileWidget(
             title: locale.favorite.toString(),
             icon: Assets.profile_favorites,
             ontap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: Favourites(),
-                withNavBar: false,
-              );
+              context.pushNamed(Routes.favourites);
             },
           ),
           CardTileWidget(
             title: locale.callUs.toString(),
             ontap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: CallUs(),
-              );
+              context.pushNamed(Routes.callUs);
             },
             icon: Assets.callUs,
           ),
@@ -214,13 +181,7 @@ class _ProfileContentState extends State<_ProfileContent> {
                 ? 'شكاوي'
                 : 'Complaints',
             ontap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: BlocProvider(
-                  create: (_) => ComplaintCubit(ComplaintRepository(Dio())),
-                  child: ComplaintScreen(),
-                ),
-              );
+              context.pushNamed(Routes.complaints);
             },
             icon: Assets.icon_complaint,
           ),

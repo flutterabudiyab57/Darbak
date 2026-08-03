@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../../core/constants/assets/app_colors.dart';
+import '../../../../../core/router/app_router.dart';
+import '../../../../../core/router/routes.dart';
 import '../../../../../core/style/style.dart';
 import '../../../../../language/locale.dart';
 import '../../../../widgets/components/appbar.dart';
 import '../../data/models/cars_model.dart';
-import '../page/cars_info.dart';
 import '../widget/car_search_item.dart';
 import 'car_service.dart';
 
@@ -148,11 +149,9 @@ class _SearchCarScreenState extends State<SearchCarScreen> {
         return CarSearchItem(
           car: _carsList[index],
           onTap: () {
-            PersistentNavBarNavigator.pushNewScreen(
-              context,
-              screen: CarsInformation(
-                datum: _carsList[index],
-              ),
+            context.pushNamed(
+              Routes.carsInformation,
+              extra: CarsInformationArgs(datum: _carsList[index]),
             );
           },
         );      },

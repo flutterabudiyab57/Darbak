@@ -32,6 +32,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     final isRTL = locale.isDirectionRTL(context);
 
     final source = await showModalBottomSheet<ImageSource>(
+      useRootNavigator: true,
       context: context,
       constraints: const BoxConstraints(
         maxWidth: double.infinity,

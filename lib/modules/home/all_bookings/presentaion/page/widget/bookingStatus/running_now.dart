@@ -387,11 +387,12 @@ class _RunningNowState extends State<RunningNow> {
                               child: GestureDetector(
                                 onTap: () {
                                   showModalBottomSheet(
+                                    useRootNavigator: true,
                                     context: context,
                                     isScrollControlled: true,
                                     constraints: const BoxConstraints(maxWidth: double.infinity,),
-                                    builder: (_) =>
-                                        cancelBottomSheet(context, booking),
+                                    builder: (sheetCtx) =>
+                                        cancelBottomSheet(sheetCtx, booking),
                                   );
                                 },
                                 child: ADGradientButton(

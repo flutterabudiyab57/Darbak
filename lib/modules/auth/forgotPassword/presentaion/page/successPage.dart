@@ -70,6 +70,7 @@ class SuccessBottomSheet extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).popUntil((route) => route.isFirst);
                           showModalBottomSheet(
+                            useRootNavigator: true,
                             context: context,
                             isScrollControlled: true,
                             isDismissible: true,

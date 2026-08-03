@@ -40,6 +40,8 @@ import '../../modules/home/home_screen/clasic.dart';
 import '../../modules/home/offers/offer_details_screen.dart';
 import '../../modules/home/offers/offers_tap_screen.dart';
 import '../../modules/notifications/presentaion/page/notifications_screen.dart';
+import '../../modules/home/profile/page/favourites/favourites.dart';
+import '../../modules/widgets/call_us.dart';
 import '../../modules/home/payment/data/models/credit_card_model.dart';
 import '../../modules/home/payment/data/models/invoice_model.dart' hide Icon;
 import '../../modules/home/payment/invoice.dart';
@@ -417,9 +419,19 @@ final appRouter = GoRouter(
 
     // ───── profile / misc ─────
     GoRoute(
+      path: '/call-us',
+      name: Routes.callUs,
+      builder: (_, __) => const CallUs(),
+    ),
+    GoRoute(
       path: '/edit-profile',
       name: Routes.editProfile,
       builder: (_, __) => const EditProfile(),
+    ),
+    GoRoute(
+      path: '/favourites',
+      name: Routes.favourites,
+      builder: (_, __) => Favourites(),
     ),
     GoRoute(
       path: '/reset-password',
@@ -442,7 +454,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/complaints',
       name: Routes.complaints,
-      builder: (_, __) => const ComplaintScreen(),
+      builder: (_, __) => ComplaintScreen.entry(),
     ),
     GoRoute(
       path: '/offers',

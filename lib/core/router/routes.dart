@@ -63,7 +63,9 @@ class Routes {
   static const viewLocation = 'viewLocation';
 
   // profile / misc
+  static const callUs = 'callUs';
   static const editProfile = 'editProfile';
+  static const favourites = 'favourites';
   static const resetPassword = 'resetPassword';
   static const branches = 'branches';
   static const cashback = 'cashback';

@@ -77,6 +77,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 Navigator.of(context).popUntil((route) => route.isFirst);
 
                 showModalBottomSheet(
+                  useRootNavigator: true,
                   context: context,
                   isScrollControlled: true,
                   isDismissible: true,

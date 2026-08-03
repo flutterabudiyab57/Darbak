@@ -1,4 +1,6 @@
 import 'package:darbak/core/constants/assets/app_colors.dart';
+import 'package:darbak/core/router/app_router.dart';
+import 'package:darbak/core/router/routes.dart';
 import 'package:darbak/core/style/style.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/cars/presentaion/bloc/filter_cubit/filter_cubit.dart';
@@ -8,13 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../../core/constants/assets/assets.dart';
 import '../../../../../service_locator.dart';
 import '../../../../widgets/Dashed_divider.dart';
 import '../../../../widgets/components/appbar.dart';
-import '../all_cars_screen.dart';
 
 class FiltersCars extends StatefulWidget {
   const FiltersCars({Key? key}) : super(key: key);
@@ -359,8 +360,9 @@ class _FiltersCarsState extends State<FiltersCars>
                   SizedBox(height: 24.h),
                   GestureDetector(
                     onTap: () {
-                      PersistentNavBarNavigator.pushNewScreen(context,
-                        screen: AllCarsScreen.entry(fromFilter: true),
+                      context.pushNamed(
+                        Routes.allCars,
+                        extra: AllCarsArgs(fromFilter: true),
                       );
                     },
                     child: ADGradientButton(locale.search),

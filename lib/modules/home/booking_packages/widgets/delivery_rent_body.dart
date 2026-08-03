@@ -228,6 +228,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
   void _showBranchBottomSheet(
       BuildContext context, SearchCubit searchCubit, AppLocalizations? locale) {
     showModalBottomSheet(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -257,6 +258,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
   void _showRegionBottomSheet(
       BuildContext context, SearchCubit searchCubit, AppLocalizations? locale) {
     showModalBottomSheet(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

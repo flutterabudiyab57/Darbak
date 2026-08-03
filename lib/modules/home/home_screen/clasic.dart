@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 import 'package:darbak/service_locator.dart';
 
 import '../../../core/constants/assets/app_colors.dart';
 import '../../../core/helpers/enums.dart';
 import '../../../core/helpers/helper_fun.dart';
+import '../../../core/router/routes.dart';
 import '../../../language/locale.dart';
 import '../../widgets/components/appbar.dart';
 import '../all_branching/bloc/all_branching_cubit.dart';
-import '../booking_packages/cars_list_package.dart';
 import '../booking_packages/widgets/daily_rent_body.dart';
 import '../cars/presentaion/bloc/cubit/cars_cubit.dart';
 import '../profile/blocs/profile_cubit/profile_cubit.dart';
@@ -103,10 +103,7 @@ class _ClasicState extends State<Clasic> {
                             context.read<ProfileCubit>().custClass.toString(),
                       )
                           .then((value) {
-                        PersistentNavBarNavigator.pushNewScreen(
-                          context,
-                          screen: CarsListPackage(filterModel: filterModel),
-                        );
+                        context.pushNamed(Routes.carsListPackage, extra: filterModel);
                       });
                     } else {
                       print(

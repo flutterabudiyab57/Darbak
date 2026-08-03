@@ -8,13 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:go_router/go_router.dart';
 import 'package:widget_zoom/widget_zoom.dart';
 
 import '../../../../../../../core/constants/assets/app_colors.dart';
  import '../../../../../../../core/helpers/helper/Network_error_widget.dart';
 import '../../../../../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../../../../../core/helpers/validation/validation.dart';
+import '../../../../../../../core/router/routes.dart';
 import '../../../../../../../language/locale.dart';
 import '../../../../../../../service_locator.dart';
 import '../../../../../../widgets/components/ad_gradient_btn.dart';
@@ -22,7 +23,6 @@ import '../../../../../../widgets/components/ad_prim_text_form/ad_prim_text_form
 import '../../../../../../widgets/components/appbar.dart';
 import '../../../../../search_screen/presentaion/widget/shimmer_list.dart';
 import '../../../../blocs/profile_cubit/profile_cubit.dart';
-import '../../../reset_password/presentaion/page/reset_password.dart';
 import '../../../widget/container_tile.dart';
 import '../bloc/edit_profile_cubit.dart';
 import '../bloc/edit_profile_state.dart';
@@ -367,10 +367,7 @@ class _EditProfileFormState extends State<_EditProfileForm> {
                     SizedBox(height: 16.h),
                     InkWell(
                       onTap: () {
-                        PersistentNavBarNavigator.pushNewScreen(
-                          context,
-                          screen: ResetPasswordScrean(),
-                        );
+                        context.pushNamed(Routes.resetPassword);
                       },
                       child: Container(
                         height: 50.h,

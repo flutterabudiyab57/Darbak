@@ -145,6 +145,7 @@ class _EnterCodeScreanState extends State<EnterCodeScrean> {
               if (state is CodeLoaded) {
                 final cubit = context.read<ForgetPasswordCubit>();
                 showModalBottomSheet(
+                  useRootNavigator: true,
                   context: context,
                   isScrollControlled: true,
                   isDismissible: true,

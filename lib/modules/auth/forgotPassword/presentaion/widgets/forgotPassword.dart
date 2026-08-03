@@ -105,6 +105,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               if (state is ForgetPasswordLoaded) {
                 final cubit = context.read<ForgetPasswordCubit>();
                 showModalBottomSheet(
+                  useRootNavigator: true,
                   context: context,
                   isScrollControlled: true,
                   isDismissible: true,

@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:darbak/language/locale.dart';
-import 'package:darbak/modules/home/cars/presentaion/page/filter_cars.dart';
 import 'package:darbak/modules/home/cars/presentaion/widget/build_empty_car.dart';
 import 'package:darbak/modules/home/cars/presentaion/widget/filter_widget.dart';
 import 'package:darbak/modules/home/search_screen/data/models/filter_model.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:darbak/core/helpers/text_scale_sizing.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../../core/router/routes.dart';
@@ -134,8 +132,7 @@ class _AllCarsScreenState extends State<AllCarsScreen>
               ? SizedBox()
               : IconButton(
             onPressed: () {
-              PersistentNavBarNavigator.pushNewScreen(context,
-                  screen: FiltersCars.entry());
+              context.pushNamed(Routes.filterCars);
             },
             icon: Image.asset(
               "assets/icons/filter_new.png",

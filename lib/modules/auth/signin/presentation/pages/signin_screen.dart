@@ -279,6 +279,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   showModalBottomSheet(
+                                    useRootNavigator: true,
                                     context: context,
                                     isScrollControlled: true,
                                     isDismissible: true,
@@ -349,6 +350,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     onTap: () {
                                       Navigator.of(context).pop();
                                       showModalBottomSheet(
+                                        useRootNavigator: true,
                                         context: context,
                                         isScrollControlled: true,
                                         isDismissible: true,

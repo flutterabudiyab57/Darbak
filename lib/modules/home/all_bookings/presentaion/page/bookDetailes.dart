@@ -85,6 +85,7 @@ class BookDetails extends StatelessWidget  {
             child: InkWell(
               onTap: () async {
                 showModalBottomSheet(
+                  useRootNavigator: true,
                   context: context,
                   constraints: const BoxConstraints(maxWidth: double.infinity,),
                   builder: (BuildContext context) {

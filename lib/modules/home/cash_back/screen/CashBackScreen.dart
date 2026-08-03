@@ -24,6 +24,7 @@ class CashbackScreen extends StatelessWidget {
 
   void _showAllTransactions(BuildContext context) {
     showModalBottomSheet(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
