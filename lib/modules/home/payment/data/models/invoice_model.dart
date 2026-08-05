@@ -83,27 +83,27 @@ class InvoiceModel {
   Cashback? cashback;
 
   factory InvoiceModel.fromJson(Map<String, dynamic> json) => InvoiceModel(
-    referralPoints: json["referral_points"],
+    referralPoints: json["referral_points"]?.toString(),
     status: json["status"],
-    promotionalDiscount: json["promotional_discount"],
+    promotionalDiscount: json["promotional_discount"]?.toString(),
     carDiscount: json["car_discount"],
-    total: json["total"],
-    generalTotal: json["general_total"],
+    total: json["total"]?.toString(),
+    generalTotal: json["general_total"]?.toString(),
     diff: json["diff"],
-    carPrice: json["car_price"],
-    taxValue: json["tax_value"],
-    featuresPrice: json["features_price"],
+    carPrice: json["car_price"]?.toString(),
+    taxValue: json["tax_value"]?.toString(),
+    featuresPrice: json["features_price"]?.toString(),
     price: json["price"] != null
         ? double.parse(json["price"].toString())
         : null,
-    beforeTax: json["before_tax"],
-    areaPricing: json["Area_pricing"],
-    areaDiscount: json["area_discount"],
+    beforeTax: json["before_tax"]?.toString(),
+    areaPricing: json["Area_pricing"]?.toString(),
+    areaDiscount: json["area_discount"]?.toString(),
     authorizationFee: json["authorization_fee"],
-    membershipDiscount: json["membership_discount"],
+    membershipDiscount: json["membership_discount"]?.toString(),
     membershipValue: json["membership_value"],
-    cashbackDiscount: json["cashback_discount"],
-    cashbackDiscountRequested: json["cashback_discount_requested"],
+    cashbackDiscount: json["cashback_discount"]?.toString(),
+    cashbackDiscountRequested: json["cashback_discount_requested"]?.toString(),
     cashbackWasLimited: json["cashback_was_limited"],
     forceCashPayment: json["force_cash_payment"],
     cashActive: json["cash_active"],
@@ -114,12 +114,12 @@ class InvoiceModel {
     tamaraActive: json["tamara_active"],
     referralPointsActive: json["referral_points_active"],
     order: json["order"] != null ? Order.fromJson(json["order"]) : null,
-    couponValue: json["coupon_value"],
+    couponValue: json["coupon_value"]?.toString(),
     couponData: json["coupon_data"] != null
         ? List<dynamic>.from(json["coupon_data"])
         : [],
-    pointsValue: json["points_value"],
-    deliveryValue: json["delivery_value"],
+    pointsValue: json["points_value"]?.toString(),
+    deliveryValue: json["delivery_value"]?.toString(),
     cashback: json["cashback"] != null
         ? Cashback.fromJson(json["cashback"])
         : null,
@@ -189,7 +189,7 @@ class Cashback {
   factory Cashback.fromJson(Map<String, dynamic> json) => Cashback(
     eligible: json["eligible"],
     type: json["type"],
-    value: json["value"],
+    value: json["value"]?.toString(),
     maxCashbackPerOrder: json["max_cashback_per_order"],
     expectedCashbackAmount: json["expected_cashback_amount"] != null
         ? (json["expected_cashback_amount"] is int
@@ -361,7 +361,7 @@ class Order {
     points: json["points"],
     qitafRedeemedAmount: json["qitaf_redeemed_amount"],
     couponDis: json["coupon_dis"],
-    cashbackDiscount: json["cashback_discount"],
+    cashbackDiscount: json["cashback_discount"]?.toString(),
     featuresAdded: json["features_added"] != null
         ? List<dynamic>.from(json["features_added"].map((x) => x))
         : [],
@@ -492,7 +492,7 @@ class AdditionsData {
       name: json["name"],
       miniDes: json["mini_des"],
       img: json["img"],
-      price: json["price"],
+      price: json["price"]?.toString() ?? '0',
     );
   }
 
@@ -548,7 +548,7 @@ class Feature {
       id: json["id"],
       title: json["title"],
       subTitle: json["sub_title"],
-      price: json["price"],
+      price: json["price"]?.toString() ?? '0',
       img: json["img"],
       daily: json["daily"],
     );

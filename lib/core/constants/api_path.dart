@@ -10,7 +10,7 @@ const String stagApi_darakson = "https://stage-darakson.daraksonksa.com/api";
 
 const String devEnvApi = "https://sa.abudiyab.com.sa/api";
 const String testApi = "https://api-darakson.abudiyabksa.com/api";
-const String mainApi = stagApi_darakson;
+const String mainApi = productionApi_darakson;
 const String oracleApi = "http://oracle.abudiyab-soft.com/api";
 ////////////////// AUTH
 // Endpoint for login request`

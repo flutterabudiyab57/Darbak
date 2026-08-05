@@ -94,7 +94,7 @@ class Feature {
     id: json["id"],
     title: json["title"],
     subTitle: json["sub_title"],
-    price: json["price"],
+    price: json["price"]?.toString(),
     img: json["img"],
     daily: json["daily"],
   );
@@ -362,7 +362,7 @@ class AdditionData {
     name: json["name"],
     miniDes: json["mini_des"],
     img: json["img"],
-    price: json["price"],
+    price: json["price"]?.toString(),
   );
 
   Map<String, dynamic> toMap() => {

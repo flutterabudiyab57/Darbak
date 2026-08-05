@@ -45,8 +45,8 @@ class AdditionsCubit extends Cubit<AdditionsState> {
     try {
       final order = await additionRepository.getCarOrder(
         receiveBranchId: searchCubit.selectedReceiveModel?.id?.toString()
-            ?? searchCubit.selectedDriveModel!.id.toString(),
-        driveBranchId: searchCubit.selectedDriveModel!.id.toString(),
+            ?? searchCubit.selectedDriveModel?.id?.toString() ?? '',
+        driveBranchId: searchCubit.selectedDriveModel?.id?.toString() ?? '',
         receiveTimeValue: searchCubit.receiveTimeValue.toString(),
         driveTimeValue: searchCubit.driveTimeValue.toString(),
         receiveDate: searchCubit.receiveDateValue,
