@@ -13,16 +13,22 @@ The on-disk project folder is `E:\projects\darbak`. It was previously `E:\projec
 ```bash
 flutter pub get                  # install deps (run after pulling or editing pubspec.yaml)
 flutter run                      # run on the currently selected device
-flutter analyze                  # static analysis (uses package:flutter_lints)
-flutter test                     # run tests in test/
-flutter test test/widget_test.dart   # run a single test file
-flutter test --plain-name "name" # run a single test by name
-flutter build apk                # Android release
-flutter build ios                # iOS release
 dart run build_runner build --delete-conflicting-outputs   # regenerate Hive .g.dart adapters
 dart run flutter_launcher_icons  # regenerate launcher icons (config in pubspec.yaml)
 flutter clean                    # nuke build/ — fixes stale AssetManifest.bin hot-reload errors
 ```
+
+> **IMPORTANT — filtered scripts (Claude Code must ALWAYS use these instead of the raw commands):**
+>
+> | Raw command | Use this instead |
+> |---|---|
+> | `flutter analyze` | `powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1` |
+> | `flutter test [args]` | `powershell -ExecutionPolicy Bypass -File scripts/flutter_test_filtered.ps1 [args]` |
+> | `flutter build <target> [args]` | `powershell -ExecutionPolicy Bypass -File scripts/flutter_build_filtered.ps1 <target> [args]` |
+>
+> The filtered scripts execute the original Flutter command, save the full output to a temp log, and return only errors, warnings, failures, exceptions, stack traces, file paths, and line numbers. This keeps Claude Code's context window free of megabytes of Gradle and pub noise.
+>
+> **Never run `flutter analyze`, `flutter test`, or `flutter build` directly.** Always go through the scripts above.
 
 `test/widget_test.dart` is still the default Flutter counter sample and does not match `App()` — treat it as scaffolding, not a real suite.
 
@@ -175,3 +181,27 @@ Separate from FCM: a normal feature module (matching `data/` + `presentaion/` la
 - **`SplashScreenOld` is the active splash**, not deprecated despite the name. It is the `'/'` route of `appRouter`; source at `lib/modules/auth/splash_screen.dart`. Cross-fades between two states (`gradient1` background → white) over `Darbak_logo.png`, then `context.go('/home')` (returning user) or `context.go('/language')` (first run) based on the `isLanguageSelected` flag in `SharedPreferences`. Landing on `/home` mounts the shell's first branch. (`ComposeUi` no longer exists — that intermediate widget was removed in the go_router migration.)
 - **Stale `AssetManifest.bin` causes hot-reload `PathNotFoundException`.** If hot reload fails with `Cannot open file ... assets/<name>` for a path that doesn't exist anywhere in source (sometimes referencing the old `fast-rent` folder name), the cause is a stale `build/app/intermediates/.../AssetManifest.bin` from a previous build. Fix: `android\gradlew.bat --stop`, then `flutter clean && flutter pub get`, then re-run.
 - **Asset folder convention.** `assets/icons/` holds SVGs; `assets/images/` holds raster images and a few Lottie JSONs (most Lottie files live in `assets/anim/`). Code uniformly references `assets/icons/<name>.svg` for SVGs — do not duplicate SVG icons into `assets/images/`. The `assets:` block in `pubspec.yaml` declares directories (not individual files), so dropping a file into a declared directory is enough to ship it; no manifest entry needed. After a recent cleanup, ~75 unreferenced files were deleted across both folders; `git log --diff-filter=D -- assets/` will show what was removed.
+
+## Filtered Flutter command scripts (`scripts/`)
+
+All three scripts live in `scripts/` at the project root. They are **Windows-only PowerShell** (`pwsh`). Run them from the project root:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1
+powershell -ExecutionPolicy Bypass -File scripts/flutter_test_filtered.ps1
+powershell -ExecutionPolicy Bypass -File scripts/flutter_test_filtered.ps1 test/foo.dart
+powershell -ExecutionPolicy Bypass -File scripts/flutter_build_filtered.ps1 apk
+powershell -ExecutionPolicy Bypass -File scripts/flutter_build_filtered.ps1 apk --release
+```
+
+Each script:
+1. Runs the underlying `flutter` command and captures all output.
+2. Saves the **full** raw output to a timestamped file in `$env:TEMP` (path is printed so you can inspect it manually).
+3. Prints only **filtered** output to stdout: errors, warnings, hints, failures, exceptions, stack traces, file paths, and line numbers.
+4. Exits with the same exit code as the underlying Flutter command, so CI and shell conditionals keep working.
+
+**What is filtered out:** normal build-progress lines, dependency download logs, per-test dot sequences, verbose Gradle task logs (unless they contain FAILED/error), and any other noise that does not indicate a problem.
+
+**Fallback:** if the exit code is non-zero but no recognisable pattern matched, the scripts dump the last 30–40 raw lines so the failure is never silently swallowed.
+
+Extra arguments are forwarded verbatim — the scripts are transparent wrappers.
