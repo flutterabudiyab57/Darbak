@@ -54,7 +54,11 @@
       "Bash(GR=\"E:/.pub-cache/hosted/pub.dev/go_router-14.8.1/lib/src\"; echo \"=== StatefulShellBranch ctor ===\"; grep -n \"StatefulShellBranch\\(\" \"$GR/route.dart\"; sed -n '/class StatefulShellBranch extends ShellRouteBase/,/^  }\\);/p' \"$GR/route.dart\" | head -60; echo \"=== goBranch ===\"; grep -n \"void goBranch\\\\|goBranch\\(\" \"$GR/misc/stateful_navigation_shell.dart\" 2>/dev/null; sed -n '/void goBranch/,/^  }/p' \"$GR/misc/stateful_navigation_shell.dart\" 2>/dev/null | head -40)",
       "Bash(grep -v \"///\")",
       "Bash(grep -v \"// \")",
-      "Bash(grep -v \"^\\\\s*//\")"
+      "Bash(grep -v \"^\\\\s*//\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"E:\\\\projects\\\\darbak\\\\scripts\")",
+      "PowerShell(cd E:\\\\projects\\\\darbak; pwsh -File scripts\\\\flutter_analyze_filtered.ps1 --no-pub 2>&1)",
+      "PowerShell(\\(Get-Command powershell.exe -ErrorAction SilentlyContinue\\).Source; \\(Get-Command pwsh.exe -ErrorAction SilentlyContinue\\).Source)",
+      "PowerShell(cd E:\\\\projects\\\\darbak; powershell -ExecutionPolicy Bypass -File scripts\\\\flutter_analyze_filtered.ps1 --no-pub 2>&1)"
     ]
   }
 }

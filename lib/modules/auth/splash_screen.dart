@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/constants/assets/app_colors.dart';
-import '../../core/helpers/SharedPreference/pereferences.dart';
 import '../home/profile/blocs/profile_cubit/profile_cubit.dart';
+
+const _kSplashGradient = LinearGradient(
+  begin: Alignment(0.50, 0.12),
+  end: Alignment(0.50, 1.00),
+  colors: [const Color(0xFF3F4552), const Color(0xFF20252D)],
+);
+
+const _kGoldColor = Color(0xFFC9A66B);
 
 class SplashScreenOld extends StatefulWidget {
   @override
@@ -17,6 +24,7 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
     Future.delayed(const Duration(milliseconds: 2000), () {
       if (mounted) {
@@ -25,36 +33,95 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
     });
 
     BlocProvider.of<ProfileCubit>(context).getProfile();
-
-    _navigateToNextScreen();
   }
 
-  Future<void> _navigateToNextScreen() async {
-    String? isLanguageSelectedStr =
-    await SharedPreferencesHelper().get("isLanguageSelected");
-
-    bool isLanguageSelected = isLanguageSelectedStr == "true";
-
-    await Future.delayed(const Duration(seconds: 4));
-
-    if (!mounted) return;
-    context.go(isLanguageSelected ? '/home' : '/language');
-  }
-
-  Widget _buildScreen({required bool gradient, required Key key}) {
+  Widget _buildFrame1(Key key) {
     return Container(
       key: key,
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
-        gradient: gradient ? gradient1(context) : null,
-        color: gradient ? null : Colors.white,
-      ),
+      decoration: const BoxDecoration(gradient: _kSplashGradient),
       child: Center(
         child: Image.asset(
-          "assets/images/Darbak_logo.png",
-          width: 180.w,
+          'assets/images/new_splash.png',
+          width: 182.w,
+          height: 281.h,
+          fit: BoxFit.contain,
         ),
+      ),
+    );
+  }
+
+  Widget _buildFrame2(Key key) {
+    return Container(
+      key: key,
+      width: double.infinity,
+      height: double.infinity,
+      decoration: const BoxDecoration(gradient: _kSplashGradient),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 263.h),
+          Image.asset(
+            'assets/images/new_logo.png',
+            width: 321.w,
+            height: 130.h,
+            fit: BoxFit.contain,
+          ),
+          SizedBox(height: 112.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 33.w),
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () => context.go('/home'),
+                  child: Container(
+                    width: double.infinity,
+                    height: 55.h,
+                    decoration: BoxDecoration(
+                      color: _kGoldColor,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'ابدأ الحجز',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.sp,
+                          fontFamily: 'ThmanyahSans',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                GestureDetector(
+                  onTap: () => context.go('/signin'),
+                  child: Container(
+                    width: double.infinity,
+                    height: 55.h,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: _kGoldColor, width: 1),
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'تسجيل الدخول',
+                        style: TextStyle(
+                          color: _kGoldColor,
+                          fontSize: 20.sp,
+                          fontFamily: 'ThmanyahSans',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -76,8 +143,8 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
           );
         },
         child: _currentScreen == 0
-            ? _buildScreen(gradient: true, key: const ValueKey('screen1'))
-            : _buildScreen(gradient: false, key: const ValueKey('screen2')),
+            ? _buildFrame1(const ValueKey('frame1'))
+            : _buildFrame2(const ValueKey('frame2')),
       ),
     );
   }
