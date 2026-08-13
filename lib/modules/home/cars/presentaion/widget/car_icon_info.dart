@@ -15,6 +15,7 @@ class CarIconInfo extends StatelessWidget {
     this.text2,
     this.backgroundColor,
     this.description,
+    this.foregroundColor,
   }) : super(key: key);
 
   final String image;
@@ -22,6 +23,7 @@ class CarIconInfo extends StatelessWidget {
   final String? text2;
   final String? description;
   final Color? backgroundColor;
+  final Color? foregroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +47,14 @@ class CarIconInfo extends StatelessWidget {
           SizedBox(
             width: 30.w,
             height: 28.h,
-            child: SvgPicture.asset(image, fit: BoxFit.contain,color: iconGrayColor(context),),
+            child: SvgPicture.asset(image, fit: BoxFit.contain,color: foregroundColor ?? iconGrayColor(context),),
 
           ),
           SizedBox(height: 10.h),
           if (description != null && description!.isNotEmpty)
             AutoSizeText(
               description!,
-              style: AppTypography.paragraphColor12(context),
+              style: AppTypography.paragraphColor12(context).copyWith(color: foregroundColor),
             ),
           if (description != null && description!.isNotEmpty)
             SizedBox(height: 5.h),

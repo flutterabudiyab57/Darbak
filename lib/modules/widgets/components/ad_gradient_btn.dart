@@ -43,10 +43,7 @@ class ADGradientButton extends StatelessWidget {
       height: height ?? 50.hs(context),
       child: Container(
         decoration: BoxDecoration(
-          gradient: backgroundColor == null
-              ? (gradient ?? gradient1(context))
-              : null,
-          color: backgroundColor,
+          color: backgroundColor ?? buttonPrimaryBgColor(context),
           borderRadius: BorderRadius.circular(15.r),
           border: border,
         ),

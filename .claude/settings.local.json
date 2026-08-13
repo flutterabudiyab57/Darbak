@@ -58,7 +58,8 @@
       "PowerShell(New-Item -ItemType Directory -Force -Path \"E:\\\\projects\\\\darbak\\\\scripts\")",
       "PowerShell(cd E:\\\\projects\\\\darbak; pwsh -File scripts\\\\flutter_analyze_filtered.ps1 --no-pub 2>&1)",
       "PowerShell(\\(Get-Command powershell.exe -ErrorAction SilentlyContinue\\).Source; \\(Get-Command pwsh.exe -ErrorAction SilentlyContinue\\).Source)",
-      "PowerShell(cd E:\\\\projects\\\\darbak; powershell -ExecutionPolicy Bypass -File scripts\\\\flutter_analyze_filtered.ps1 --no-pub 2>&1)"
+      "PowerShell(cd E:\\\\projects\\\\darbak; powershell -ExecutionPolicy Bypass -File scripts\\\\flutter_analyze_filtered.ps1 --no-pub 2>&1)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1)"
     ]
   }
 }

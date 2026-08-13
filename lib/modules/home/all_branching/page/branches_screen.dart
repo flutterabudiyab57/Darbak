@@ -386,8 +386,9 @@ class _BranchesScreenState extends State<BranchesScreen> {
                       },
                       child: ADGradientButton(
                         locale.callUs,
+                        border: Border.all(color: iconDefaultColor(context),width: 2.w),
                         icon: Icons.phone,
-                        gradient: secondary2,
+                        backgroundColor: backgroundColor(context),
                         iconSize: 20.sp,
                         textStyle: AppTypography.buttonText15(context),
                       ),
@@ -423,7 +424,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                         }
                       },
                       child: ADGradientButton(
-                        gradient: secondary,
+                        backgroundColor: buttonPrimaryBgColor(context),
                         locale.LocationOnMap.toString(),
                         textStyle: AppTypography.buttonText15(context),
                       ),

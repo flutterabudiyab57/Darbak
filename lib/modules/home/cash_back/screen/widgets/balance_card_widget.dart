@@ -6,8 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../../../../core/constants/assets/app_colors.dart';
 import '../../../../../../../language/locale.dart';
 import '../../../../../core/constants/assets/assets.dart';
+import '../../../../../core/style/figma_gradient_box.dart';
 import '../../models/cashbackbalance.dart';
-
 
 class BalanceCardWidget extends StatelessWidget {
   final BalanceData balance;
@@ -18,26 +18,18 @@ class BalanceCardWidget extends StatelessWidget {
     required this.balance,
     required this.locale,
   });
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
+    return FigmaGradientBox(
+      figmaWidth: 360,
+      figmaHeight: 171,
+      gradientStart: const Offset(2, 0),
+      gradientEnd: const Offset(134.545, 279.041),
+      colors: const [Color(0xFF021E45), Color(0xFF2172EF)],
+      stops: const [0.0, 1.0],
+      borderRadius: BorderRadius.circular(24.r),
       padding: EdgeInsets.all(24.w),
-      decoration: ShapeDecoration(
-          gradient: gradient1(context),
-        // color: strokeMainColor(context),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24.r),
-        ),
-        // shadows: [
-        //   BoxShadow(
-        //     color: const Color(0x3300BC7D),
-        //     blurRadius: 6,
-        //     offset: const Offset(0, 12),
-        //     spreadRadius: -4,
-        //   )
-        // ],
-      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -74,12 +66,9 @@ class BalanceCardWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 15.h),
+          SizedBox(height: 10.h),
           Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 9.w,
-              vertical: 9.h,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 9.h),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12.r),

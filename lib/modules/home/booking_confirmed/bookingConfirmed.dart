@@ -64,7 +64,9 @@ class BookingConfirmedBottomSheet extends StatelessWidget {
             ),
             margin: EdgeInsets.only(bottom: 30.h),
             child: SvgPicture.asset(
-              Assets.icon_Confirm,
+              Theme.of(context).brightness == Brightness.light
+                  ? Assets.icon_confirm_light
+                  : Assets.icon_confirm_dark,
               height: 182.h,
               width: 182.w,
 

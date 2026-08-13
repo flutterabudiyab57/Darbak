@@ -165,7 +165,7 @@ class _CarTileState extends State<CarTile> {
                               padding: EdgeInsets.all(8.w),
                               height: size.height * 0.064,
                               decoration: BoxDecoration(
-                                gradient: secondary2,
+                                color: buttonPrimaryBgColor(context),
                                 borderRadius: BorderRadiusDirectional.only(
                                   bottomStart: Radius.circular(18.r),
                                   topEnd: Radius.circular(12.r),
@@ -305,7 +305,7 @@ class _CarTileState extends State<CarTile> {
                                   ADGradientButton(
                                     locale.bookNow,
                                     width: 90.w,
-                                    gradient: secondary,
+                                    backgroundColor: buttonPrimaryBgColor(context),
                                     textStyle:
                                         AppTypography.buttonText15(context),
                                     height: 40.h,

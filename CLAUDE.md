@@ -95,7 +95,7 @@ The 4-tab bottom-nav app structure lives in `lib/modules/shell/`, **not** in a `
 
 Navigation was migrated off `Navigator.push`/`MaterialPageRoute` onto **`go_router` (`^14.6.2`)**. The router lives in `lib/core/router/`:
 
-- **`app_router.dart`** — the single `GoRouter appRouter` (wired into `MaterialApp.router` in `bloc_providers.dart`). `initialLocation: '/'` is `SplashScreenOld`. The router has two kinds of entries:
+- **`app_router.dart`** — the single `GoRouter appRouter` (wired into `MaterialApp.router` in `bloc_providers.dart`). `initialLocation: '/'` is `SplashScreenOld`. Auth pre-shell routes: `/language` → `SelectLanguage`, `/onboarding` → `OnBoarding` (3-page swipe intro, navigates to `/home` on finish/skip). The router has two kinds of entries:
   1. **`StatefulShellRoute.indexedStack`** — the 4-tab shell (branches `/home`, `/fleet`, `/bookings`, `/profile`). Branch order is index 0–3 and must match `ShellBottomNavBar` and `Routes.shellBranchPaths`.
   2. **Top-level `GoRoute`s** — every other screen. **Multi-parameter destinations take a typed `*Args` class via `extra:`** — those arg classes (`AuthScreenArgs`, `CarsInformationArgs`, `PaymentMethodsArgs`, `InvoiceArgs`, `LocationPickerArgs`, etc.) are defined at the bottom of `app_router.dart`. Single-value routes pass the bare value as `extra` (e.g. `/offer-details` takes `int`, `/web-payment` takes `String?`). The `/booking-confirmed` route uses `BottomSheetPage` (in `bottom_sheet_page.dart`) for a modal-style transition.
 - **`routes.dart`** — `class Routes` with a `static const` name per route plus `shellBranchPaths` (the list `['/home', '/fleet', '/bookings', '/profile']`) and `pathForShellTab(int)`. **`extra` is not serializable**, so no route is reachable by deep link or app-restart restoration. Tab branch paths are the only routes navigable by plain URL string.
@@ -129,17 +129,60 @@ grep -rEn "Text\(\s*['\"][A-Za-z][^'\"\$]{3,}['\"]" lib/
 
 **The one intentional exception** is `lib/core/constants/privacy_policy.dart` — ~700 lines of legal text held as two `const String` blocks (`PrivacyAr` / `PrivacyEn`). The privacy/terms screen toggles between them by locale. Migrating multi-paragraph legal copy into the `Map<String,String>` would bloat the dictionaries with no benefit. Don't migrate this file.
 
-**Backend/protocol strings stay hardcoded** — API endpoints, HTTP header keys (`Authorization`, `Bearer`, `Accept-Language`), font family (`'IBMPlexSansArabic'`), country codes (`'966'`), API response values compared against (`'OK'` in `data['status']`), asset paths, debug `print()` strings, and decorative emojis (`'❌ $msg'`) are not UI text and stay as-is.
+**Backend/protocol strings stay hardcoded** — API endpoints, HTTP header keys (`Authorization`, `Bearer`, `Accept-Language`), font family (`'ThmanyahSans'`), country codes (`'966'`), API response values compared against (`'OK'` in `data['status']`), asset paths, debug `print()` strings, and decorative emojis (`'❌ $msg'`) are not UI text and stay as-is.
 
 **Note: nullable vs. non-nullable getters.** Older entries in `locale.dart` are `String? get foo` — call sites need `locale.foo!` where a non-null `String` is required. New keys are declared as `String get foo` (non-nullable) and don't need the `!`. Prefer non-nullable when adding new entries.
 
 ### Theming and styling
 
-`ThemeCubit` (light/dark) lives in `lib/core/theme.dart` and is provided in `bloc_providers.dart` (it is created inline, **not** through GetIt). Custom font is `IBMPlexSansArabic` (declared in `pubspec.yaml`). All sizing should go through `flutter_screenutil` (`.w`, `.h`, `.sp`) since the design size is fixed at 390×844.
+`ThemeCubit` (light/dark) lives in `lib/core/theme.dart` and is provided in `bloc_providers.dart` (it is created inline, **not** through GetIt). Custom font is `ThmanyahSans` (four weights: 300/400/500/700/900; declared in `pubspec.yaml`). All sizing should go through `flutter_screenutil` (`.w`, `.h`, `.sp`) since the design size is fixed at 390×844.
 
 Color tokens and gradients live in `lib/core/constants/assets/app_colors.dart`. Each color has a `*Light` / `*Dark` constant plus a dynamic `*Color(BuildContext)` function that picks based on `Theme.of(context).brightness`. Use the dynamic functions in widgets; only use the constants if you specifically need the same color in both modes. The `linear()` gradient is the brand blue→green (`mainTypographyColor` → `SecondaryTypographyColor`) horizontal sweep.
 
+**`AppTypography`** (`lib/core/style/style.dart`) is the single source for text styles — e.g. `AppTypography.headingColor26(context)`, `.paragraphColor16(context)`, `.buttonText20(context)`. Always use these instead of inline `TextStyle(fontFamily: 'ThmanyahSans', ...)`. The `lightTheme()` / `darkTheme()` functions in the same file define the `ThemeData` returned to `MaterialApp.router`.
+
 **Text-scale-aware sizing — `num.hs(context)` / `.ws(context)` / `.sps(context)`.** Defined in `lib/core/helpers/text_scale_sizing.dart`, these multiply a screenutil value by the current `MediaQuery.textScalerOf(context).scale(1.0)`, so the dimension scales in lockstep with the system text scaler (clamped to `0.8–1.2` in `bloc_providers.dart`). Use them on heights of widgets that hold text — `toolbarHeight`, `PreferredSize.fromHeight`, button heights with labels, form-field heights, text-wrapping container heights. **Do NOT use them on `SizedBox` spacers, image / card / decoration dimensions, border radii, or `.sp` text/icon sizes** — those stay on plain `.h` / `.w` / `.sp` so the 390×844 design grid stays predictable. Tier-1 migration already covers the seven `toolbarHeight` call sites + the `PreferredSize` in `profile.dart`; the shared `CustomAppBar`'s `preferredSize` getter intentionally still returns `80.h` (no `BuildContext` available there) while its `build` renders `80.hs(context)` — a 1–8px measurement gap is acceptable within the clamp range.
+
+### FigmaGradientBox
+
+**Why raw Figma `Alignment` values are wrong.** Figma (and gradient-export plugins) describe linear gradient endpoints in a userSpace coordinate system — `x1`, `y1`, `x2`, `y2` in an SVG `<linearGradient gradientUnits="userSpaceOnUse">` are pixel offsets from the **top-left corner of the shape**, ranging from `0` to `figmaWidth` / `figmaHeight`. Flutter's `Alignment` uses a different origin and scale: `Alignment(0, 0)` is the center of the box, and the range is `−1` (top-left) to `+1` (bottom-right). Copying plugin-exported values verbatim into `LinearGradient(begin: Alignment(x1, y1), end: Alignment(x2, y2))` silently produces a gradient that starts and ends at completely different positions — the visual result looks wrong with no analyzer warning.
+
+**Rule: always use `FigmaGradientBox` for Figma-sourced gradients** (`lib/core/style/figma_gradient_box.dart`). Never hand-roll a `LinearGradient` with plugin-exported alignment values. The widget accepts raw pixel coordinates and converts them internally:
+
+```dart
+// inside _FigmaGradientBoxState:
+Alignment _toAlignment(Offset point, double width, double height) {
+  final relX = point.dx / width;
+  final relY = point.dy / height;
+  return Alignment(relX * 2 - 1, relY * 2 - 1);
+}
+```
+
+**Usage:**
+
+```dart
+FigmaGradientBox(
+  figmaWidth:    358,                        // bounding box of the shape element
+  figmaHeight:   120,                        // NOT the SVG viewBox (see below)
+  gradientStart: const Offset(0, 60),        // x1, y1 from <linearGradient>
+  gradientEnd:   const Offset(358, 60),      // x2, y2 from <linearGradient>
+  colors: const [Color(0xFF1A6FBF), Color(0xFF16A87E)],
+  stops:  const [0.0, 1.0],
+  borderRadius: BorderRadius.circular(16.r),
+  padding: EdgeInsets.all(16.w),
+  child: const YourContentWidget(),
+)
+```
+
+**Extracting values from a Figma SVG export:**
+
+1. Select the shape in Figma and export as SVG.
+2. Open the file and locate the `<linearGradient gradientUnits="userSpaceOnUse" x1="…" y1="…" x2="…" y2="…">` element. Those four attributes are `gradientStart = Offset(x1, y1)` and `gradientEnd = Offset(x2, y2)`.
+3. Find the shape's `<path>` or `<rect>` and measure its bounding box — **not** the `<svg viewBox>`, which often adds extra margin for drop-shadow filters. The shape's own bounding box is `figmaWidth` × `figmaHeight`.
+
+**Why runtime measurement instead of `AspectRatio`.** An earlier version used `AspectRatio(aspectRatio: figmaWidth / figmaHeight)` so the coordinate transform could be computed at build time. That caused `RenderFlex` overflow on wide/tablet screens (reproduced on a Lenovo TB128XU): `flutter_screenutil` padding scales with actual device width, and locking the height via `AspectRatio` left too little room for padding plus content. The current widget uses `GlobalKey` + `RenderBox` + `WidgetsBinding.instance.addPostFrameCallback` to measure its actual rendered size and recompute `_toAlignment` against it, so the gradient is always accurate regardless of final dimensions.
+
+**Do not reintroduce `AspectRatio` inside this widget.** If a call site needs a locked aspect ratio, apply it there — not inside the shared widget.
 
 ### Push notifications (FCM)
 
@@ -166,6 +209,16 @@ Separate from FCM: a normal feature module (matching `data/` + `presentaion/` la
 - **`NotificationsCubit`** (registered `registerFactory`) does paginated load (`getNotifications` resets, `loadMore` appends — `_perPage = 15`), plus **optimistic** `markOneAsRead` / `markAllAsRead` that revert on failure. States: `NotificationsInitial/Loading/Loaded/Empty/Error/NoInternet`.
 - **`NotificationsRemoteDataSource`** uses the DI `Dio` (inherits Bearer token). **The API is PROVISIONAL** — endpoints `notificationsList` / `notificationsMarkOneRead` / `notificationsMarkAllRead` in `api_path.dart` are marked `TODO(api): confirm path + method`, and `NotificationItem.fromJson` / `NotificationsPage.fromJson` parse a guessed shape. When the real backend JSON arrives, only the model `fromJson` and those path constants change.
 - **`NotificationType`** (`presentaion/widget/notification_type.dart`) is the enum (`cashback/booking/offer/update/unknown`) used for both the per-type icon/color (Figma swatches, no theme token) and routing via `routeFromNotification`. Tapping a card marks-as-read then routes through `routeFromNotification`.
+
+### Shared widget library (`lib/modules/widgets/`)
+
+Reusable UI components live here — prefer them over writing new ones from scratch:
+
+- **`CustomAppBar`** (`components/appbar.dart`) — themed `AppBar` with optional back button and `AnimatedThemeToggleButton`; `preferredSize` uses `80.h`.
+- **`ADGradientButton`** (`components/ad_gradient_btn.dart`) — primary CTA button with the brand gradient.
+- **`ad_prim_text_form.dart`** / **`DynamicPhoneField_WithCountry.dart`** — standard form fields used across auth + booking flows.
+- **`showResponsive_Flushbar.dart`** — the app's standard snackbar/toast wrapper (uses `another_flushbar`).
+- **`FormValidator`** (`lib/core/helpers/validation/form_validator.dart`) — static validators for password, email, phone, passport, credit card, etc.; delegates to `Validate` class in the same folder.
 
 ## Conventions and gotchas
 

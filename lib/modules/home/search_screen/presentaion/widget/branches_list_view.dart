@@ -231,7 +231,7 @@ class _BranchesListViewState extends State<BranchesListView> {
                                     width: MediaQuery.of(context).size.width * 0.40,
                                     child: ADGradientButton(
                                       locale.callUs.toString(),
-                                      gradient: secondary2,
+                                      backgroundColor: buttonPrimaryBgColor(context),
                                       icon: Icons.phone,
                                       iconSize: 20.sp,
                                       textStyle: AppTypography.buttonText15(context),
@@ -268,7 +268,7 @@ class _BranchesListViewState extends State<BranchesListView> {
                                   child: SizedBox(
                                     width: MediaQuery.of(context).size.width * 0.42,
                                     child: ADGradientButton(
-                                      gradient: secondary,
+                                      backgroundColor: buttonPrimaryBgColor(context),
                                       locale.LocationOnMap.toString(),
                                       textStyle: AppTypography.buttonText15(context),
                                       icon: Icons.arrow_forward_ios_rounded,

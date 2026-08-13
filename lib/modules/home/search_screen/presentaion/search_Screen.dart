@@ -431,15 +431,8 @@ class _SearchState extends State<SearchScreen>
       padding:  EdgeInsets.all(20.w),
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xff0A708D).withValues(alpha: .5),
-            Color(0xFF2BC181).withValues(alpha: .125),
-            Color(0xff0A708D).withValues(alpha: .5),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+          color: iconBlueColor(context).withValues(alpha: .5),
+
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: strokeGrayColor(context), width: 1.5.w),
       ),
@@ -523,6 +516,8 @@ class _SearchState extends State<SearchScreen>
                 icon: Icons.search_rounded,
                 height:45.h,
                 iconSize: 21.sp,
+                textStyle:AppTypography.buttonText18(context),
+
               )
               ,
             ),
@@ -538,7 +533,7 @@ class _SearchState extends State<SearchScreen>
       child: Container(
         decoration: BoxDecoration(
           color: Colors.transparent,
-          border: Border.all(color: strokeGrayColor(context), width: 1.5.w),
+          border: Border.all(color: backgroundColor(context), width: 1.5.w),
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: Padding(

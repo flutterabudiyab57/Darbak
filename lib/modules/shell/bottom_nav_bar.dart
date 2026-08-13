@@ -80,7 +80,7 @@ class ShellBottomNavBar extends StatelessWidget {
         height: 50.h,
         decoration: isSelected
             ? BoxDecoration(
-                gradient: gradient2(context),
+                color: buttonPrimaryBgColor(context),
                 shape: BoxShape.circle,
               )
             : null,

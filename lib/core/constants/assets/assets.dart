@@ -66,6 +66,8 @@ class Assets {
   static const String icon_wallet= 'assets/icons/wallet_icon.svg';
   static const String icon_riyal= 'assets/icons/Saudi_Riyal_Symbol.svg';
   static const String icon_Confirm= 'assets/icons/Confirm_icon.svg';
+  static const String icon_confirm_light = 'assets/icons/icon_confirm_light.svg';
+  static const String icon_confirm_dark  = 'assets/icons/icon_confirm_dark.svg';
 
 
 }

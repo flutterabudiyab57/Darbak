@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../../language/locale.dart';
 import '../../../../../../core/router/routes.dart';
+import '../../../../../../core/style/figma_gradient_box.dart';
 import '../../../../../widgets/components/ad_gradient_btn.dart';
 import '../../../../search_screen/blocs/search_bloc/search_cubit.dart';
 
@@ -23,22 +24,15 @@ class Branches_Card extends StatelessWidget {
         BlocProvider.of<SearchCubit>(context).getAirPortBranches();
         context.pushNamed(Routes.deliveryPackage);
       },
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          gradient:LinearGradient(
-            begin: _figmaToFlutter(0.00, 0.00),
-            end: _figmaToFlutter(1.00, 1.00),
-        colors:  [
-          buttonPrimaryBgColor(context),
-          Color(0xFF009966),
-
-        ],
+      child: FigmaGradientBox(
+        figmaWidth: 360,
+        figmaHeight: 126,
+        gradientStart: const Offset(0, 0),
+        gradientEnd: const Offset(78.5746, 224.499),
+        colors: [const Color(0xFF021E45), const Color(0xFF2172EF)],
         stops: const [0.0, 1.0],
-      ),
-          borderRadius: BorderRadius.circular(15.r),
-        ),
+        borderRadius: BorderRadius.circular(15.r),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -61,7 +55,7 @@ class Branches_Card extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                   decoration: ShapeDecoration(
-                    color: const Color(0xFF2BC181),
+                    color: buttonColor(context),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
                     ),
@@ -72,12 +66,9 @@ class Branches_Card extends StatelessWidget {
                     maxLines: 1,
                   ),
                 ),
-
               ],
             ),
-
             SizedBox(height: 8.h),
-
             Row(
               children: [
                 Expanded(
@@ -94,21 +85,16 @@ class Branches_Card extends StatelessWidget {
               ],
             ),
             SizedBox(height: 10.h),
-
             ADGradientButton(
               locale.deliveryCta,
-              backgroundColor: buttonWhiteColor(context),
+              backgroundColor: backgroundColor(context),
               textStyle: AppTypography.secondaryTypographyColor16(context),
               height: 42.h,
             ),
-
             SizedBox(height: 5.h),
           ],
         ),
       ),
     );
   }
-}
-Alignment _figmaToFlutter(double x, double y) {
-  return Alignment((x * 2) - 1, (y * 2) - 1);
 }

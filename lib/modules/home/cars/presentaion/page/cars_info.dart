@@ -341,6 +341,7 @@ class _CarsInformationState extends State<CarsInformation> {
                     "${widget.datum!.doors} ",
                     text2: "${locale.seats}",
                     backgroundColor:seatsContainer(context),
+                    foregroundColor: const Color(0xFFD58F11),
 
                   ),
                   // CarIconInfo(
@@ -356,6 +357,7 @@ class _CarsInformationState extends State<CarsInformation> {
                     "${widget.datum!.kilo} ",
                     text2: "${locale.kmDay}",
                     backgroundColor: speedContainer(context),
+                    foregroundColor: const Color(0xFF42813B),
 
                   ),
                   CarIconInfo(
@@ -364,6 +366,7 @@ class _CarsInformationState extends State<CarsInformation> {
                     text:
                     "${widget.datum!.fuel} ",
                     backgroundColor: fuelContainer(context),
+                    foregroundColor: const Color(0xFF3B3B3B),
 
                   ),
 
@@ -376,8 +379,9 @@ class _CarsInformationState extends State<CarsInformation> {
                         : widget.datum!.transmission == "ناقل حركة يدوى"
                         ? locale.manual
                         : "${widget.datum!.transmission}",
-                    backgroundColor: TransmissionContainer(context)
-                    ,)
+                    backgroundColor: TransmissionContainer(context),
+                    foregroundColor: const Color(0xFFA10012),
+                    )
                 ],
               ),
             ),

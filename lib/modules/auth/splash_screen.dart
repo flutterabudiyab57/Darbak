@@ -5,13 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../home/profile/blocs/profile_cubit/profile_cubit.dart';
 
-const _kSplashGradient = LinearGradient(
-  begin: Alignment(0.50, 0.12),
-  end: Alignment(0.50, 1.00),
-  colors: [const Color(0xFF3F4552), const Color(0xFF20252D)],
-);
-
-const _kGoldColor = Color(0xFFC9A66B);
 
 class SplashScreenOld extends StatefulWidget {
   @override
@@ -24,7 +17,7 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
     Future.delayed(const Duration(milliseconds: 2000), () {
       if (mounted) {
@@ -40,7 +33,7 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
       key: key,
       width: double.infinity,
       height: double.infinity,
-      decoration: const BoxDecoration(gradient: _kSplashGradient),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Center(
         child: Image.asset(
           'assets/images/new_splash.png',
@@ -57,7 +50,7 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
       key: key,
       width: double.infinity,
       height: double.infinity,
-      decoration: const BoxDecoration(gradient: _kSplashGradient),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -79,7 +72,7 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
                     width: double.infinity,
                     height: 55.h,
                     decoration: BoxDecoration(
-                      color: _kGoldColor,
+                      color: const Color(0xFF021E45),
                       borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Center(
@@ -102,14 +95,14 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
                     width: double.infinity,
                     height: 55.h,
                     decoration: BoxDecoration(
-                      border: Border.all(color: _kGoldColor, width: 1),
+                      border: Border.all(color: const Color(0xFF021E45), width: 1),
                       borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Center(
                       child: Text(
                         'تسجيل الدخول',
                         style: TextStyle(
-                          color: _kGoldColor,
+                          color: const Color(0xFF021E45),
                           fontSize: 20.sp,
                           fontFamily: 'ThmanyahSans',
                           fontWeight: FontWeight.w500,

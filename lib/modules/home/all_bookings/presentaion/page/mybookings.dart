@@ -98,7 +98,7 @@ class _MyBookingsState extends State<MyBookings>
       margin:EdgeInsetsGeometry.symmetric(horizontal: 6.w) ,
       height: 50.h,
       decoration: BoxDecoration(
-        gradient: isSelected ? secondary : null ,
+        color: isSelected ? buttonPrimaryBgColor(context) : null,
         borderRadius: BorderRadius.circular(15.sp),
         border: isSelected
             ? null
