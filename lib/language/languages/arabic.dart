@@ -370,6 +370,7 @@ Map<String, String> arabic() {
     'permissionRequired': 'الإذن مطلوب',
     'permissionPermanentlyDeniedBody':
         'تم رفض إذن الموقع بشكل دائم. يرجى تفعيله من الإعدادات.',
+    'locationServiceDisabled': 'خدمات الموقع معطلة. يرجى تفعيلها للمتابعة.',
     'openSettings': 'فتح الإعدادات',
     'errorFetchingCoupons': 'خطأ في جلب الكوبونات',
     'couldNotLaunchUrl': 'تعذر فتح الرابط',

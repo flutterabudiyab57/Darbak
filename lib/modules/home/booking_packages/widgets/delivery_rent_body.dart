@@ -71,6 +71,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       await Geolocator.openLocationSettings();
+      _showSnackError(AppLocalizations.of(context)!.locationServiceDisabled);
       return false;
     }
     LocationPermission permission = await Geolocator.checkPermission();
@@ -164,13 +165,17 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
       return;
     }
 
-    bool hasPermission = await _checkLocationPermission();
-    if (!hasPermission) return;
+    final bounds = isPickup ? _buildBoundsFromBranch() : _buildBoundsFromRegion();
+
+    if (bounds == null) {
+      bool hasPermission = await _checkLocationPermission();
+      if (!hasPermission) return;
+    }
 
     final result = await context.pushNamed(
       Routes.locationPicker,
       extra: LocationPickerArgs(
-        bounds: isPickup ? _buildBoundsFromBranch() : _buildBoundsFromRegion(),
+        bounds: bounds,
         centerOverride:
             isPickup ? _getCenterFromBranch() : _getCenterFromRegion(),
       ),

@@ -337,6 +337,9 @@ class AppLocalizations {
   String get permissionPermanentlyDeniedBody => _localizedValues[
       locale.languageCode]!['permissionPermanentlyDeniedBody']!;
 
+  String get locationServiceDisabled =>
+      _localizedValues[locale.languageCode]!['locationServiceDisabled']!;
+
   String get openSettings =>
       _localizedValues[locale.languageCode]!['openSettings']!;
 

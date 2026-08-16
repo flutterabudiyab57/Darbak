@@ -356,6 +356,7 @@ Map<String, String> english() {
     'permissionRequired': 'Permission Required',
     'permissionPermanentlyDeniedBody':
         'Location permission is permanently denied. Please enable it from settings.',
+    'locationServiceDisabled': 'Location services are disabled. Please enable them to continue.',
     'openSettings': 'Open Settings',
     'errorFetchingCoupons': 'Error fetching coupons',
     'couldNotLaunchUrl': 'Could not launch URL',
