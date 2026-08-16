@@ -578,7 +578,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     context.pushNamed(Routes.privacyPolicy);
                                   },
                                   child: Text(
-                                    locale.agreeTermsAndConditions.toString(),
+                                    locale.agreeTerms.toString(),
                                     style: AppTypography.paragraphColor14(context),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,

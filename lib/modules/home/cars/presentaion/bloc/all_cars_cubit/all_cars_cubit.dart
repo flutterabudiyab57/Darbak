@@ -30,7 +30,7 @@ class AllCarsCubit extends Cubit<AllCarsState> {
       filteredData = data;
     } else {
       try {
-        final url = '$searchAboutCars/?trem=$searchTerm';
+        final url = '$legacyCarSearchUrl/?trem=$searchTerm';
 
         final response = await Dio().get(
           url,

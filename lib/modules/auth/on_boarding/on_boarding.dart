@@ -3,7 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../core/constants/assets/app_colors.dart';
+import '../../../core/constants/preferences_constants.dart';
 import '../../../core/style/style.dart';
+import '../../../core/helpers/SharedPreference/pereferences.dart';
 import '../../../language/locale.dart';
 import '../../widgets/components/ad_gradient_btn.dart';
 
@@ -110,13 +112,15 @@ class _OnBoardingState extends State<OnBoarding> {
 
   Widget buildNextButton(BuildContext context, AppLocalizations? locale) {
     return GestureDetector(
-        onTap: () {
+        onTap: () async {
           if (currentIndex < 2) {
             controller.nextPage(
               duration: Duration(milliseconds: 400),
               curve: Curves.easeInOut,
             );
           } else {
+            await SharedPreferencesHelper().set(PreferencesConstants.hasSeenOnboarding, "true");
+            if (!mounted) return;
             context.go('/home');
           }
         },
@@ -131,7 +135,9 @@ class _OnBoardingState extends State<OnBoarding> {
 
   Widget buildSkipButton(BuildContext context, AppLocalizations? locale) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        await SharedPreferencesHelper().set(PreferencesConstants.hasSeenOnboarding, "true");
+        if (!mounted) return;
         context.go('/home');
       },
       child: Container(

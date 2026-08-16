@@ -337,7 +337,7 @@ class AppTypography {
   static TextStyle buttonText16(BuildContext context) => TextStyle(
         fontFamily: 'ThmanyahSans',
         fontSize: 16.sp,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
         color: buttonTextColor(context),
       );
 

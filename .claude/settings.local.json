@@ -59,7 +59,15 @@
       "PowerShell(cd E:\\\\projects\\\\darbak; pwsh -File scripts\\\\flutter_analyze_filtered.ps1 --no-pub 2>&1)",
       "PowerShell(\\(Get-Command powershell.exe -ErrorAction SilentlyContinue\\).Source; \\(Get-Command pwsh.exe -ErrorAction SilentlyContinue\\).Source)",
       "PowerShell(cd E:\\\\projects\\\\darbak; powershell -ExecutionPolicy Bypass -File scripts\\\\flutter_analyze_filtered.ps1 --no-pub 2>&1)",
-      "PowerShell(powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1)"
+      "PowerShell(powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1 2>&1 | Select-String -Pattern \"\\(error|warning|Error|Warning\\)\" | Where-Object { $_ -notmatch \"deprecated_member_use|unused_import|equal_keys_in_map|unused_element|include_file_not_found\" })",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1 2>&1 | Out-String | Select-String \"^\\\\s+error\" -AllMatches | ForEach-Object { $_.Matches } | Select-Object -First 30)",
+      "Bash(Remove-Item \"E:\\\\projects\\\\darbak\\\\lib\\\\language\\\\languageCubit.dart\" -Force)",
+      "Bash(Remove-Item \"E:\\\\projects\\\\darbak\\\\lib\\\\core\\\\helpers\\\\helper\\\\FigmaToFlutter.dart\" -Force)",
+      "Bash(Write-Host \"Deleted both files\")",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \"E:\\\\projects\\\\darbak\\\\scripts\\\\flutter_analyze_filtered.ps1\" 2>&1 | Select-Object -Last 20)",
+      "Bash(powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1)",
+      "Bash(Get-Content \"C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Temp\\\\flutter_analyze_20260816_134101.log\")"
     ]
   }
 }

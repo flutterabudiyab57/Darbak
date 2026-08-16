@@ -15,40 +15,45 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onThemeToggle;
 
   const CustomAppBar({
-    Key? key,
+    super.key,
     required this.title,
     this.showBackButton = false,
     this.showThemeToggle = false,
     this.onBackPressed,
     this.onThemeToggle,
-  }) : super(key: key);
+  });
+
+  double _height(BuildContext context) => 80.hs(context);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: backgroundColor(context),
-      toolbarHeight: 80.hs(context),
-      title: Text(
-        title,
-        style: AppTypography.mainTypographyColor22(context),
-      ),
+      toolbarHeight: _height(context),
+      leadingWidth: 64.w,
+      title: Text(title, style: AppTypography.mainTypographyColor22(context)),
       leading: showBackButton
-          ? Padding(
-            padding:  EdgeInsets.all(12.sp),
-            child: IconButton(
-                    icon: Icon(Icons.arrow_back_ios, color: strokeMainColor(context),size: 30.sp,),
-                    onPressed: onBackPressed ?? () => Navigator.pop(context),
-                  ),
-          )
+          ? IconButton(
+        padding: EdgeInsets.zero,
+        constraints: BoxConstraints(
+          minWidth: 48.w,
+          minHeight: 48.w,
+        ),
+        splashRadius: 28.w,
+        icon: Icon(
+          Icons.arrow_back_ios_new,
+          color: strokeMainColor(context),
+          size: 26.sp,
+        ),
+        onPressed: onBackPressed ?? () => Navigator.pop(context),
+      )
           : null,
       automaticallyImplyLeading: showBackButton,
       actions: [
         if (showThemeToggle)
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: AnimatedThemeToggleButton(
-              onToggle: onThemeToggle,
-            ),
+            child: AnimatedThemeToggleButton(onToggle: onThemeToggle),
           ),
       ],
     );
@@ -57,7 +62,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(80.h);
 }
-
 class AnimatedThemeToggleButton extends StatelessWidget {
   final VoidCallback? onToggle;
   const AnimatedThemeToggleButton({

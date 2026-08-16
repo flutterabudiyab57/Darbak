@@ -23,6 +23,8 @@ const String category = "/categories";
 const String offers = "/check_for_offers";
 const String allCars = "/cars/filter";
 const String searchAboutCars = mainApi + "/cars";
+// TODO(backend): legacy domain, bypasses baseUrl and AppInterceptors. Replace with main-API endpoint.
+const String legacyCarSearchUrl = searchAboutCars;
 const String allCarsOffers = "/filters";
 const String memberShipCars = "/cars_membership/filter";
 const String carsByBranch = allCars + "?from_app=1&branch_id=";

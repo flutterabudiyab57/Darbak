@@ -67,7 +67,6 @@ Map<String, String> arabic() {
     "checkUsernameAndPassword": "برجاء فحص البريد ورقم السر",
     "allDays": "يوميآ",
     "skip": "تخطي",
-    "agreeTermsAndConditions": "أوافق علي الشروط والأحكام",
     "newPass": "تعيين كلمه مرور جديده",
     "new": "جديد",
     "enterCodeSent": "التحقق من صحة المصادقة",

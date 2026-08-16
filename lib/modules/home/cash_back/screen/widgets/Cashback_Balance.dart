@@ -256,14 +256,15 @@ class _DarbakBalanceWidgetState extends State<DarbakBalanceWidget>
                           children: [
                             Text(
                               locale.availableBalance,
-                              style: AppTypography.headingColor16(context),
+                              style: AppTypography.headingColor14(context),
                             ),
+                            SizedBox(width: 5.w),
                             Text(
                               widget.availableBalance.toStringAsFixed(0),
                               style:
-                                  AppTypography.mainTypographyColor16(context),
+                                  AppTypography.mainTypographyColor14(context),
                             ),
-                            SizedBox(width: 5.w),
+                            SizedBox(width: 2.w),
                             SvgPicture.asset(
                               Assets.icon_riyal,
                               height: 14.hs(context),

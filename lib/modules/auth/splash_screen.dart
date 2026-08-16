@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../home/profile/blocs/profile_cubit/profile_cubit.dart';
+import '../../core/constants/preferences_constants.dart';
+import '../../core/helpers/SharedPreference/pereferences.dart';
 
 
 class SplashScreenOld extends StatefulWidget {
@@ -19,13 +21,40 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
-    Future.delayed(const Duration(milliseconds: 2000), () {
-      if (mounted) {
-        setState(() => _currentScreen = 1);
-      }
-    });
+    _initializeStartup();
 
     BlocProvider.of<ProfileCubit>(context).getProfile();
+  }
+
+  Future<void> _initializeStartup() async {
+    try {
+      final stopwatch = Stopwatch()..start();
+
+      final tokenFuture = SharedPreferencesHelper().get(PreferencesConstants.token);
+      final token = tokenFuture != null ? await tokenFuture : null;
+
+      final elapsed = stopwatch.elapsedMilliseconds;
+      final remainingMs = 300 - elapsed;
+      if (remainingMs > 0) {
+        await Future.delayed(Duration(milliseconds: remainingMs));
+      }
+
+      if (!mounted) return;
+
+      if (token != null && token.isNotEmpty) {
+        context.go('/home');
+      } else {
+        Future.delayed(const Duration(milliseconds: 1700), () {
+          if (!mounted) return;
+          setState(() => _currentScreen = 1);
+        });
+      }
+    } catch (e) {
+      Future.delayed(const Duration(milliseconds: 2000), () {
+        if (!mounted) return;
+        setState(() => _currentScreen = 1);
+      });
+    }
   }
 
   Widget _buildFrame1(Key key) {
@@ -67,7 +96,20 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: () => context.go('/home'),
+                  onTap: () async {
+                    final isLanguageSelected = await SharedPreferencesHelper().get("isLanguageSelected");
+                    final hasSeenOnboarding = await SharedPreferencesHelper().get(PreferencesConstants.hasSeenOnboarding);
+
+                    if (!mounted) return;
+
+                    if (isLanguageSelected != "true") {
+                      context.go('/language');
+                    } else if (hasSeenOnboarding != "true") {
+                      context.go('/onboarding');
+                    } else {
+                      context.go('/home');
+                    }
+                  },
                   child: Container(
                     width: double.infinity,
                     height: 55.h,

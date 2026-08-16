@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/assets/app_colors.dart';
+import '../../../core/constants/preferences_constants.dart';
 import '../../../core/helpers/SharedPreference/pereferences.dart';
 import '../../widgets/components/ad_gradient_btn.dart';
 
@@ -22,18 +23,11 @@ class SelectLanguage extends StatefulWidget {
 class _SelectLanguageState extends State<SelectLanguage> {
   late LanguageCubit _languageCubit;
   int? _selectedLanguage = -1;
-  String? token;
 
   @override
   void initState() {
     super.initState();
     _languageCubit = BlocProvider.of<LanguageCubit>(context);
-    _loadToken();
-  }
-
-  Future<void> _loadToken() async {
-    token = await SharedPreferencesHelper().get("token");
-    setState(() {});
   }
   bool en_Selected = false;
   bool ar_Selected = false;
@@ -135,7 +129,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                               width: 2.w),
                           borderRadius: BorderRadius.circular(24.sp),
                           color: ar_Selected == true
-                              ? buttonPrimaryBgColor(context)
+                              ? buttonSecondaryColor(context)
                               : Colors.transparent),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -168,7 +162,9 @@ class _SelectLanguageState extends State<SelectLanguage> {
                     }
 
                     if (widget.isStart) {
-                      context.go(token != null ? '/home' : '/onboarding');
+                      final hasSeenOnboarding = await SharedPreferencesHelper().get(PreferencesConstants.hasSeenOnboarding);
+                      if (!mounted) return;
+                      context.go(hasSeenOnboarding == "true" ? '/home' : '/onboarding');
                     } else {
                       Navigator.pop(context);
                     }

@@ -34,9 +34,12 @@ class SharedPreferencesHelper {
 
   Future<String?> getUserID() async => get(PreferencesConstants.userData);
 
-  Future<void> clear(String s) async {
+  /// Removes only session-scoped keys. Language and first-run flags are preserved.
+  Future<void> clearSession() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.clear();
+    await preferences.remove(PreferencesConstants.token);
+    await preferences.remove(PreferencesConstants.userData);
+    await preferences.remove(PreferencesConstants.userPassword);
   }
 }
 

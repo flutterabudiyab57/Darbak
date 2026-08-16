@@ -73,7 +73,6 @@ Map<String, String> english() {
     "enterCodeSent": "Authentication verification",
     "newPass": "Set a new password",
     "copyCode": "Copy the verification code in your SMS to verify the recovery of this account.",
-    "agreeTermsAndConditions": "I agree to the terms and conditions",
     "send": "Send activation code",
     "enterIdAndNumber": "Please enter ID Number",
     "reset": "Reset",

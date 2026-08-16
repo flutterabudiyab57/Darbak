@@ -104,6 +104,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                       child: ADPrimTextForm(
+
                         auth: true,
                         controller: _searchController,
                         type: TextInputType.name,
@@ -387,10 +388,10 @@ class _BranchesScreenState extends State<BranchesScreen> {
                       child: ADGradientButton(
                         locale.callUs,
                         border: Border.all(color: iconDefaultColor(context),width: 2.w),
-                        icon: Icons.phone,
+                        icon: Icons.phone,iconColor: headingColor(context),
                         backgroundColor: backgroundColor(context),
                         iconSize: 20.sp,
-                        textStyle: AppTypography.buttonText15(context),
+                        textStyle: AppTypography.headingColor15(context),
                       ),
                     ),
                   ),

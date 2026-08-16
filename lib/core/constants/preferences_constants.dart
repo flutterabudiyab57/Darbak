@@ -4,5 +4,6 @@ class PreferencesConstants {
   static const String token = "token";
   static const String lang = "LANG";
   static const String userPassword = "USER_PASSWORD";
+  static const String hasSeenOnboarding = "has_seen_onboarding";
 
 }

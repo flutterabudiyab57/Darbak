@@ -710,8 +710,6 @@ class AppLocalizations {
 
   String? get send => _localizedValues[locale.languageCode]!['send'];
 
-  String? get agreeTermsAndConditions =>
-      _localizedValues[locale.languageCode]!['agreeTermsAndConditions'];
 
   String? get enterCodeSent =>
       _localizedValues[locale.languageCode]!['enterCodeSent'];

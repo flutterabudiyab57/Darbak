@@ -50,8 +50,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   logOut() async {
-    await sharedPreferencesHelper.clear('token').then((value) => userToken = "");
-
+    await sharedPreferencesHelper.clearSession();
+    userToken = "";
     emit(ProfileLogout());
   }
 }
