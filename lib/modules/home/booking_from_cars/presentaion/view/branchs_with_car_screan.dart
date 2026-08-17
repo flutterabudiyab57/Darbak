@@ -101,7 +101,7 @@ class _BranchWithCarScreenState extends State<BranchWithCarScreen> {
                         listener: (context, addState) {
                           if (addState is AdditionsFailed &&
                               addState.error.contains("Error Please LOGIN To Continue")) {
-                            context.go('/signin');
+                            context.go('/home');
                           }
                         },
                         builder: (context, addState) {

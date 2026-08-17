@@ -29,7 +29,7 @@ class ErrorPage extends StatelessWidget {
                   style: defaultTextStyle(34, FontWeight.w700, Colors.black),),
                 SizedBox(height: size.height*0.05,),
                 GestureDetector(onTap:(){
-                  context.go('/signin');
+                  context.go('/home');
                 },child: ADGradientButton(locale.goToHome)),
 
               ],

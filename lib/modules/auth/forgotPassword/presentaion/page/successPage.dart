@@ -82,7 +82,7 @@ class SuccessBottomSheet extends StatelessWidget {
                             ),                            builder: (context) => BackdropFilter(
                               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                               child: FractionallySizedBox(
-                                child: SignInScreen(),
+                                child: SignInScreen(mode: SignInMode.gate),
                               ),
                             ),
                           );

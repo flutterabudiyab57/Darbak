@@ -67,7 +67,9 @@
       "Bash(Write-Host \"Deleted both files\")",
       "PowerShell(powershell -ExecutionPolicy Bypass -File \"E:\\\\projects\\\\darbak\\\\scripts\\\\flutter_analyze_filtered.ps1\" 2>&1 | Select-Object -Last 20)",
       "Bash(powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1)",
-      "Bash(Get-Content \"C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Temp\\\\flutter_analyze_20260816_134101.log\")"
+      "Bash(Get-Content \"C:\\\\Users\\\\flutt\\\\AppData\\\\Local\\\\Temp\\\\flutter_analyze_20260816_134101.log\")",
+      "Bash(Select-Object -Last 50)",
+      "PowerShell(cd E:\\\\projects\\\\darbak; powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1)"
     ]
   }
 }

@@ -52,7 +52,7 @@ class LoginNoAuth extends StatelessWidget {
                     return BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                       child: FractionallySizedBox(
-                        child: SignInScreen(),
+                        child: SignInScreen(mode: SignInMode.gate),
                       ),
                     );
                   },

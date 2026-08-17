@@ -2,7 +2,7 @@ name: darbak
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.2.1
+version: 3.3.3
 
 environment:
   sdk: ^3.5.3
@@ -82,7 +82,7 @@ dependency_overrides:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/Darbak_logoo.png"
+  image_path: "assets/images/new_splash.png"
   remove_alpha_ios: true
   adaptive_icon_background: "#FFFFFF"
 

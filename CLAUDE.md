@@ -36,6 +36,7 @@ flutter clean                    # nuke build/ — fixes stale AssetManifest.bin
 
 - **Pub cache lives on `E:\.pub-cache`**, not the default `%LOCALAPPDATA%\Pub\Cache`. The `PUB_CACHE` user env var is set to this path. Reason: on Windows, Kotlin's `RelocatableFileToPathConverter` crashes when project sources and pub cache are on different drive letters (`IllegalArgumentException: this and base files have different roots`). Keep `PUB_CACHE` and the project on the same drive.
 - **`flutter pub get` may hit pub.dev's `advisoriesUpdated` decoding bug** (`FormatException: advisoriesUpdated must be a String`). Workaround: `flutter pub get --offline` once packages are cached; the post-solve advisories fetch is what crashes, packages still install.
+- **Dependency version conflict (known issue).** The project has an existing constraint conflict between `package_info_plus ^8.3.1` and `device_info_plus ^13.2.0` (different transitive `win32` versions). This does not prevent the app from building; it only blocks `flutter pub get` and `flutter analyze` without `--offline`. The filtered scripts work around this — use them for analyze/test. This is a pre-existing issue unrelated to code changes.
 - **Gradle/Kotlin daemons hold file locks** in `build/` and `android/app/`. If a delete or replace of any file inside the project tree fails with "file in use", run `android\gradlew.bat --stop` first. Closing Android Studio / VS Code is also often required.
 - **Dart files must be UTF-8 without BOM.** `Get-Content -Raw` in Windows PowerShell 5.1 reads as cp1252 by default — round-tripping through it silently corrupts Arabic strings into mojibake. For bulk edits use `[System.IO.File]::ReadAllBytes` + `[System.Text.Encoding]::UTF8.GetString` for reading and `[System.IO.File]::WriteAllText(path, text, (New-Object System.Text.UTF8Encoding $false))` for writing. The full incident is in the legacy memory folder: `~/.claude/projects/E--projects-fast-rent/memory/feedback_powershell_utf8.md`.
 
@@ -64,10 +65,27 @@ If you add a feature-level cubit that should be globally available, register it 
 - A single `Dio` is registered as a lazy singleton in `service_locator.dart`. **`AppInterceptors`** (in `lib/core/helpers/interceptors/app_interceptor.dart`) is attached to that `Dio` once at the end of `setup()` — so every `sl<Dio>()` call inherits `baseUrl = mainApi`, the `Accept-Language` header, and the `Authorization: Bearer <token>` header (token pulled from `SharedPreferencesHelper` on every request). Do **not** call `sl<Dio>().interceptors.add(AppInterceptors(...))` again from feature code — it would double-fire the request hook.
 - All endpoints are constants in `lib/core/constants/api_path.dart`. Active base URL is `productionApi = "https://api.daraksonksa.com/api"` (controlled by the `mainApi` const). Many endpoint constants are pre-prefixed with `mainApi`, so do not double-prefix when composing requests.
 
+**⚠️ Authentication & API Error Handling:**
+- **Token requirement:** Most endpoints return 401 "Not Authenticated" if the Bearer token is missing or null. When the token is null (e.g., guest users or logout), requests send `"Authorization: Bearer null"` (the string "null"), which the API rejects.
+- **Empty error interceptor:** `AppInterceptors.onError()` is currently a pass-through with no custom handling. 401 responses are **not** caught globally — errors propagate to individual datasources. There is **no automatic redirect to login or token refresh on 401**.
+- **Individual error handling:** Each datasource catches exceptions independently (e.g., `ProfileService.getProfile()` throws `"Not Authenticated"` on 401). Check the state cubit to see how errors are handled upstream.
+- **Bearer header quirk:** String interpolation of a null token produces `"Bearer null"` (literal string), not omitted or empty. To support unauthenticated requests, check `if (token != null)` before adding the header (see `app_interceptor.dart:48–50` for the pattern).
+
 ### Persistence
 
 - **Hive** (`lib/core/helpers/cache/cache_helper.dart`) — TTL of 5 minutes (`cacheValidDuration`), boxes `branches_box`/`cars_box`/`cache_meta_box`, with metadata keys of the form `${key}_time`. Use `CacheHelper.isCacheValid(key)` before serving cached data.
 - **SharedPreferences** wrapper at `lib/core/helpers/SharedPreference/pereferences.dart` (note spelling), exposed as `SharedPreferencesHelper` via GetIt. Auth token is read from here in the Dio interceptor.
+
+**Preference key constants** (see `lib/core/constants/preferences_constants.dart`):
+- `token` — Bearer token; read on every Dio request. **Stored in plain SharedPreferences (not encrypted)** — consider migration to `flutter_secure_storage`.
+- `lang` — Locale ("en" or "ar"); default "ar"
+- `isLanguageSelected` — First-run flag ("true" when user picks language)
+- `hasSeenOnboarding` — First-run flag ("true" when user finishes onboarding)
+- `userData`, `userPassword` — User profile data; cleared on logout
+
+All flags use string storage ("true" string, not bool type) because `SharedPreferencesHelper` provides only string get/set (no getBool/setBool).
+
+**⚠️ Security Note:** Auth tokens are stored in plain `SharedPreferences` (not encrypted). On Android this is `shared_prefs.xml` (plaintext); on iOS it's `NSUserDefaults` (plaintext unless device-encrypted). Any attacker with file-system access can read the token. **Future work:** Migrate to `flutter_secure_storage` for encrypted key-value storage.
 
 ### App shell and tab navigation
 
@@ -103,6 +121,38 @@ Navigation was migrated off `Navigator.push`/`MaterialPageRoute` onto **`go_rout
 - **`tab_jump.dart`** — `extension TabJump on BuildContext` providing `context.jumpToShellTab(int)`, which calls `context.go(Routes.pathForShellTab(tab))`.
 
 When adding a screen: add a `Routes` name, a `GoRoute` in `app_router.dart`, and (if it needs >1 param) an `*Args` class. Prefer `context.pushNamed`/`goNamed` over hardcoding path strings.
+
+### Authentication Flow & Guest Mode
+
+**Auth gating happens at the splash screen, not the router level.**
+
+**File:** `lib/modules/auth/splash_screen.dart` (`SplashScreenOld`)
+
+1. **On app boot:** Reads token from `SharedPreferences.get('token')` asynchronously (enforces min 300ms splash display).
+2. **If token exists & not empty:** `context.go('/home')` immediately (Frame 2 never shown).
+3. **If no token:** Shows Frame 2 (logo + two buttons):
+   - **"ابدأ الحجز" (Start Booking)** — Routes to `/language`, `/onboarding`, or `/home` depending on first-run flags.
+   - **"تسجيل الدخول" (Sign In)** — Routes to `/signin`.
+
+**Guest mode:** A "Continue As Guest" button exists in `SignInScreen` (`lib/modules/auth/signin/presentation/pages/signin_screen.dart:326–338`). It simply calls `context.go('/home')` with **no token set**. This is a de-facto guest mode entry point, but:
+- ❌ No `isGuest` flag is set in SharedPreferences.
+- ❌ API calls send `"Authorization: Bearer null"`, causing 401 errors.
+- ❌ Auth-dependent screens (Profile, Bookings) show "Not Authenticated" or error states.
+
+**AuthStatusCubit** (`lib/modules/auth/blocs/auth_status_cubit.dart`): Tri-state cubit (`null` → resolving, `false` → signed out, `true` → signed in). Checked by Profile and Bookings tabs to show/hide auth-gated UI. Global singletons in GetIt.
+
+**Auth-dependent screens:**
+- **Profile tab (`profile.dart`):** Shows `LoginNoAuth()` widget (sign-in/register prompts) if `AuthStatusCubit` is `false`.
+- **Bookings tab (`all_booking_screen.dart`):** Shows `ErrorImage` ("Not Authenticated") if `AuthStatusCubit` is `false`.
+- **Home/Search tab (`search_Screen.dart`):** Shows login bottom sheet if no token, but doesn't block page render.
+- **Shell init (`app_shell.dart`):** Calls `ProfileCubit.getProfile()` on mount, which fails with 401 if no token. Error is silently caught and emitted.
+
+**To fully implement guest mode**, you would need:
+1. Add `isGuest` flag to SharedPreferences when "Continue As Guest" is tapped.
+2. Modify `AuthStatusCubit._init()` to emit `true` if token exists **or** `isGuest` flag is set.
+3. Update datasources to skip Bearer header for guests (check `if (token != null)` before adding).
+4. Handle or skip API calls that require authentication (e.g., `getProfile()` on shell init).
+5. Show guest-specific UI (no profile, limited bookings, etc.) instead of "Login Required".
 
 ### Localization
 
@@ -222,6 +272,49 @@ Reusable UI components live here — prefer them over writing new ones from scra
 - **`showResponsive_Flushbar.dart`** — the app's standard snackbar/toast wrapper (uses `another_flushbar`).
 - **`FormValidator`** (`lib/core/helpers/validation/form_validator.dart`) — static validators for password, email, phone, passport, credit card, etc.; delegates to `Validate` class in the same folder.
 
+## Adding a New Feature
+
+Follow this pattern for consistency with the existing feature-module architecture.
+
+**File structure:**
+```
+lib/modules/<feature>/
+  data/
+    datasources/
+      remote/
+        <feature>_remote_datasource.dart
+      local/
+        <feature>_local_datasource.dart
+    models/
+      <feature>_model.dart
+    repositories/
+      <feature>_repository.dart
+  presentaion/  # ← Note the misspelling — do not fix
+    bloc/
+      <feature>_cubit.dart  # or state_bloc.dart for complex state machines
+    pages/
+      <feature>_screen.dart
+    widgets/
+      <feature>_widget.dart
+```
+
+**Steps:**
+
+1. **Model:** Create `<feature>_model.dart` with JSON parsing (`fromJson` / `toMap`).
+2. **Remote datasource:** Create `<feature>_remote_datasource.dart` using `sl<Dio>()` (inherits interceptor + token).
+3. **Repository:** Create `<feature>_repository.dart` that abstracts datasource (optional if datasource is simple).
+4. **Cubit:** Create `<feature>_cubit.dart` extending `Cubit<State>`. Decide: `registerFactory` (per-screen) or `registerLazySingleton` (global).
+5. **State class:** Define state classes (e.g., `<Feature>Initial`, `<Feature>Loading`, `<Feature>Loaded`, `<Feature>Error`).
+6. **Register in service locator:** Add to `lib/service_locator.dart` — both the datasource and cubit.
+7. **Create screen:** Build `<feature>_screen.dart` with `BlocProvider<YourCubit>` wrapping `BlocBuilder`.
+8. **Add route:** Add `GoRoute` to `lib/core/router/app_router.dart` (and optional `*Args` class if needed).
+9. **Register route name:** Add constant to `lib/core/router/routes.dart`.
+
+**Auth-dependent features:** If your feature's datasource needs authentication:
+- Always check `if (token != null)` before adding the Bearer header (see `app_interceptor.dart:48–50`).
+- Catch exceptions and emit error states instead of crashing.
+- Use `BlocBuilder<AuthStatusCubit>` to gate UI for unauthenticated users (see Profile tab pattern).
+
 ## Conventions and gotchas
 
 - **Known misspellings to preserve** — these are baked into imports across the codebase, fixing them is a large unrelated change:
@@ -233,7 +326,26 @@ Reusable UI components live here — prefer them over writing new ones from scra
 - **Print statements** are commented out throughout `main.dart` and elsewhere; keep new logs gated similarly or remove before committing.
 - **Service locator double-init guard:** `setup()` checks `sl.isRegistered<SignInBloc>()` and returns early. If you intentionally need to re-register, reset GetIt first (`sl.reset()`).
 - **Bulk regex over Dart strings**: `[^'"]+` truncates at apostrophes inside double-quoted English (e.g. `"Let's"`). Use `"((?:[^"\\]|\\.)*)"` or two passes (one per quote style). After bulk substitutions always run `flutter analyze` and look for `Unterminated string literal` — that's the signature of mid-string truncation.
-- **`SplashScreenOld` is the active splash**, not deprecated despite the name. It is the `'/'` route of `appRouter`; source at `lib/modules/auth/splash_screen.dart`. Cross-fades between two states (`gradient1` background → white) over `Darbak_logo.png`, then `context.go('/home')` (returning user) or `context.go('/language')` (first run) based on the `isLanguageSelected` flag in `SharedPreferences`. Landing on `/home` mounts the shell's first branch. (`ComposeUi` no longer exists — that intermediate widget was removed in the go_router migration.)
+- **SharedPreferencesHelper quirk:** `get(key)` returns `Future<String?>?` (nullable Future of nullable String). When reading preferences, check if the Future itself is null before awaiting:
+  ```dart
+  final future = SharedPreferencesHelper().get(key);
+  final value = future != null ? await future : null;
+  ```
+  Do NOT pass the result to `Future.wait()` without null-checking first. The helper provides only string get/set; there is no `getBool`/`setBool` pair, so boolean flags use string storage ("true" string).
+- **Startup flow and first-run routing.** `SplashScreenOld` (the active splash, route `'/'` at `lib/modules/auth/splash_screen.dart`) distinguishes first-run from returning users via two SharedPreferences flags:
+  - `isLanguageSelected` (string: "true" or absent) — set by SelectLanguage on confirmation
+  - `hasSeenOnboarding` (string: "true" or absent) — set by OnBoarding on finish/skip
+  
+  Flow:
+  1. SplashScreenOld reads token asynchronously (enforces min 300ms display via Stopwatch)
+  2. If token exists → `context.go('/home')` immediately (Frame 2 never shown)
+  3. If no token → show Frame 2 with two buttons
+     - "ابدأ الحجز" → checks both flags, routes: missing isLanguageSelected → `/language`; missing hasSeenOnboarding → `/onboarding`; both set → `/home`
+     - "تسجيل الدخول" → `context.go('/signin')`
+  
+  First-run users always see: splash → language selection → onboarding → home.
+  Returning users see: splash → direct to home (if logged in) or signin (if not).
+  (`ComposeUi` no longer exists — removed in go_router migration.)
 - **Stale `AssetManifest.bin` causes hot-reload `PathNotFoundException`.** If hot reload fails with `Cannot open file ... assets/<name>` for a path that doesn't exist anywhere in source (sometimes referencing the old `fast-rent` folder name), the cause is a stale `build/app/intermediates/.../AssetManifest.bin` from a previous build. Fix: `android\gradlew.bat --stop`, then `flutter clean && flutter pub get`, then re-run.
 - **Asset folder convention.** `assets/icons/` holds SVGs; `assets/images/` holds raster images and a few Lottie JSONs (most Lottie files live in `assets/anim/`). Code uniformly references `assets/icons/<name>.svg` for SVGs — do not duplicate SVG icons into `assets/images/`. The `assets:` block in `pubspec.yaml` declares directories (not individual files), so dropping a file into a declared directory is enough to ship it; no manifest entry needed. After a recent cleanup, ~75 unreferenced files were deleted across both folders; `git log --diff-filter=D -- assets/` will show what was removed.
 
@@ -260,3 +372,75 @@ Each script:
 **Fallback:** if the exit code is non-zero but no recognisable pattern matched, the scripts dump the last 30–40 raw lines so the failure is never silently swallowed.
 
 Extra arguments are forwarded verbatim — the scripts are transparent wrappers.
+
+## Debugging & Troubleshooting
+
+### App won't start or shows blank screen
+
+Check the guarded `try` block in `main.dart` (lines 33–50). The catch is silent in release mode, so Firebase init failure, corrupted Hive box, or missing GetIt registration will cause silent boot failure. **Add logging in the catch block to diagnose startup issues.**
+
+### "Bearer null" or 401 errors on API calls
+
+1. Check if a token should exist: Is the user logged in? Run `await SharedPreferencesHelper().getToken()` in a debugger.
+2. If token is null and you're hitting an API that requires auth, the call will fail with 401.
+3. If you want to support unauthenticated (guest) requests, add `if (token != null)` check before adding the Bearer header.
+4. Remember: String interpolation of null produces `"Bearer null"` (literal string "null"), not empty or omitted.
+
+### Profile/Bookings tab shows "Not Authenticated" but user is logged in
+
+Check `AuthStatusCubit.emit()` in `_init()`:
+```dart
+emit(token != null && token.isNotEmpty);  // ← Both conditions must pass
+```
+- Token exists but is empty string → emits `false` (treated as logged out).
+- Token is null → emits `false`.
+- Only if token exists AND not empty → emits `true`.
+
+### Hot reload shows stale AssetManifest errors
+
+```bash
+android\gradlew.bat --stop
+flutter clean
+flutter pub get
+flutter run
+```
+
+The `build/` folder has cached asset manifests. Gradle daemon holds locks on them.
+
+### "X is not registered" errors deep in a feature
+
+The service locator failed to wire up a cubit or datasource. Check:
+1. Is the class registered in `service_locator.dart`?
+2. Did you forget to call `di.setup()` in `main.dart`? (It is called, but check the catch block isn't swallowing errors.)
+3. If you added a global cubit, did you register it in **both** `service_locator.dart` AND `bloc_providers.dart`?
+
+### App boots but navigation doesn't work
+
+Check `appRouter` in `bloc_providers.dart` (line 62). The router is wired into `MaterialApp.router`, but if the route name doesn't exist in `routes.dart` or the GoRoute is missing from `app_router.dart`, navigation silently fails.
+
+### "Stale object reference" or Hive adapter errors
+
+A `@HiveType` class was modified but the adapter wasn't regenerated:
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+This regenerates `*.g.dart` adapters and `lib/hive_registrar.g.dart` (the aggregated register call).
+
+### Locale/language isn't switching across the whole app
+
+`LanguageCubit` is a global singleton that rebuilds the entire `MaterialApp.router`. If a screen isn't rebuilding on locale change:
+1. Verify the screen is wrapped in `BlocBuilder<LanguageCubit>` or uses `AppLocalizations.of(context)` (which depends on the locale).
+2. Check that you're calling `selectEngLanguage()` or `selectArabicLanguage()` on the cubit (not just updating SharedPreferences).
+3. The top-level rebuild is triggered by the cubit emit, not prefs directly.
+
+### Dio interceptor is firing twice or not at all
+
+The Dio interceptor is added once in `service_locator.dart:151` at the end of `setup()`. Do NOT add it again from feature code:
+```dart
+// ❌ WRONG — will double-fire
+sl<Dio>().interceptors.add(AppInterceptors(...));
+
+// ✅ RIGHT — use the singleton
+final dio = sl<Dio>();  // Already has interceptor
+```

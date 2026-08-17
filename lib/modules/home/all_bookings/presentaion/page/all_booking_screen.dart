@@ -42,13 +42,13 @@ class _AllBookingScreenState extends State<AllBookingScreen> {
         title: locale.myBookings.toString(),
         // showThemeToggle: true,
       ),
-      body: BlocBuilder<AuthStatusCubit, bool?>(
-        builder: (context, isAuthenticated) {
-          if (isAuthenticated == null) {
+      body: BlocBuilder<AuthStatusCubit, AuthState>(
+        builder: (context, authState) {
+          if (authState is AuthUnknown) {
             return const _BookingsSkeleton();
           }
 
-          if (!isAuthenticated) {
+          if (authState is AuthGuest || authState is! AuthAuthenticated) {
             return ErrorImage(
               refresh: () {
                 setState(() {});

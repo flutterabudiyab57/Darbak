@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../home/profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../core/constants/preferences_constants.dart';
 import '../../core/helpers/SharedPreference/pereferences.dart';
+import '../auth/blocs/auth_status_cubit.dart';
 
 
 class SplashScreenOld extends StatefulWidget {
@@ -32,6 +33,7 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
 
       final tokenFuture = SharedPreferencesHelper().get(PreferencesConstants.token);
       final token = tokenFuture != null ? await tokenFuture : null;
+      final isGuest = await SharedPreferencesHelper().getIsGuest();
 
       final elapsed = stopwatch.elapsedMilliseconds;
       final remainingMs = 300 - elapsed;
@@ -41,14 +43,24 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
 
       if (!mounted) return;
 
-      if (token != null && token.isNotEmpty) {
+      // Decision order:
+      // 1. Token exists and is not empty → go to /home as authenticated user
+      if (token != null && token.isNotEmpty && token != 'null') {
         context.go('/home');
-      } else {
-        Future.delayed(const Duration(milliseconds: 1700), () {
-          if (!mounted) return;
-          setState(() => _currentScreen = 1);
-        });
+        return;
       }
+
+      // 2. is_guest flag is set → go to /home as guest
+      if (isGuest) {
+        context.go('/home');
+        return;
+      }
+
+      // 3. Otherwise → show splash UI (existing flow)
+      Future.delayed(const Duration(milliseconds: 1700), () {
+        if (!mounted) return;
+        setState(() => _currentScreen = 1);
+      });
     } catch (e) {
       Future.delayed(const Duration(milliseconds: 2000), () {
         if (!mounted) return;
@@ -107,7 +119,8 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
                     } else if (hasSeenOnboarding != "true") {
                       context.go('/onboarding');
                     } else {
-                      context.go('/home');
+                      await context.read<AuthStatusCubit>().markAsGuest();
+                      if (mounted) context.go('/home');
                     }
                   },
                   child: Container(
@@ -132,7 +145,7 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
                 ),
                 SizedBox(height: 24.h),
                 GestureDetector(
-                  onTap: () => context.go('/signin'),
+                  onTap: () => context.go('/home'),
                   child: Container(
                     width: double.infinity,
                     height: 55.h,

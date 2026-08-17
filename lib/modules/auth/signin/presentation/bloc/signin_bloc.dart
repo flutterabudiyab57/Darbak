@@ -42,7 +42,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         await signInRepository.signInLocalDataSource.saveToken(response['token']);
         await signInRepository.signInLocalDataSource.savePassword(event.password);
 
-        authStatus.markSignedIn();
+        await authStatus.markSignedIn(response['token']);
         emit(SignInSuccess());
       } else {
         emit(SignInFailure(error: 'Unknown error, token not found'));

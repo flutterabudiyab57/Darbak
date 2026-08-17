@@ -1,23 +1,89 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 
+import '../../../core/constants/preferences_constants.dart';
 import '../../../core/helpers/SharedPreference/pereferences.dart';
 
-/// Tri-state auth status:
-/// - null  → still resolving (read token from prefs on construction)
-/// - false → signed out
-/// - true  → signed in
-class AuthStatusCubit extends Cubit<bool?> {
+/// Three-state auth status cubit.
+/// Emits one of: AuthUnknown (boot), AuthGuest (guest mode), AuthAuthenticated (logged in)
+abstract class AuthState extends Equatable {
+  const AuthState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+/// Initial state during app boot — still resolving auth status
+class AuthUnknown extends AuthState {
+  const AuthUnknown();
+}
+
+/// User is in guest mode (explicitly chose guest or session cleared)
+/// NEVER treat this as authenticated.
+class AuthGuest extends AuthState {
+  const AuthGuest();
+}
+
+/// User is authenticated with a valid token
+class AuthAuthenticated extends AuthState {
+  final String token;
+  const AuthAuthenticated(this.token);
+
+  @override
+  List<Object?> get props => [token];
+}
+
+class AuthStatusCubit extends Cubit<AuthState> {
   final SharedPreferencesHelper preferences;
 
-  AuthStatusCubit(this.preferences) : super(null) {
+  AuthStatusCubit(this.preferences) : super(const AuthUnknown()) {
     _init();
+  }
+
+  /// Single source of truth for the auth check rule:
+  /// Token must be not null, not empty after trim(), and not the literal string "null"
+  Future<bool> _isTokenValid(String? token) async {
+    if (token == null) return false;
+    final trimmed = token.trim();
+    if (trimmed.isEmpty) return false;
+    if (trimmed == 'null') return false;
+    return true;
   }
 
   Future<void> _init() async {
     final token = await preferences.getToken();
-    emit(token != null && token.isNotEmpty);
+
+    if (await _isTokenValid(token)) {
+      emit(AuthAuthenticated(token!));
+      return;
+    }
+
+    final isGuest = await preferences.getIsGuest();
+    if (isGuest) {
+      emit(const AuthGuest());
+      return;
+    }
+
+    emit(const AuthGuest());
   }
 
-  void markSignedIn() => emit(true);
-  void markSignedOut() => emit(false);
+  /// Called on successful login — saves token and clears guest flag
+  Future<void> markSignedIn(String token) async {
+    await preferences.set(PreferencesConstants.token, token);
+    await preferences.remove(PreferencesConstants.isGuest);
+    emit(AuthAuthenticated(token));
+  }
+
+  /// Called on logout — clears token and guest flag, emits guest state
+  Future<void> markSignedOut() async {
+    await preferences.remove(PreferencesConstants.token);
+    await preferences.remove(PreferencesConstants.isGuest);
+    emit(const AuthGuest());
+  }
+
+  /// Called when "continue as guest" is tapped — sets guest flag
+  Future<void> markAsGuest() async {
+    await preferences.setBool(PreferencesConstants.isGuest, true);
+    emit(const AuthGuest());
+  }
 }

@@ -27,7 +27,37 @@ class SharedPreferencesHelper {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.remove(key);
   }
+
+  Future<bool> setBool(String key, bool value) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.setBool(key, value);
+  }
+
+  /// Get bool with legacy string value migration.
+  /// Existing installs may have 'true' string stored. Remove it and default to false.
+  Future<bool> getBool(String key, {bool defaultValue = false}) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    // Check if stored as bool (normal path)
+    if (preferences.getBool(key) != null) {
+      return preferences.getBool(key)!;
+    }
+
+    // Legacy migration: if stored as string 'true', remove and return false
+    final stringValue = preferences.getString(key);
+    if (stringValue == 'true') {
+      await preferences.remove(key);
+    }
+
+    return defaultValue;
+  }
+
   Future<String?> getToken() async => await get(PreferencesConstants.token);
+
+  Future<bool> getIsGuest() async {
+    return getBool(PreferencesConstants.isGuest, defaultValue: false);
+  }
+
   static dynamic getDataFromSP({required String key}) {
     return sP!.get(PreferencesConstants.lang);
   }
@@ -40,6 +70,7 @@ class SharedPreferencesHelper {
     await preferences.remove(PreferencesConstants.token);
     await preferences.remove(PreferencesConstants.userData);
     await preferences.remove(PreferencesConstants.userPassword);
+    await preferences.remove(PreferencesConstants.isGuest);
   }
 }
 

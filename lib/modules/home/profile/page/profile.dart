@@ -13,7 +13,6 @@ import 'package:go_router/go_router.dart';
 import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../core/constants/assets/app_colors.dart';
-import '../../../../core/helpers/SharedPreference/pereferences.dart';
 import '../../../widgets/components/ad_gradient_btn.dart';
 import '../../../widgets/components/appbar.dart';
 import '../../all_bookings/presentaion/bloc/allbooking_cubit.dart';
@@ -44,12 +43,12 @@ class MyProfile extends StatelessWidget {
           ],
         ),
       ),
-      body: BlocBuilder<AuthStatusCubit, bool?>(
-        builder: (context, isAuthenticated) {
-          if (isAuthenticated == null) {
+      body: BlocBuilder<AuthStatusCubit, AuthState>(
+        builder: (context, authState) {
+          if (authState is AuthUnknown) {
             return const _ProfileSkeleton();
           }
-          if (!isAuthenticated) {
+          if (authState is AuthGuest || authState is! AuthAuthenticated) {
             return LoginNoAuth();
           }
           return _ProfileContent();
@@ -276,10 +275,9 @@ class _ProfileContentState extends State<_ProfileContent> {
                       onTap: () async {
                         Navigator.pop(context);
 
-                        await SharedPreferencesHelper().remove("token");
                         context.read<ProfileCubit>().logOut();
                         context.read<AllBookingCubit>().booking = null;
-                        context.read<AuthStatusCubit>().markSignedOut();
+                        await context.read<AuthStatusCubit>().markSignedOut();
 
                         // Clean slate: switch to the home tab AND reset that
                         // branch to its initial location so a logged-out user

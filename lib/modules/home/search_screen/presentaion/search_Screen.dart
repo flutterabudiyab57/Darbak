@@ -115,7 +115,7 @@ class _SearchState extends State<SearchScreen>
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: FractionallySizedBox(
-          child: SignInScreen(pushAddition: true),
+          child: SignInScreen(pushAddition: true, mode: SignInMode.gate),
         ),
       ),
     ).then((_) {

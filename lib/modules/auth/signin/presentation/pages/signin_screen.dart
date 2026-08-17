@@ -18,21 +18,27 @@ import '../../../../widgets/components/ad_prim_text_form/DynamicPhoneField_WithC
 import '../../../../widgets/components/ad_prim_text_form/ad_prim_text_form.dart';
 import '../../../../widgets/components/identity_type_selector.dart';
 import '../../../blocs/auth_bloc/onboarding_cubt_cubit.dart';
+import '../../../blocs/auth_status_cubit.dart';
 import '../../../forgotPassword/presentaion/widgets/forgotPassword.dart';
 import '../../../register/presentaion/pages/register_page.dart';
 import '../../../../../core/router/app_router.dart';
 import '../../../../../core/router/routes.dart';
 import '../bloc/signin_bloc.dart';
+
+enum SignInMode { entry, gate }
+
 class SignInScreen extends StatefulWidget {
   final Function()? isLogin;
   final OnBoardingCubit? cubit;
   final bool pushAddition;
+  final SignInMode mode;
 
   const SignInScreen({
     Key? key,
     this.isLogin,
     this.cubit,
     this.pushAddition = false,
+    this.mode = SignInMode.entry,
   }) : super(key: key);
 
   @override
@@ -323,19 +329,22 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                               SizedBox(height: 10.h),
 
-                              GestureDetector(
-                                onTap: () {
-                                  context.go('/home');
-                                },
-                                child: ADGradientButton(
-                                  locale.continueAsGuest!,
-                                  border: Border.all(
-                                    color: const Color(0xFF05658F),
-                                    width: 1.5.w,
+                              if (widget.mode == SignInMode.entry)
+                                GestureDetector(
+                                  onTap: () async {
+                                    await context.read<AuthStatusCubit>().markAsGuest();
+                                    if (context.mounted) context.go('/home');
+                                  },
+                                  child: ADGradientButton(
+                                    locale.continueAsGuest!,
+                                    border: Border.all(
+                                      color: const Color(0xFF05658F),
+                                      width: 1.5.w,
+                                    ),
+                                    backgroundColor: Colors.transparent,
+                                    textStyle: AppTypography.paragraphColor20(context),
                                   ),
-                                  backgroundColor: Colors.transparent,
-                                  textStyle: AppTypography.paragraphColor20(context),
-                                ),),
+                                ),
                               SizedBox(height: 10.h),
 
                               Row(

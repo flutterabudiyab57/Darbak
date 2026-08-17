@@ -5,5 +5,5 @@ class PreferencesConstants {
   static const String lang = "LANG";
   static const String userPassword = "USER_PASSWORD";
   static const String hasSeenOnboarding = "has_seen_onboarding";
-
+  static const String isGuest = "is_guest";
 }
