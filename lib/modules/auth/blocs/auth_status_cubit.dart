@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../core/constants/preferences_constants.dart';
 import '../../../core/helpers/SharedPreference/pereferences.dart';
+import '../../../core/helpers/token_validator.dart';
 
 /// Three-state auth status cubit.
 /// Emits one of: AuthUnknown (boot), AuthGuest (guest mode), AuthAuthenticated (logged in)
@@ -40,20 +41,10 @@ class AuthStatusCubit extends Cubit<AuthState> {
     _init();
   }
 
-  /// Single source of truth for the auth check rule:
-  /// Token must be not null, not empty after trim(), and not the literal string "null"
-  Future<bool> _isTokenValid(String? token) async {
-    if (token == null) return false;
-    final trimmed = token.trim();
-    if (trimmed.isEmpty) return false;
-    if (trimmed == 'null') return false;
-    return true;
-  }
-
   Future<void> _init() async {
     final token = await preferences.getToken();
 
-    if (await _isTokenValid(token)) {
+    if (TokenValidator.isValid(token)) {
       emit(AuthAuthenticated(token!));
       return;
     }
