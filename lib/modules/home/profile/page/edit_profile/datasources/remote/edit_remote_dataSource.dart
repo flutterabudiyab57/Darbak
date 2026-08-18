@@ -3,6 +3,7 @@
 import 'package:darbak/core/constants/api_path.dart';
 import 'package:darbak/core/constants/langCode.dart';
 import 'package:darbak/core/constants/preferences_constants.dart';
+import 'package:darbak/core/helpers/request_headers.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,11 +47,13 @@ class EditProfileDataSource {
         throw Exception("Authentication token not found. Please login again.");
       }
 
-      item.headers.addAll({
-        "Accept": "application/json",
-        'Authorization': "Bearer $token",
-        "Accept-Language": langCode == '' ? "en" : langCode
-      });
+      item.headers.addAll(RequestHeaders.forHttp(
+        token: token,
+        otherHeaders: {
+          "Accept": "application/json",
+          "Accept-Language": langCode == '' ? "en" : langCode
+        },
+      ));
 
       item.fields.addAll(data);
 

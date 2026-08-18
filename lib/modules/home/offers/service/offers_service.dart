@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/constants/langCode.dart';
 import '../../../../core/helpers/SharedPreference/pereferences.dart';
+import '../../../../core/helpers/request_headers.dart';
 import '../model/offer_model.dart';
 
 class OffersService {
@@ -18,11 +19,13 @@ class OffersService {
       final response = await _dio.get(
         getOffers,
         options: Options(
-          headers: {
-            "Accept": "application/json",
-            "Authorization": "Bearer $token",
-            "Accept-Language": langCode.isEmpty ? "en" : langCode,
-          },
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
+              "Accept": "application/json",
+              "Accept-Language": langCode.isEmpty ? "en" : langCode,
+            },
+          ),
         ),
       );
       return response.data['data'];

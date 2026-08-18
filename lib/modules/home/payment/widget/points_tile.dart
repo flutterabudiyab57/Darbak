@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/api_path.dart';
 import '../../../../core/constants/langCode.dart';
 import '../../../../core/helpers/SharedPreference/pereferences.dart';
+import '../../../../core/helpers/request_headers.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 
@@ -131,11 +132,13 @@ class _PointsTileState extends State<PointsTile> {
 
   Options _buildHeaders({String? token}) {
     return Options(
-      headers: {
-        if (token != null) "Authorization": "Bearer $token",
-        "Accept-Language": langCode.isEmpty ? 'en' : langCode,
-        "Content-Type": "application/json",
-      },
+      headers: RequestHeaders.forDio(
+        token: token,
+        otherHeaders: {
+          "Accept-Language": langCode.isEmpty ? 'en' : langCode,
+          "Content-Type": "application/json",
+        },
+      ),
     );
   }
 

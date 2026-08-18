@@ -3,6 +3,7 @@ import 'package:darbak/core/constants/api_path.dart';
 import 'package:darbak/core/constants/langCode.dart';
 import 'package:darbak/core/helpers/SharedPreference/pereferences.dart';
 import 'package:darbak/core/helpers/exception/exceptions.dart';
+import 'package:darbak/core/helpers/request_headers.dart';
 import 'package:darbak/modules/home/cars/data/models/cars_model.dart';
 import 'package:dio/dio.dart';
 class CarsRemoteDataSource {
@@ -30,11 +31,13 @@ class CarsRemoteDataSource {
         url,
         options: Options(
           responseType: ResponseType.plain,
-          headers: {
-            "Accept": "application/json",
-            "Authorization": "Bearer $token",
-            "Accept-Language": langCode.isEmpty ? "en" : langCode,
-          },
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
+              "Accept": "application/json",
+              "Accept-Language": langCode.isEmpty ? "en" : langCode,
+            },
+          ),
         ),
       );
 

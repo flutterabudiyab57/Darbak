@@ -3,6 +3,7 @@
 import 'package:darbak/core/constants/api_path.dart';
 import 'package:darbak/core/constants/langCode.dart';
 import 'package:darbak/core/helpers/SharedPreference/pereferences.dart';
+import 'package:darbak/core/helpers/request_headers.dart';
 import 'package:darbak/modules/home/profile/data/models/profile_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,11 +12,16 @@ class ProfileService {
     try {
       final SharedPreferencesHelper preferences = SharedPreferencesHelper();
       final token = await preferences.getToken();
-      var response = await http.get(Uri.parse(mainApi + '/profile'), headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer $token",
-        'Accept-Language': langCode == "" ? 'en' : langCode
-      });
+      var response = await http.get(
+        Uri.parse(mainApi + '/profile'),
+        headers: RequestHeaders.forHttp(
+          token: token,
+          otherHeaders: {
+            "Accept": "application/json",
+            'Accept-Language': langCode == "" ? 'en' : langCode
+          },
+        ),
+      );
       //print(response.body);
       var data = json.decode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 200) {

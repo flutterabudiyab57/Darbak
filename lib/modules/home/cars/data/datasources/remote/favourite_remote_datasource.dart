@@ -1,6 +1,7 @@
 ﻿import 'package:darbak/core/constants/api_path.dart';
 import 'package:darbak/core/constants/langCode.dart';
 import 'package:darbak/core/helpers/exception/exceptions.dart';
+import 'package:darbak/core/helpers/request_headers.dart';
 import 'package:dio/dio.dart';
 
 class FavouriteRemoteDatasource {
@@ -14,11 +15,13 @@ class FavouriteRemoteDatasource {
         favourite + carID,
         options: Options(
           responseType: ResponseType.plain,
-          headers: {
-            "Accept": "application/json",
-            "Authorization": "Bearer $token",
-            "Accept-Language": langCode == '' ? "en" : langCode,
-          },
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
+              "Accept": "application/json",
+              "Accept-Language": langCode == '' ? "en" : langCode,
+            },
+          ),
         ),
       );
     } on DioException catch (DioException) {

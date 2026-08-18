@@ -2,6 +2,7 @@
 
 import 'package:darbak/core/constants/api_path.dart';
 import 'package:darbak/core/helpers/exception/exceptions.dart';
+import 'package:darbak/core/helpers/request_headers.dart';
 import 'package:darbak/modules/home/additions/data/models/payment_step_model.dart';
 import 'package:darbak/modules/home/payment/data/models/credit_card_model.dart';
 import 'package:dio/dio.dart';
@@ -14,10 +15,15 @@ class PaymentRemoteDatasource {
     try {
       final Response response = await _dio.post(
         paymentPath,
-        options: Options(responseType: ResponseType.plain, headers: {
-          "Accept": "application/json",
-          "Authorization": "Bearer $token",
-        }),
+        options: Options(
+          responseType: ResponseType.plain,
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
+              "Accept": "application/json",
+            },
+          ),
+        ),
         data: cardModel!.toJson(),
       );
       return paymentStepModelFromJson(response.data);
@@ -36,10 +42,15 @@ class PaymentRemoteDatasource {
     try {
       final Response response = await _dio.post(
         paymentAutomationPath,
-        options: Options(responseType: ResponseType.plain, headers: {
-          "Accept": "application/json",
-          "Authorization": "Bearer $token",
-        }),
+        options: Options(
+          responseType: ResponseType.plain,
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
+              "Accept": "application/json",
+            },
+          ),
+        ),
         data: cardModel!.toJson()..addAll({"contract_id": cardModel.orderId}),
       );
       return paymentStepModelFromJson(response.data);
@@ -60,16 +71,20 @@ class PaymentRemoteDatasource {
     required String token,
   }) async {
     try {
-      final response = await _dio.post(checkOrderPath,
-          options: Options(
-            responseType: ResponseType.plain,
-            headers: {
+      final response = await _dio.post(
+        checkOrderPath,
+        options: Options(
+          responseType: ResponseType.plain,
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
               'Content-type': 'application/json',
               "Accept": "application/json",
-              "Authorization": "Bearer $token"
             },
           ),
-          data: {"order_id": orderId});
+        ),
+        data: {"order_id": orderId},
+      );
       final data = json.decode(response.data);
       final status = data["status"];
       return status;

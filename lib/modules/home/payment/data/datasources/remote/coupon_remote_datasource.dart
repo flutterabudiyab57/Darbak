@@ -1,5 +1,6 @@
 ﻿import 'package:darbak/core/constants/api_path.dart';
 import 'package:darbak/core/helpers/exception/exceptions.dart';
+import 'package:darbak/core/helpers/request_headers.dart';
 import 'package:darbak/modules/home/payment/data/models/coupon_model.dart';
 import 'package:dio/dio.dart';
 
@@ -18,11 +19,13 @@ class CouponRemoteDatasource {
         couponPath,
         options: Options(
           responseType: ResponseType.json,
-          headers: {
-            "Accept": "application/json",
-            "content-type": "application/json",
-            "Authorization": "Bearer $token",
-          },
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
+              "Accept": "application/json",
+              "content-type": "application/json",
+            },
+          ),
         ),
         data: {
           "order_id": orderID,
@@ -46,11 +49,13 @@ class CouponRemoteDatasource {
         deleteCouponPath,
         options: Options(
           responseType: ResponseType.json,
-          headers: {
-            "Accept": "application/json",
-            "content-type": "application/json",
-            "Authorization": "Bearer $token",
-          },
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
+              "Accept": "application/json",
+              "content-type": "application/json",
+            },
+          ),
         ),
         data: {
           "order_id": orderID,

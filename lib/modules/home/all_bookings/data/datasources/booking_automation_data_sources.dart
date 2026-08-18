@@ -4,6 +4,7 @@ import 'package:darbak/core/constants/api_path.dart';
 import 'package:darbak/core/constants/langCode.dart';
 import 'package:darbak/core/helpers/SharedPreference/pereferences.dart';
 import 'package:darbak/core/helpers/exception/exceptions.dart';
+import 'package:darbak/core/helpers/request_headers.dart';
 import 'package:darbak/modules/home/all_bookings/data/model/booking_automation_model.dart';
 import 'package:dio/dio.dart';
 
@@ -16,12 +17,17 @@ class BookingAutomationDataSources {
 
       final Response response = await dio.get(
         bookingAutomationPath,
-        options: Options(responseType: ResponseType.plain, headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-          "Accept-Language": langCode == '' ? "en" : langCode,
-        }),
+        options: Options(
+          responseType: ResponseType.plain,
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
+              "Accept": "application/json",
+              "Content-Type": "application/json",
+              "Accept-Language": langCode == '' ? "en" : langCode,
+            },
+          ),
+        ),
       );
       print("response : ${response.statusCode}");
       final dataOrders = json.decode(response.data);

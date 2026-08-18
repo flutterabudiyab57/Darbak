@@ -6,6 +6,7 @@ import '../../../../../../core/constants/api_path.dart';
 import '../../../../../../core/constants/langCode.dart';
 import '../../../../../../core/helpers/SharedPreference/pereferences.dart';
 import '../../../../../../core/helpers/exception/exceptions.dart';
+import '../../../../../../core/helpers/request_headers.dart';
 import '../../../../all_bookings/data/model/check_order_step_model.dart';
 import '../../models/automated_step_one_order_model.dart';
 import '../../models/step_one_order_model.dart';
@@ -52,11 +53,13 @@ class OrderAdditionsRemoteDatasource {
       }
       final response = await http.post(
         Uri.parse(orderStepOnePath),
-        headers: {
-          "Accept": "application/json",
-          "Accept-Language": langCode == '' ? "en" : langCode,
-          "Authorization": "Bearer $token"
-        },
+        headers: RequestHeaders.forHttp(
+          token: token,
+          otherHeaders: {
+            "Accept": "application/json",
+            "Accept-Language": langCode == '' ? "en" : langCode,
+          },
+        ),
         body: body,
       );
       //
@@ -91,11 +94,13 @@ class OrderAdditionsRemoteDatasource {
     try {
       final response = await http.post(
         Uri.parse(step1Automation),
-        headers: {
-          "Accept": "application/json",
-          "Accept-Language": langCode == '' ? "en" : langCode,
-          "Authorization": "Bearer $token"
-        },
+        headers: RequestHeaders.forHttp(
+          token: token,
+          otherHeaders: {
+            "Accept": "application/json",
+            "Accept-Language": langCode == '' ? "en" : langCode,
+          },
+        ),
         body: {
           "car_id": carId,
           'receiving_location': receiveLocationId.toString(),
@@ -129,16 +134,21 @@ class OrderAdditionsRemoteDatasource {
       final Dio dio = Dio();
       var uri = Uri.parse(checkSteps);
       final Response response = await dio.post(
-          uri.toString(),
-          options: Options(responseType: ResponseType.plain, headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "Authorization": "Bearer $token",
-            "Accept-Language": langCode == '' ? "en" : langCode,
-          }),
-          data: {
-            "order_id": orderId,
-          }
+        uri.toString(),
+        options: Options(
+          responseType: ResponseType.plain,
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
+              "Accept": "application/json",
+              "Content-Type": "application/json",
+              "Accept-Language": langCode == '' ? "en" : langCode,
+            },
+          ),
+        ),
+        data: {
+          "order_id": orderId,
+        },
       );
       final checkOrderSteps = json.decode(response.data);
       final CheckOrderStepModel checkOrderStepModel = CheckOrderStepModel.fromMap(checkOrderSteps);

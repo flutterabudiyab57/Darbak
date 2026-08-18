@@ -1,6 +1,7 @@
 ﻿import 'package:darbak/core/constants/api_path.dart';
 import 'package:darbak/core/constants/langCode.dart';
 import 'package:darbak/core/helpers/exception/exceptions.dart';
+import 'package:darbak/core/helpers/request_headers.dart';
 import 'package:darbak/modules/home/payment/data/models/automated_invoice_model.dart';
 import 'package:darbak/modules/home/payment/data/models/invoice_model.dart';
 import 'package:dio/dio.dart';
@@ -21,11 +22,13 @@ class InvoiceRemoteDatasource {
         invoicePath,
         options: Options(
           responseType: ResponseType.plain,
-          headers: {
-            "Accept": "application/json",
-            "Authorization": "Bearer $token",
-            "Accept-Language": langCode == '' ? "en" : langCode
-          },
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
+              "Accept": "application/json",
+              "Accept-Language": langCode == '' ? "en" : langCode
+            },
+          ),
         ),
         data: {'order_id': orderID, 'features': additions,'payment_type':paymentType.toString()},
       );
@@ -50,11 +53,13 @@ class InvoiceRemoteDatasource {
         invoiceAutomationPath,
         options: Options(
           responseType: ResponseType.plain,
-          headers: {
-            "Accept": "application/json",
-            "Authorization": "Bearer $token",
-            "Accept-Language": langCode == '' ? "en" : langCode
-          },
+          headers: RequestHeaders.forDio(
+            token: token,
+            otherHeaders: {
+              "Accept": "application/json",
+              "Accept-Language": langCode == '' ? "en" : langCode
+            },
+          ),
         ),
         data: {
           'order_id': orderID,

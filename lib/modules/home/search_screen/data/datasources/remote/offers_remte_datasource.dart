@@ -2,6 +2,7 @@
 import 'package:darbak/core/constants/api_path.dart';
 import 'package:darbak/core/constants/langCode.dart';
 import 'package:darbak/core/helpers/SharedPreference/pereferences.dart';
+import 'package:darbak/core/helpers/request_headers.dart';
 import 'package:darbak/modules/home/search_screen/data/models/offers_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,11 +14,13 @@ class OffersRemotDataSource {
 
       final response = await http.get(
         Uri.parse(mainApi + '/offers'),
-        headers: {
-          "Accept": "application/json",
-          "Authorization": "Bearer $token",
-          'Accept-Language': langCode == "" ? 'en' : langCode,
-        },
+        headers: RequestHeaders.forHttp(
+          token: token,
+          otherHeaders: {
+            "Accept": "application/json",
+            'Accept-Language': langCode == "" ? 'en' : langCode,
+          },
+        ),
       );
 
       if (response.statusCode == 200) {
