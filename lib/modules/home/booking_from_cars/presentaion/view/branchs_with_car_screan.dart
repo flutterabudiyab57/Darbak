@@ -1,4 +1,5 @@
 import 'package:darbak/core/constants/assets/app_colors.dart';
+import 'package:darbak/core/helpers/auth_guard/require_auth.dart';
 import 'package:darbak/core/helpers/helper_fun.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/additions/presentaion/blocs/addition_cubit/additions_cubit.dart';
@@ -107,19 +108,24 @@ class _BranchWithCarScreenState extends State<BranchWithCarScreen> {
                         builder: (context, addState) {
                           return Bounce(
                             onTap: () async {
-                              setState(() => isLoading = true);
-                              BlocProvider.of<AdditionsCubit>(context).clearAdditions();
+                              await requireAuth(
+                                context,
+                                onAuthenticated: () async {
+                                  setState(() => isLoading = true);
+                                  BlocProvider.of<AdditionsCubit>(context).clearAdditions();
 
-                              if (BlocProvider.of<SearchCubit>(context).selectedReceiveBranch != null) {
-                                await onTapFirst(context);
-                                await onTap(context);
-                              } else {
-                                showErrorAlertDialog(
-                                  context,
-                                  locale.mustSelectBranchFirst,
-                                );
-                              }
-                              setState(() => isLoading = false);
+                                  if (BlocProvider.of<SearchCubit>(context).selectedReceiveBranch != null) {
+                                    await onTapFirst(context);
+                                    await onTap(context);
+                                  } else {
+                                    showErrorAlertDialog(
+                                      context,
+                                      locale.mustSelectBranchFirst,
+                                    );
+                                  }
+                                  setState(() => isLoading = false);
+                                },
+                              );
                             },
                             child: isLoading
                                 ? const Center(child: LoadingIndicator())

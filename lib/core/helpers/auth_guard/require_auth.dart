@@ -8,37 +8,34 @@ import '../../../modules/auth/signin/presentation/pages/signin_screen.dart' show
 
 /// Single entry point for protecting auth-dependent actions (booking, favourites, etc.)
 ///
-/// Behaviour for Phase 1:
-/// - If current auth state is AuthAuthenticated → call onAuthenticated()
-/// - Otherwise → show the existing login UI (bottom sheet with sign-in / register)
-///
-/// Phase 2 will add pending-intent restore: actions triggered from FCM or deep links
-/// will queue their intent, show login if needed, then re-execute on successful auth.
+/// If user is authenticated, calls onAuthenticated() immediately.
+/// Otherwise shows a sign-in bottom sheet and re-executes onAuthenticated()
+/// after successful login.
 ///
 /// Usage:
 /// ```dart
 /// await requireAuth(
 ///   context,
-///   onAuthenticated: () {
+///   onAuthenticated: () async {
 ///     // User is logged in, perform the protected action
-///     _doProtectedAction();
+///     await _doProtectedAction();
 ///   },
 /// );
 /// ```
 Future<void> requireAuth(
   BuildContext context, {
-  required VoidCallback onAuthenticated,
+  required Future<void> Function() onAuthenticated,
 }) async {
   final authState = context.read<AuthStatusCubit>().state;
 
   if (authState is AuthAuthenticated) {
-    onAuthenticated();
+    await onAuthenticated();
     return;
   }
 
-  // Show the existing login UI (sign-in / register bottom sheet)
+  // Show the login UI (sign-in / register bottom sheet)
   if (context.mounted) {
-    showModalBottomSheet(
+    final result = await showModalBottomSheet<bool>(
       useRootNavigator: true,
       context: context,
       isScrollControlled: true,
@@ -51,5 +48,13 @@ Future<void> requireAuth(
         ),
       ),
     );
+
+    // After sheet closes, check if login succeeded
+    if (context.mounted && result == true) {
+      final newAuthState = context.read<AuthStatusCubit>().state;
+      if (newAuthState is AuthAuthenticated) {
+        await onAuthenticated();
+      }
+    }
   }
 }

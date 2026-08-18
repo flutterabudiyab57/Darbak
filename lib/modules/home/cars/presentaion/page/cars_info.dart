@@ -536,37 +536,32 @@ class _CarsInformationState extends State<CarsInformation> {
                                   ),
                                 ),
                                 actions: [
-                                  BlocConsumer<AdditionsCubit, AdditionsState>(
-                                    listener: (context, state) {
-                                      if (state is AdditionsFailed) {
-                                        print("AdditionsFailed 11 11 ... ....");
-                                        print("error:  ${state.error}");
-                                        if (state.error.contains(
-                                            "Error Please LOGIN To Continue")) {
-                                          context.go('/signin');
-                                        }
-                                      }
-                                    },
+                                  BlocBuilder<AdditionsCubit, AdditionsState>(
                                     builder: (context, state) {
                                       return Bounce(
                                         onTap: () async {
                                           await BlocProvider.of<AdditionsCubit>(context)
                                               .getCarFeatures(context, widget.datum!.id.toString(), widget.filterModel);
-                                          if (widget.filterModel == null && lookLike == true) {
-                                            BlocProvider.of<SearchCubit>(context).resetBranches();
-                                            context.pushNamed(Routes.branchWithCar,
-                                                extra: widget.datum!);} else {
-                                            Navigator.pop(context);
-                                            if (state is AdditionsSuccess ||
-                                                state is AdditionsInitial) {
-                                              context.pushNamed(Routes.additions,
-                                                  extra: AdditionsArgs(datum: widget.datum));
-                                            }
-                                            if (state is AdditionsFailed) {
-                                              print("AdditionsFailed 00 00 00");
-                                              if (state.error.contains(
-                                                  "Error Please LOGIN To Continue")) {
-                                                context.go('/signin');
+
+                                          if (context.mounted) {
+                                            final newState = BlocProvider.of<AdditionsCubit>(context).state;
+                                            if (widget.filterModel == null && lookLike == true) {
+                                              BlocProvider.of<SearchCubit>(context).resetBranches();
+                                              if (context.mounted) {
+                                                context.pushNamed(Routes.branchWithCar,
+                                                    extra: widget.datum!);
+                                              }
+                                            } else {
+                                              Navigator.pop(context);
+                                              if (newState is AdditionsSuccess ||
+                                                  newState is AdditionsInitial) {
+                                                if (context.mounted) {
+                                                  context.pushNamed(Routes.additions,
+                                                      extra: AdditionsArgs(datum: widget.datum));
+                                                }
+                                              }
+                                              if (newState is AdditionsFailed) {
+                                                print("AdditionsFailed: ${newState.error}");
                                               }
                                             }
                                           }
