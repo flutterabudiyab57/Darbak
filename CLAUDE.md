@@ -60,16 +60,38 @@ If you add a feature-level cubit that should be globally available, register it 
 
 `flutter_bloc` (Bloc + Cubit). Per-feature cubits are resolved from GetIt (`sl<X>()`) inside `BlocProvider.create`. Some cubits are `registerFactory` (new instance per request — e.g. `SignInBloc`, most form cubits), others are `registerLazySingleton` (shared instance — e.g. `BookingCubit`, `LanguageCubit`, `FilterCubit`, `SearchCubit`). Match this distinction when adding new cubits: stateful cross-screen state → singleton; per-screen form/flow state → factory.
 
+**Selection Persistence Across Screens** — `SearchCubit` is a `registerLazySingleton`, so the same instance is shared app-wide. User selections (branch, dates, times, pickup/dropoff coords) stay in that singleton throughout the booking flow:
+
+- **CarsInformation:** User views car details (clearAllDataSearched NOT called here)
+- **BranchWithCarScreen:** User picks branch and dates (clearAllDataSearched called once on first entry)
+- **Auth gate:** If guest, modal sheet covers BranchWithCarScreen; selections survive in SearchCubit
+- **After login:** `requireAuth()` reruns the booking action; SearchCubit still has all selections
+
+If the entire screen is replaced/popped (e.g., navigating back to /home), selections are lost. But for modal-overlay patterns (`requireAuth()`), selections persist because the screen never unmounts.
+
 ### Networking
 
 - A single `Dio` is registered as a lazy singleton in `service_locator.dart`. **`AppInterceptors`** (in `lib/core/helpers/interceptors/app_interceptor.dart`) is attached to that `Dio` once at the end of `setup()` — so every `sl<Dio>()` call inherits `baseUrl = mainApi`, the `Accept-Language` header, and the `Authorization: Bearer <token>` header (token pulled from `SharedPreferencesHelper` on every request). Do **not** call `sl<Dio>().interceptors.add(AppInterceptors(...))` again from feature code — it would double-fire the request hook.
 - All endpoints are constants in `lib/core/constants/api_path.dart`. Active base URL is `productionApi = "https://api.daraksonksa.com/api"` (controlled by the `mainApi` const). Many endpoint constants are pre-prefixed with `mainApi`, so do not double-prefix when composing requests.
 
 **⚠️ Authentication & API Error Handling:**
-- **Token requirement:** Most endpoints return 401 "Not Authenticated" if the Bearer token is missing or null. When the token is null (e.g., guest users or logout), requests send `"Authorization: Bearer null"` (the string "null"), which the API rejects.
+- **Token requirement:** Most endpoints return 401 "Not Authenticated" if the Bearer token is missing or null. When the token is null (e.g., guest users or logout), requests must omit the Authorization header entirely (never send `"Bearer null"`).
 - **Empty error interceptor:** `AppInterceptors.onError()` is currently a pass-through with no custom handling. 401 responses are **not** caught globally — errors propagate to individual datasources. There is **no automatic redirect to login or token refresh on 401**.
 - **Individual error handling:** Each datasource catches exceptions independently (e.g., `ProfileService.getProfile()` throws `"Not Authenticated"` on 401). Check the state cubit to see how errors are handled upstream.
-- **Bearer header quirk:** String interpolation of a null token produces `"Bearer null"` (literal string), not omitted or empty. To support unauthenticated requests, check `if (token != null)` before adding the header (see `app_interceptor.dart:48–50` for the pattern).
+- **RequestHeaders helper** (`lib/core/helpers/request_headers.dart`) — Always use this for requests that may have missing auth:
+
+```dart
+// ✅ CORRECT — omits Authorization header for guests
+final headers = RequestHeaders.forHttp(
+  token: token,  // May be null for guests
+  otherHeaders: { "Accept": "application/json" },
+);
+
+// ❌ WRONG — would send literal "Bearer null"
+final headers = { "Authorization": "Bearer $token" };
+```
+
+The helper uses `TokenValidator.isValid(token)` which returns false for null/empty/"null" strings, ensuring the Authorization header is omitted entirely for unauthenticated requests. Datasources using `http` package call `RequestHeaders.forHttp()`; those using injected `Dio` inherit the interceptor pattern (see `app_interceptor.dart:48–50`).
 
 ### Persistence
 
@@ -146,6 +168,35 @@ When adding a screen: add a `Routes` name, a `GoRoute` in `app_router.dart`, and
 - **Bookings tab (`all_booking_screen.dart`):** Shows `ErrorImage` ("Not Authenticated") if `AuthStatusCubit` is `false`.
 - **Home/Search tab (`search_Screen.dart`):** Shows login bottom sheet if no token, but doesn't block page render.
 - **Shell init (`app_shell.dart`):** Calls `ProfileCubit.getProfile()` on mount, which fails with 401 if no token. Error is silently caught and emitted.
+
+**Auth-Gated Actions** — Some features (like "Book Now") require login but don't warrant full-screen navigation. Use the `requireAuth()` helper to gate actions in-place:
+
+**File:** `lib/core/helpers/auth_guard/require_auth.dart`
+
+The helper shows a sign-in modal sheet (SignInMode.gate) over the current screen, then retries the protected action after successful login without navigating away:
+
+```dart
+await requireAuth(
+  context,
+  onAuthenticated: () async {
+    // This runs immediately if already authenticated,
+    // or after successful login via modal sheet
+    await performBooking();
+  },
+);
+```
+
+**Key behaviors:**
+- Modal sheet appears over the current screen — user stays on BranchWithCarScreen during sign-in
+- After login, `onAuthenticated()` callback runs with all screen state intact (SearchCubit selections, etc.)
+- If user closes sheet without signing in, nothing happens — they're still on the original screen
+- No navigation occurs; the sheet is the only UI change
+
+**Modal vs. Navigation modes:**
+- `SignInMode.gate` — Used by `requireAuth()`. Pops the sheet with result=true on login, no other navigation.
+- `SignInMode.entry` — Used for entry-point sign-in (splash, /signin route). Navigates to /home on login.
+
+The difference: gate mode returns control to its caller (requireAuth), which decides what to do next. Entry mode owns the navigation flow.
 
 **To fully implement guest mode**, you would need:
 1. Add `isGuest` flag to SharedPreferences when "Continue As Guest" is tapped.
