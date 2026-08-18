@@ -169,7 +169,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 );
               } else if (state is SignInSuccess) {
                 if (_formKey.currentState!.validate()) {
-                  if (widget.pushAddition) {
+                  if (widget.mode == SignInMode.gate) {
+                    context.read<ProfileCubit>().getProfile().then((_) {
+                      Navigator.of(context).pop(true);
+                    });
+                  } else if (widget.pushAddition) {
                     context.read<ProfileCubit>().getProfile().then((_) {
                       Navigator.of(context).pop(true);
                     });
