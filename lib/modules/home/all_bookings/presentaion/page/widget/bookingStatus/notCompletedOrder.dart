@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../../../core/helpers/helper_fun.dart';
 import '../../../../../../../core/helpers/interceptors/loading_indicator.dart';
+import '../../../../../../../core/style/style.dart';
 import '../../../../../../../language/locale.dart';
 import '../../../../../../../core/router/app_router.dart';
 import '../../../../../../../core/router/routes.dart';
@@ -379,10 +380,9 @@ class _NotCompletedOrderState extends State<NotCompletedOrder> {
               //     fontSize: 28.sp,
               //     fontWeight: FontWeight.w700
               // ),),
-              Text(locale.noCarsBooking1.toString(),style:Theme.of(context).textTheme.titleMedium!.copyWith(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w400
-              )),
+              Text(locale.noCarsBooking1.toString(),
+                style: AppTypography.secondaryTypographyColor20(context),
+              ),
             ],
           ),
         ),

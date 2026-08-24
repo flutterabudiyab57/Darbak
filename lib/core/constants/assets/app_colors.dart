@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 /// :large_brown_square: Background
 const Color backgroundLight = Color(0xFFFFFFFF);
 const Color backgroundDark = Color(0xFF0D1117);
+const Color bg2Light = Color(0xFFE2E8EF);
+const Color bg2Dark  = Color(0xFF111C2C);
 /// :writing_hand: Typography
 const Color headingLight = Color(0xFF021E45);
 const Color headingDark = Color(0xFFFFFFFF);
@@ -31,7 +33,11 @@ const Color buttonSecondaryDark = Color(0xFF464646);
 /// White Button
 const Color buttonWhiteLight = Color(0xFFFFFFFF);
 const Color buttonWhiteDark = Color(0xFF0D1117);
+/// White Button
+const Color navLight = Color(0xFFFFFFFF);
+const Color navDark = Color(0xFF3E4146);
 /// Green Button
+///
 const Color buttongreenLight = Color(0xFF0B6E00);
 const Color buttongreenDark =  Color(0xFF43823C);
 /// Red Button
@@ -58,6 +64,8 @@ const Color iconGreenDark = Color(0xFF009966);
 
 const Color iconBlueLight = Color(0xFF155DFC);
 const Color iconBlueDark  = Color(0xFF155DFC);
+const Color iconnavLight = Color(0xFF354B6A);
+const Color iconnavDark  = Color(0xFFD8D9DA);
 
 /// :straight_ruler: Stroke (Borders)
 const Color strokeGrayLight = Color(0xFFC5C5C5);
@@ -84,6 +92,8 @@ Color backgroundColor(BuildContext context) =>
     Theme.of(context).brightness == Brightness.light
         ? backgroundLight
         : backgroundDark;
+Color bg2Color(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.light ? bg2Light : bg2Dark;
 Color headingColor(BuildContext context) =>
     Theme.of(context).brightness == Brightness.light
         ? headingLight
@@ -122,6 +132,10 @@ Color buttonWhiteColor(BuildContext context) =>
     Theme.of(context).brightness == Brightness.light
         ? buttonWhiteLight
         : buttonWhiteDark;
+Color navColor(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.light
+        ? navLight
+        : navDark;
 Color buttonGreenColor(BuildContext context) =>
     Theme.of(context).brightness == Brightness.light
         ? buttongreenLight
@@ -152,6 +166,10 @@ Color iconBlueColor(BuildContext context) =>
     Theme.of(context).brightness == Brightness.light
         ? iconBlueLight
         : iconBlueDark;
+Color iconnavColor(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.light
+        ? iconnavLight
+        : iconnavDark;
 
 /// Stroke
 Color strokeGrayColor(BuildContext context) =>

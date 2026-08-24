@@ -467,12 +467,7 @@ class _PreviousOrdersState extends State<PreviousOrders> {
                 SizedBox(height: 16.h),
                 Text(
                   locale.noCarsBooking1.toString(),
-                  style: TextStyle(
-                    color: mainTypographyColor(context),
-                    fontSize: 20.sp,
-                    fontFamily: 'ThmanyahSans',
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: AppTypography.secondaryTypographyColor20(context),
                 ),
               ],
             ),

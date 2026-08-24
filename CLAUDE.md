@@ -100,12 +100,13 @@ The helper uses `TokenValidator.isValid(token)` which returns false for null/emp
 
 **Preference key constants** (see `lib/core/constants/preferences_constants.dart`):
 - `token` — Bearer token; read on every Dio request. **Stored in plain SharedPreferences (not encrypted)** — consider migration to `flutter_secure_storage`.
+- `isGuest` — Guest mode flag (boolean); set when user taps "Continue As Guest". If true, user is treated as logged out but can browse and access `requireAuth()` gates to trigger sign-in.
 - `lang` — Locale ("en" or "ar"); default "ar"
 - `isLanguageSelected` — First-run flag ("true" when user picks language)
 - `hasSeenOnboarding` — First-run flag ("true" when user finishes onboarding)
 - `userData`, `userPassword` — User profile data; cleared on logout
 
-All flags use string storage ("true" string, not bool type) because `SharedPreferencesHelper` provides only string get/set (no getBool/setBool).
+Most flags use string storage ("true" string, not bool type) because `SharedPreferencesHelper` provides only string get/set (no getBool/setBool). The `isGuest` flag uses `SharedPreferencesHelper.getIsGuest()` for a dedicated boolean getter.
 
 **⚠️ Security Note:** Auth tokens are stored in plain `SharedPreferences` (not encrypted). On Android this is `shared_prefs.xml` (plaintext); on iOS it's `NSUserDefaults` (plaintext unless device-encrypted). Any attacker with file-system access can read the token. **Future work:** Migrate to `flutter_secure_storage` for encrypted key-value storage.
 
@@ -156,24 +157,25 @@ When adding a screen: add a `Routes` name, a `GoRoute` in `app_router.dart`, and
    - **"ابدأ الحجز" (Start Booking)** — Routes to `/language`, `/onboarding`, or `/home` depending on first-run flags.
    - **"تسجيل الدخول" (Sign In)** — Routes to `/signin`.
 
-**Guest mode:** A "Continue As Guest" button exists in `SignInScreen` (`lib/modules/auth/signin/presentation/pages/signin_screen.dart:326–338`). It simply calls `context.go('/home')` with **no token set**. This is a de-facto guest mode entry point, but:
-- ❌ No `isGuest` flag is set in SharedPreferences.
-- ❌ API calls send `"Authorization: Bearer null"`, causing 401 errors.
-- ❌ Auth-dependent screens (Profile, Bookings) show "Not Authenticated" or error states.
+**Guest mode:** A "Continue As Guest" button exists in `SignInScreen` (`lib/modules/auth/signin/presentation/pages/signin_screen.dart`). It sets an `isGuest` flag in SharedPreferences and navigates to `/home`. Guest mode is **now implemented** with the following behavior:
+- ✅ `isGuest` flag is set in SharedPreferences when "Continue As Guest" is tapped.
+- ✅ Splash screen (`SplashScreenOld`) checks for `isGuest` flag; if set, navigates directly to `/home`.
+- ✅ API calls respect `if (token != null)` checks — datasources omit Authorization header for guests, preventing "Bearer null" errors.
+- ✅ Auth-dependent screens show "Login Required" UI (Profile, Bookings tabs) for guest users.
 
-**AuthStatusCubit** (`lib/modules/auth/blocs/auth_status_cubit.dart`): Tri-state cubit (`null` → resolving, `false` → signed out, `true` → signed in). Checked by Profile and Bookings tabs to show/hide auth-gated UI. Global singletons in GetIt.
+**AuthStatusCubit** (`lib/modules/auth/blocs/auth_status_cubit.dart`): Tri-state cubit (`null` → resolving, `false` → signed out or guest, `true` → signed in). **Note:** The cubit emits `true` only if a token exists AND is not empty; guest mode is treated as `false` (logged out). Checked by Profile and Bookings tabs to show/hide auth-gated UI. Global singletons in GetIt.
 
 **Auth-dependent screens:**
-- **Profile tab (`profile.dart`):** Shows `LoginNoAuth()` widget (sign-in/register prompts) if `AuthStatusCubit` is `false`.
+- **Profile tab (`profile.dart`):** Shows `LoginNoAuth()` widget (sign-in/register prompts) if `AuthStatusCubit` is `false` (applies to both guests and logged-out users).
 - **Bookings tab (`all_booking_screen.dart`):** Shows `ErrorImage` ("Not Authenticated") if `AuthStatusCubit` is `false`.
-- **Home/Search tab (`search_Screen.dart`):** Shows login bottom sheet if no token, but doesn't block page render.
-- **Shell init (`app_shell.dart`):** Calls `ProfileCubit.getProfile()` on mount, which fails with 401 if no token. Error is silently caught and emitted.
+- **Home/Search tab (`search_Screen.dart`):** Shows login bottom sheet if no token and not guest, but doesn't block page render. Guests can browse but cannot book without signing in.
+- **Shell init (`app_shell.dart`):** Calls `ProfileCubit.getProfile()` on mount; for guests/unauthenticated users, this fails with 401 and error is silently caught and emitted.
 
 **Auth-Gated Actions** — Some features (like "Book Now") require login but don't warrant full-screen navigation. Use the `requireAuth()` helper to gate actions in-place:
 
 **File:** `lib/core/helpers/auth_guard/require_auth.dart`
 
-The helper shows a sign-in modal sheet (SignInMode.gate) over the current screen, then retries the protected action after successful login without navigating away:
+The helper shows a sign-in modal sheet (SignInMode.gate) over the current screen, then retries the protected action after successful login without navigating away. For guest users, this modal becomes the sign-in entry point:
 
 ```dart
 await requireAuth(
@@ -191,19 +193,20 @@ await requireAuth(
 - After login, `onAuthenticated()` callback runs with all screen state intact (SearchCubit selections, etc.)
 - If user closes sheet without signing in, nothing happens — they're still on the original screen
 - No navigation occurs; the sheet is the only UI change
+- For guests, the `requireAuth()` flow is the primary sign-in mechanism; they cannot access auth-gated features until authenticated
 
 **Modal vs. Navigation modes:**
-- `SignInMode.gate` — Used by `requireAuth()`. Pops the sheet with result=true on login, no other navigation.
+- `SignInMode.gate` — Used by `requireAuth()`. Pops the sheet with result=true on login, no other navigation. Also used by guest users to sign in from booking flows.
 - `SignInMode.entry` — Used for entry-point sign-in (splash, /signin route). Navigates to /home on login.
 
 The difference: gate mode returns control to its caller (requireAuth), which decides what to do next. Entry mode owns the navigation flow.
 
-**To fully implement guest mode**, you would need:
-1. Add `isGuest` flag to SharedPreferences when "Continue As Guest" is tapped.
-2. Modify `AuthStatusCubit._init()` to emit `true` if token exists **or** `isGuest` flag is set.
-3. Update datasources to skip Bearer header for guests (check `if (token != null)` before adding).
-4. Handle or skip API calls that require authentication (e.g., `getProfile()` on shell init).
-5. Show guest-specific UI (no profile, limited bookings, etc.) instead of "Login Required".
+**Guest mode implementation summary:**
+1. ✅ `isGuest` flag is set in SharedPreferences when "Continue As Guest" is tapped.
+2. ✅ `AuthStatusCubit._init()` emits `false` for guests (treated as logged out, not as a third state).
+3. ✅ Datasources use `if (token != null)` checks to skip Bearer header for guests (see `app_interceptor.dart:48–50`).
+4. ✅ API calls that require auth (e.g., `getProfile()`) skip or gracefully fail for guests.
+5. ✅ Guest-specific UI is shown (no profile access, limited bookings, etc.) until authenticated via `requireAuth()`.
 
 ### Localization
 
@@ -383,19 +386,22 @@ lib/modules/<feature>/
   final value = future != null ? await future : null;
   ```
   Do NOT pass the result to `Future.wait()` without null-checking first. The helper provides only string get/set; there is no `getBool`/`setBool` pair, so boolean flags use string storage ("true" string).
-- **Startup flow and first-run routing.** `SplashScreenOld` (the active splash, route `'/'` at `lib/modules/auth/splash_screen.dart`) distinguishes first-run from returning users via two SharedPreferences flags:
-  - `isLanguageSelected` (string: "true" or absent) — set by SelectLanguage on confirmation
-  - `hasSeenOnboarding` (string: "true" or absent) — set by OnBoarding on finish/skip
+- **Startup flow and first-run routing.** `SplashScreenOld` (the active splash, route `'/'` at `lib/modules/auth/splash_screen.dart`) follows this priority:
   
-  Flow:
-  1. SplashScreenOld reads token asynchronously (enforces min 300ms display via Stopwatch)
-  2. If token exists → `context.go('/home')` immediately (Frame 2 never shown)
-  3. If no token → show Frame 2 with two buttons
-     - "ابدأ الحجز" → checks both flags, routes: missing isLanguageSelected → `/language`; missing hasSeenOnboarding → `/onboarding`; both set → `/home`
-     - "تسجيل الدخول" → `context.go('/signin')`
+  1. Read token and `isGuest` flag asynchronously (enforces min 300ms display via Stopwatch)
+  2. If token exists and not empty → `context.go('/home')` immediately (authenticated user, Frame 2 never shown)
+  3. If `isGuest` flag is set → `context.go('/home')` immediately (guest user, Frame 2 never shown)
+  4. If neither → show Frame 2 with two buttons:
+     - "ابدأ الحجز" (Start Booking) → checks first-run flags (`isLanguageSelected` / `hasSeenOnboarding`), routes: missing language → `/language`; missing onboarding → `/onboarding`; both set → `/home`
+     - "تسجيل الدخول" (Sign In) → `context.go('/signin')`
   
-  First-run users always see: splash → language selection → onboarding → home.
-  Returning users see: splash → direct to home (if logged in) or signin (if not).
+  First-run logged-in users: splash → home (skip language/onboarding).
+  First-run guests: splash → home (skip language/onboarding, access guest mode features).
+  First-run unauthenticated: splash → language selection → onboarding → home.
+  Returning logged-in users: splash → direct to home.
+  Returning guests: splash → direct to home (guest mode).
+  Returning unauthenticated users: splash → sign-in or guest entry buttons.
+  
   (`ComposeUi` no longer exists — removed in go_router migration.)
 - **Stale `AssetManifest.bin` causes hot-reload `PathNotFoundException`.** If hot reload fails with `Cannot open file ... assets/<name>` for a path that doesn't exist anywhere in source (sometimes referencing the old `fast-rent` folder name), the cause is a stale `build/app/intermediates/.../AssetManifest.bin` from a previous build. Fix: `android\gradlew.bat --stop`, then `flutter clean && flutter pub get`, then re-run.
 - **Asset folder convention.** `assets/icons/` holds SVGs; `assets/images/` holds raster images and a few Lottie JSONs (most Lottie files live in `assets/anim/`). Code uniformly references `assets/icons/<name>.svg` for SVGs — do not duplicate SVG icons into `assets/images/`. The `assets:` block in `pubspec.yaml` declares directories (not individual files), so dropping a file into a declared directory is enough to ship it; no manifest entry needed. After a recent cleanup, ~75 unreferenced files were deleted across both folders; `git log --diff-filter=D -- assets/` will show what was removed.

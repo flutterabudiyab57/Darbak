@@ -3,6 +3,8 @@ import 'package:darbak/language/locale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/style/style.dart';
+
 class NotificationsEmptyState extends StatelessWidget {
   const NotificationsEmptyState({super.key});
 
@@ -21,12 +23,7 @@ class NotificationsEmptyState extends StatelessWidget {
             child: Text(
               locale.notificationsEmpty,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: paragraphColor(context),
-                fontFamily: 'ThmanyahSans',
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w400,
-              ),
+              style: AppTypography.secondaryTypographyColor20(context),
             ),
           ),
         ],

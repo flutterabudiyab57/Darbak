@@ -50,7 +50,7 @@ class _FavouritesState extends State<Favourites> {
                     SizedBox(height: 6.h),
                     Text(
                       locale.addFavoriteCar,
-                      style: AppTypography.mainTypographyColor20(context),
+                      style: AppTypography.secondaryTypographyColor20(context),
                       textAlign: TextAlign.center,
                     ),
                   ],

@@ -7,6 +7,7 @@ import 'package:darbak/modules/home/all_branching/page/view_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
  import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
@@ -110,6 +111,8 @@ class _BranchesScreenState extends State<BranchesScreen> {
                         type: TextInputType.name,
                         label: locale.exploreOurBranches,
                         pIcon: Icons.search_outlined,
+                        fillColor: bg2Color(context),
+                        borderColor: Colors.transparent,
                       ),
                     ),
 
@@ -184,218 +187,223 @@ class _BranchesScreenState extends State<BranchesScreen> {
         final branch = _filteredBranches[index];
         final isRTL = locale.isDirectionRTL(context);
 
+        final int? period = branch.workTime?.alldays?.period;
+        final bool hasAfternoon = (period ?? 0) != 0;
+
         return Container(
           margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
           padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.r),
-            color: buttonWhiteColor(context),
+            color: backgroundColor(context),
             border: Border.all(
-              color: strokeGrayColor(context),
-              width: 2.w,
+              color: bg2Color(context),
+              width: 1.5.w,
             ),
           ),
           child: Column(
-            spacing: 12.h,
-            crossAxisAlignment: isRTL ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            spacing: 15.h,
+            crossAxisAlignment: isRTL ? CrossAxisAlignment.start : CrossAxisAlignment.end,
             children: [
               // Branch name
               Row(
-                textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
                 children: [
-                  Image.asset(
-                    "assets/icons/new_branch.png",
-                    height: 27.h,
-                    width: 27.w,
-                  ),
-                  SizedBox(width: 8.w),
-                  Expanded(
+                  Flexible(
                     child: AutoSizeText(
                       branch.name ?? '',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTypography.mainTypographyColor16(context),
+                      style: AppTypography.mainTypographyColor15(context),
                       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
                     ),
                   ),
-                ],
-              ),
-
-              // Region
-              Row(
-                textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                children: [
-                  Image.asset(
-                    "assets/icons/new_branch_2.png",
-                    height: 27.h,
-                    width: 27.w,
-                  ),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: Row(
+                  if ((branch.region ?? '').isNotEmpty) ...[
+                    SizedBox(width: 3.w,),
+                    AutoSizeText(
+                      "( ${branch.region!} )",
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.paragraphColor12(context),
                       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                      children: [
-                        Text(
-                          "${locale.region.toString()} : ",
-                          style: AppTypography.paragraphColor14(context),
-                        ),
-                        Flexible(
-                          child: Text(
-                            "${branch.region}",
-                            style: AppTypography.headingColor14(context),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-
-              // Address
-              Row(
-                textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                children: [
-                  Image.asset(
-                    "assets/icons/new_branch_2.png",
-                    height: 27.h,
-                    width: 27.w,
-                  ),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: Text(
-                      branch.address ?? '',
-                      style: AppTypography.headingColor14(context),
-                      overflow: TextOverflow.visible,
-                      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                    ),
-                  ),
-                ],
-              ),
-
-              // Work Time
-              if (branch.workTime?.openAllDays == 1) ...[
-                Row(
-                  textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                  children: [
-                    Image.asset(
-                      "assets/icons/new_clock.png",
-                      height: 27.h,
-                      width: 27.w,
-                    ),
-                    SizedBox(width: 8.w),
-                    Expanded(
-                      child: Row(
-                        textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                        children: [
-                          Text(
-                            "${locale.workTime} : ",
-                            style: AppTypography.paragraphColor14(context),
-                          ),
-                          Text(
-                            "24 ${locale.hour}",
-                            style: AppTypography.headingColor14(context),
-                          ),
-                        ],
-                      ),
                     ),
                   ],
-                ),
-              ] else ...[
-                Row(
+                ],
+              ),
+
+              // Working hours + Address boxes
+              IntrinsicHeight(
+                child: Row(
                   textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Image.asset(
-                      "assets/icons/new_clock.png",
-                      height: 27.h,
-                      width: 27.w,
-                    ),
-                    SizedBox(width: 8.w),
                     Expanded(
-                      child: Row(
-                        textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                        children: [
-                          Text(
-                            "${locale.morning.toString()} : ",
-                            style: AppTypography.paragraphColor14(context),
-                          ),
-                          Flexible(
-                            child: Text(
-                              "${branch.workTime?.alldays?.morning?.timeopen ?? ''} - ${branch.workTime?.alldays?.morning?.timeclose ?? ''}",
-                              style: AppTypography.headingColor14(context),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                if (branch.workTime?.alldays?.period != 0)
-                  Row(
-                    textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                    children: [
-                      Image.asset(
-                        "assets/icons/new_clock.png",
-                        height: 27.h,
-                        width: 27.w,
-                      ),
-                      SizedBox(width: 8.w),
-                      Expanded(
-                        child: Row(
-                          textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                      child: Container(
+                        constraints: BoxConstraints(minHeight: 97.h),
+                        padding: EdgeInsets.all(10.w),
+                        decoration: BoxDecoration(
+                          color: bg2Color(context),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Column(
+                          spacing: 10.h,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              "${locale.afternoon.toString()} : ",
-                              style: AppTypography.paragraphColor14(context),
-                            ),
-                            Flexible(
-                              child: Text(
-                                "${branch.workTime?.alldays?.afternone?.timeopen ?? ''} ${locale.toTime} ${branch.workTime?.alldays?.afternone?.timeclose ?? ''}",
-                                style: AppTypography.headingColor14(context),
-                                overflow: TextOverflow.ellipsis,
+                            SvgPicture.asset(
+                              'assets/icons/new_branch_2.svg',
+                              width: 28.w,
+                              height: 27.h,
+                              colorFilter: ColorFilter.mode(
+                                iconDefaultColor(context),
+                                BlendMode.srcIn,
                               ),
+                            ),
+                            Text(
+                              branch.address ?? '',
+                              style: AppTypography.headingColor12(context),
+                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-              ],
+                    ),
+                    SizedBox(width: 20.w),
+                    Expanded(
+                      child: Container(
+                        constraints: BoxConstraints(minHeight: 97.h),
+                        padding: EdgeInsets.all(10.w),
+                        decoration: BoxDecoration(
+                          color: bg2Color(context),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Column(
+                          spacing: 10.h,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/new_clock.svg',
+                              width: 28.w,
+                              height: 27.h,
+                              colorFilter: ColorFilter.mode(
+                                iconDefaultColor(context),
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            Column(
+                              spacing: 6.h,
+                              children: [
+                                if (branch.workTime?.openAllDays == 1)
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "${locale.workTime} : ",
+                                          style: AppTypography.headingColor12Bold(context),
+                                        ),
+                                        TextSpan(
+                                          text: "24 ${locale.hour}",
+                                          style: AppTypography.headingColor12(context),
+                                        ),
+                                      ],
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )
+                                else ...[
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "${locale.morning} : ",
+                                          style: AppTypography.headingColor12Bold(context),
+                                        ),
+                                        TextSpan(
+                                          text: "${branch.workTime?.alldays?.morning?.timeopen ?? ''} - ${branch.workTime?.alldays?.morning?.timeclose ?? ''}",
+                                          style: AppTypography.headingColor12(context),
+                                        ),
+                                      ],
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  if (hasAfternoon)
+                                    Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: "${locale.afternoon} : ",
+                                            style: AppTypography.headingColor12Bold(context),
+                                          ),
+                                          TextSpan(
+                                            text: "${branch.workTime?.alldays?.afternone?.timeopen ?? ''} ${locale.toTime} ${branch.workTime?.alldays?.afternone?.timeclose ?? ''}",
+                                            style: AppTypography.headingColor12(context),
+                                          ),
+                                        ],
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-              SizedBox(height: 4.h),
-
-              // Action Buttons
               Row(
                 textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: InkWell(
                       borderRadius: BorderRadius.circular(15.r),
                       onTap: () async {
-                        final Uri telUri = Uri(
-                          scheme: 'tel',
-                          path: branch.phone,
-                        );
+                        final phone = branch.phone;
+                        if (phone == null || phone.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                isRTL ? 'رقم الهاتف غير متوفر' : 'Phone number not available',
+                              ),
+                            ),
+                          );
+                          return;
+                        }
 
-                        if (await UrlLauncher.canLaunchUrl(telUri)) {
-                          await UrlLauncher.launchUrl(telUri);
-                        } else {
-                          print('Could not launch ${telUri.toString()}');
+                        final Uri telUri = Uri.parse('tel:${phone.trim()}');
+
+                        try {
+                          final launched = await UrlLauncher.launchUrl(
+                            telUri,
+                            mode: UrlLauncher.LaunchMode.externalApplication,
+                          );
+                          if (!launched) {
+                            debugPrint('launchUrl returned false for $telUri');
+                          }
+                        } catch (e) {
+                          debugPrint('tel launch failed: $e');
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                isRTL ? 'تعذر بدء المكالمة' : 'Could not start the call',
+                              ),
+                            ),
+                          );
                         }
                       },
                       child: ADGradientButton(
                         locale.callUs,
-                        border: Border.all(color: iconDefaultColor(context),width: 2.w),
-                        icon: Icons.phone,iconColor: headingColor(context),
-                        backgroundColor: backgroundColor(context),
-                        iconSize: 20.sp,
-                        textStyle: AppTypography.headingColor15(context),
+                        backgroundColor: Colors.transparent,
+                        border: Border.all(color: strokeMainColor(context), width: 2.w),
+                        height: 42.h,
+                        textStyle: AppTypography.headingColor14Bold(context),
+                        autoSize: false,
                       ),
                     ),
                   ),
-                  SizedBox(width: 8.w),
+                  SizedBox(width: 17.w),
                   Expanded(
                     child: InkWell(
                       borderRadius: BorderRadius.circular(15.r),
@@ -427,7 +435,11 @@ class _BranchesScreenState extends State<BranchesScreen> {
                       child: ADGradientButton(
                         backgroundColor: buttonPrimaryBgColor(context),
                         locale.LocationOnMap.toString(),
-                        textStyle: AppTypography.buttonText15(context),
+                        iconColor: buttonTextColor(context),
+                        height: 42.h,
+                        textStyle: AppTypography.buttonText14(context),
+                        autoSize: false,
+
                       ),
                     ),
                   ),

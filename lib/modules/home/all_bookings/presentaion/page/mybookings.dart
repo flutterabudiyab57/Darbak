@@ -126,7 +126,7 @@ class _MyBookingsState extends State<MyBookings>
         SizedBox(height: 25.sp),
         Text(
           locale.noCarsBooking1.toString(),
-          style:AppTypography.mainTypographyColor20(context)
+          style: AppTypography.secondaryTypographyColor20(context),
         ),
       ],
     );

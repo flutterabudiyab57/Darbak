@@ -19,6 +19,7 @@ class ADGradientButton extends StatelessWidget {
   final Widget? customIcon;
   final BoxBorder? border;
   final Gradient? gradient;
+  final bool autoSize;
   const ADGradientButton(
       this.title, {
         Key? key,
@@ -32,11 +33,15 @@ class ADGradientButton extends StatelessWidget {
         this.textStyle,
         this.customIcon,
         this.border, this.gradient,
+        this.autoSize = true,
       }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final baseStyle = AppTypography.buttonText18(context);
+    final resolvedStyle = (textStyle ?? baseStyle).copyWith(
+      color: textColor ?? (textStyle ?? baseStyle).color,
+    );
 
     return SizedBox(
       width: width ?? double.infinity,
@@ -48,7 +53,7 @@ class ADGradientButton extends StatelessWidget {
           border: border,
         ),
         child: Padding(
-          padding:   EdgeInsets.symmetric(vertical: 8.w),
+          padding:   EdgeInsets.symmetric(vertical: 2.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
@@ -64,12 +69,15 @@ class ADGradientButton extends StatelessWidget {
                 ),
               if (icon != null) SizedBox(width: 8.w),
 
-              AutoSizeText(
-                title ?? '',
-                style: (textStyle ?? baseStyle).copyWith(
-                  color: textColor ?? (textStyle ?? baseStyle).color,
-                ),
-              ),
+              autoSize
+                  ? AutoSizeText(title ?? '', style: resolvedStyle)
+                  : Text(
+                      title ?? '',
+                      style: resolvedStyle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
             ],
           ),
         ),

@@ -6,6 +6,7 @@ import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import '../../../../../core/constants/assets/app_colors.dart';
@@ -177,8 +178,8 @@ class _BranchesListViewState extends State<BranchesListView> {
 
                              Row(
                               children: [
-                                Image.asset(
-                                  "assets/icons/new_clock.png",
+                                SvgPicture.asset(
+                                  "assets/icons/new_clock.svg",
                                   height: 27.h,
                                   width: 27.w,
                                 ),
@@ -194,8 +195,8 @@ class _BranchesListViewState extends State<BranchesListView> {
                             ),
                              Row(
                               children: [
-                                Image.asset(
-                                  "assets/icons/new_clock.png",
+                                SvgPicture.asset(
+                                  "assets/icons/new_clock.svg",
                                   height: 27.h,
                                   width: 27.w,
                                 ),

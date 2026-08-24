@@ -28,6 +28,9 @@ class ADPrimTextForm extends StatefulWidget {
   final String? notMatchMessage;
   final bool enableDynamicValidation;
   final String? countryCode;
+  final Color? fillColor;
+  final Color? borderColor;
+  final double? borderWidth;
 
   ADPrimTextForm({
     Key? key,
@@ -51,6 +54,9 @@ class ADPrimTextForm extends StatefulWidget {
     this.countryCode,
     this.matchWithController,
     this.notMatchMessage,
+    this.fillColor,
+    this.borderColor,
+    this.borderWidth,
   }) : super(key: key);
 
   @override
@@ -173,17 +179,21 @@ class _ADPrimTextFormState extends State<ADPrimTextForm> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.r),
-              borderSide: BorderSide(
-                color: strokeGrayColor(context),
-                width: 2.w,
-              ),
+              borderSide: widget.borderColor == Colors.transparent
+                  ? BorderSide.none
+                  : BorderSide(
+                      color: widget.borderColor ?? strokeGrayColor(context),
+                      width: widget.borderWidth?.w ?? 2.w,
+                    ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.r),
-              borderSide: BorderSide(
-                color: strokeGrayColor(context),
-                width: 2.w,
-              ),
+              borderSide: widget.borderColor == Colors.transparent
+                  ? BorderSide.none
+                  : BorderSide(
+                      color: widget.borderColor ?? strokeGrayColor(context),
+                      width: widget.borderWidth?.w ?? 2.w,
+                    ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.r),
@@ -212,7 +222,7 @@ class _ADPrimTextFormState extends State<ADPrimTextForm> {
                   : Theme.of(context).colorScheme.error,
             ),
             errorMaxLines: 2,
-            fillColor: backgroundColor(context),
+            fillColor: widget.fillColor ?? backgroundColor(context),
             filled: true,
             hintText: widget.hint,
             hintStyle: AppTypography.paragraphColor15(context),

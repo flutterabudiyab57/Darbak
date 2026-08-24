@@ -429,7 +429,7 @@ class _RunningNowState extends State<RunningNow> {
             SizedBox(height: 6.h),
             Text(
               locale.noCarsBooking1.toString(),
-              style: AppTypography.mainTypographyColor20(context),
+              style: AppTypography.secondaryTypographyColor20(context),
             ),
           ],
         );

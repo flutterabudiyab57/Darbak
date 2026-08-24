@@ -179,11 +179,23 @@ class AppTypography {
         fontWeight: FontWeight.w500,
         color: headingColor(context),
       );
+  static TextStyle headingColor14Bold(BuildContext context) => TextStyle(
+        fontFamily: 'ThmanyahSans',
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w700,
+        color: headingColor(context),
+      );
 
   static TextStyle headingColor12(BuildContext context) => TextStyle(
         fontFamily: 'ThmanyahSans',
         fontSize: 12.sp,
         fontWeight: FontWeight.w500,
+        color: headingColor(context),
+      );
+  static TextStyle headingColor12Bold(BuildContext context) => TextStyle(
+        fontFamily: 'ThmanyahSans',
+        fontSize: 12.sp,
+        fontWeight: FontWeight.w700,
         color: headingColor(context),
       ); static TextStyle headingColor10(BuildContext context) => TextStyle(
         fontFamily: 'ThmanyahSans',
@@ -304,6 +316,12 @@ class AppTypography {
   static TextStyle secondaryTypographyColor16(BuildContext context) => TextStyle(
     fontFamily: 'ThmanyahSans',
     fontSize: 16.sp,
+    fontWeight: FontWeight.bold,
+    color: SecondaryTypographyColor(context),
+  );
+  static TextStyle secondaryTypographyColor20(BuildContext context) => TextStyle(
+    fontFamily: 'ThmanyahSans',
+    fontSize: 20.sp,
     fontWeight: FontWeight.bold,
     color: SecondaryTypographyColor(context),
   );

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import '../../language/locale.dart';
 import '../home/profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../core/constants/preferences_constants.dart';
 import '../../core/helpers/SharedPreference/pereferences.dart';
@@ -70,6 +71,7 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
   }
 
   Widget _buildFrame1(Key key) {
+
     return Container(
       key: key,
       width: double.infinity,
@@ -78,7 +80,7 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
       child: Center(
         child: Image.asset(
           'assets/images/new_splash.png',
-          width: 182.w,
+          width: 249.w,
           height: 281.h,
           fit: BoxFit.contain,
         ),
@@ -87,6 +89,8 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
   }
 
   Widget _buildFrame2(Key key) {
+    final locale = AppLocalizations.of(context);
+
     return Container(
       key: key,
       width: double.infinity,
@@ -155,7 +159,7 @@ class _SplashScreenOldState extends State<SplashScreenOld> {
                     ),
                     child: Center(
                       child: Text(
-                        'تسجيل الدخول',
+                          locale!.signIn.toString(),
                         style: TextStyle(
                           color: const Color(0xFF021E45),
                           fontSize: 20.sp,
