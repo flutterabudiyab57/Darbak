@@ -16,6 +16,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:darbak/core/router/routes.dart';
 import 'package:darbak/core/helpers/text_scale_sizing.dart';
+import 'package:darbak/modules/shell/shell_bottom_bar_metrics.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../widgets/components/ad_gradient_btn.dart';
@@ -212,7 +213,7 @@ class _SearchState extends State<SearchScreen>
                   context.pushNamed(Routes.offers);
                 },
               ),
-              SizedBox(height: 60.h),
+              SizedBox(height: shellBottomInset(context)),
             ],
           ),
         ),

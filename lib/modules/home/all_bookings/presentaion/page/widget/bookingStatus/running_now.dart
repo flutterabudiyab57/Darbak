@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:darbak/modules/shell/shell_bottom_bar_metrics.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../../../language/locale.dart';
 import '../../../../../../../core/router/app_router.dart';
@@ -30,6 +31,7 @@ class _RunningBookingSkeleton extends StatelessWidget {
     return Skeletonizer.zone(
       child: ListView.builder(
         physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.only(bottom: shellBottomInset(context)),
         itemCount: 4,
         itemBuilder: (context, index) {
           return Padding(
@@ -245,6 +247,7 @@ class _RunningNowState extends State<RunningNow> {
 
           return ListView.builder(
             physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.only(bottom: shellBottomInset(context)),
             itemCount: bookingData.length,
             itemBuilder: (context, index) {
               final booking = bookingData[index]!;

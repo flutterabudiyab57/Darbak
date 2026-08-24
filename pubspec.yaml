@@ -50,7 +50,6 @@ dependencies:
   rename_app: ^1.6.5
   flutter_launcher_icons: ^0.14.4
   permission_handler: ^12.0.1
-  curved_labeled_navigation_bar: ^2.0.6
   flutter_otp_text_field: ^1.5.1+1
   country_picker: ^2.0.27
   dio: ^5.9.1

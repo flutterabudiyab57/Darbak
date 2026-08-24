@@ -4,7 +4,6 @@ import 'package:darbak/core/constants/api_path.dart';
 import 'package:darbak/core/helpers/settings/settings__cubit.dart';
 import 'package:darbak/core/helpers/settings/settings_repository.dart';
 import 'package:darbak/modules/home/profile/blocs/profile_cubit/profile_cubit.dart';
-import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:darbak/modules/shell/bottom_nav_bar.dart';
 import 'package:darbak/modules/shell/tab_scroll_registry.dart';
 import 'package:darbak/modules/shell/update_dialog.dart';
@@ -74,7 +73,6 @@ class _ShellScaffoldBody extends StatefulWidget {
 }
 
 class _ShellScaffoldBodyState extends State<_ShellScaffoldBody> {
-  final GlobalKey<CurvedNavigationBarState> _bottomKey = GlobalKey();
   final TabScrollRegistry _scrollRegistry = TabScrollRegistry();
 
   @override
@@ -153,7 +151,6 @@ class _ShellScaffoldBodyState extends State<_ShellScaffoldBody> {
         extendBody: true,
         body: widget.navigationShell,
         bottomNavigationBar: ShellBottomNavBar(
-          navKey: _bottomKey,
           selectedIndex: widget.navigationShell.currentIndex,
           onTap: _handleNavTap,
         ),

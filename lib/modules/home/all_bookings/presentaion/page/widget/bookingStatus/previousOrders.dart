@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:widget_zoom/widget_zoom.dart';
+import 'package:darbak/modules/shell/shell_bottom_bar_metrics.dart';
 import '../../../../../../../core/constants/assets/assets.dart';
 import '../../../../../../../language/locale.dart';
 import '../../../../../../../core/router/app_router.dart';
@@ -34,6 +35,7 @@ class _PreviousBookingSkeleton extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         child: ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.only(bottom: shellBottomInset(context)),
           itemCount: 3,
           itemBuilder: (context, index) {
             return Padding(
@@ -206,6 +208,7 @@ class _PreviousOrdersState extends State<PreviousOrders> {
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             child: ListView.builder(
+              padding: EdgeInsets.only(bottom: shellBottomInset(context)),
               itemCount: BlocProvider.of<AllBookingCubit>(context)
                   .filteredBookings
                   .length,

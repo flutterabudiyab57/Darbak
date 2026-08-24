@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:darbak/core/helpers/text_scale_sizing.dart';
+import 'package:darbak/modules/shell/shell_bottom_bar_metrics.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../../core/router/routes.dart';
@@ -241,6 +242,8 @@ class _AllCarsScreenState extends State<AllCarsScreen>
                           child: ListView.builder(
                               controller: _scrollController,
                               physics: const BouncingScrollPhysics(),
+                              padding: EdgeInsets.only(
+                                  bottom: shellBottomInset(context)),
                               itemCount: cubit!.data!.length,
                               itemBuilder: (context, index) {
                                   return CarTile(

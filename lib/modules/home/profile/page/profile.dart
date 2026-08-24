@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:darbak/core/helpers/text_scale_sizing.dart';
+import 'package:darbak/modules/shell/shell_bottom_bar_metrics.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../widgets/components/ad_gradient_btn.dart';
@@ -218,7 +219,7 @@ class _ProfileContentState extends State<_ProfileContent> {
               ),
             ),
           ),
-          SizedBox(height: 182.h),
+          SizedBox(height: shellBottomInset(context)),
         ],
       ),
     );
