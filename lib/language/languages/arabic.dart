@@ -435,6 +435,7 @@ Map<String, String> arabic() {
     'selectAirport': 'برجاء اختيار المطار الذى تريده',
     'chooseMonthlyPackage': 'اختر الباقة الشهرية.',
     'monthlyPackages': 'الباقات الشهريه',
+    'discover': 'اسكتشف',
     'selectDeliveryBranchFirst': 'يرجى اختيار فرع التوصيل أولاً',
     'selectRegionFirst': 'يرجى اختيار المنطقة أولاً',
     'customLocationLabel': 'موقع مخصص',

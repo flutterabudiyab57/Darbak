@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:darbak/core/style/style.dart';
 import 'package:darbak/language/locale.dart';
 
@@ -16,59 +17,76 @@ class MonthlyPackageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = AppLocalizations.of(context);
+    final locale = AppLocalizations.of(context)!;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.r),
-          border: Border.all(color: strokeGrayColor(context), width: 2.w),
-          image: DecorationImage(
-            image: AssetImage(
-              Theme.of(context).brightness == Brightness.light
-                  ? "assets/images/back_ground_packat.png"
-                  : "assets/images/back_ground_packat_dark.png",
-            ),
-            fit: BoxFit.cover,
+        padding: EdgeInsets.all(12.w),
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.r),
           ),
         ),
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              locale!.isDirectionRTL(context)
-                  ? "assets/images/monthly_ar.png"
-                  : "assets/images/monthly_en.png",
-              width: 85.w,
-              height: 38.h,
-              fit: BoxFit.contain,
+            SvgPicture.asset(
+              'assets/icons/Monthly_Packages.svg',
+              width: 60.w,
+              height: 60.h,
             ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AutoSizeText(
-                    Directionality.of(context) == TextDirection.rtl
-                        ? "الباقات الشهرية"
-                        : "Monthly packages",
-                    style: AppTypography.mainTypographyColor16(context),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+            SizedBox(height: 6.h),
+            AutoSizeText(
+              locale.monthlyPackages,
+              textAlign: TextAlign.center,
+              style: AppTypography.headingColor20(context).copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+              maxLines: 1,
+            ),
+            SizedBox(height: 6.h),
+            AutoSizeText(
+              locale.chooseMonthlyPackage,
+              textAlign: TextAlign.center,
+              style: AppTypography.paragraphColor16(context),
+              maxLines: 1,
+            ),
+            SizedBox(height: 6.h),
+            Container(
+              width: 156.w,
+              height: 40.h,
+              decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: 2.w,
+                    color: headingColor(context),
                   ),
-                  SizedBox(height: 4.h),
-                  AutoSizeText(
-                    Directionality.of(context) == TextDirection.rtl
-                        ? "أختر باقتك الشهرية المناسبة لك"
-                        : "Choose the monthly package that suits you",
-                    style: AppTypography.headingColor16(context),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.arrow_back_ios_new,
+                      color: headingColor(context),
+                      size: 14.sp,
+                    ),
+                    SizedBox(width: 6.w),
+                    Text(
+                      locale.discover,
+                      textAlign: TextAlign.center,
+                      style: AppTypography.headingColor16(context).copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

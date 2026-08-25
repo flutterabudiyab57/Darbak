@@ -527,6 +527,8 @@ class AppLocalizations {
   String get monthlyPackages =>
       _localizedValues[locale.languageCode]!['monthlyPackages']!;
 
+  String get discover => _localizedValues[locale.languageCode]!['discover']!;
+
   String get selectDeliveryBranchFirst =>
       _localizedValues[locale.languageCode]!['selectDeliveryBranchFirst']!;
 

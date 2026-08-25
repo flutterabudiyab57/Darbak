@@ -421,6 +421,7 @@ Map<String, String> english() {
     'selectAirport': 'Please select the airport you want',
     'chooseMonthlyPackage': 'Choose the monthly package.',
     'monthlyPackages': 'Monthly Packages',
+    'discover': 'Discover',
     'selectDeliveryBranchFirst': 'Please select a delivery branch first',
     'selectRegionFirst': 'Please select a region first',
     'customLocationLabel': 'Custom Location',
