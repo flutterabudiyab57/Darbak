@@ -1073,6 +1073,10 @@ class AppLocalizations {
     return _localizedValues[locale.languageCode]!['viewAll'];
   }
 
+  String get discoverOffers {
+    return _localizedValues[locale.languageCode]!['discoverOffers']!;
+  }
+
   String? get carSelected {
     return _localizedValues[locale.languageCode]!['carSelected'];
   }

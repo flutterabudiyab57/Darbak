@@ -166,6 +166,7 @@ Map<String, String> english() {
     'complaint': 'Complaint',
     'bookNow': 'Book Now',
     'viewAll': 'View all',
+    'discoverOffers': 'Discover Exclusive Offers',
     'carSelected': 'Car Selected',
     'enteramount': 'Enter the amount',
     'more': 'More',

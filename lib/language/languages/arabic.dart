@@ -172,6 +172,7 @@ Map<String, String> arabic() {
     'complaint': 'الشكاوى',
     'bookNow': 'إحجز الآن',
     'viewAll': 'عرض الكل',
+    'discoverOffers': 'اسكتشف العروض الحصرية',
     'carSelected': 'السيارة المحجوزة',
     'enteramount': 'أدخل المبلغ',
     'registerNow': 'سجل الان',

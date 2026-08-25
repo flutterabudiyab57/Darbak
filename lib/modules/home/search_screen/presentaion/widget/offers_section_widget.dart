@@ -27,6 +27,14 @@ class OffersSectionWidget extends StatefulWidget {
 
 class _OffersSectionWidgetState extends State<OffersSectionWidget> {
   List<OffersModel>? _cachedOffers;
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +45,11 @@ class _OffersSectionWidgetState extends State<OffersSectionWidget> {
         }
 
         if (state is OffersLoding && _cachedOffers == null) {
-          return _buildContainer(
-            context,
-            child: Center(
-              child: LoadingIndicator(),
-            ),
-          );
+          return Center(child: LoadingIndicator());
         }
 
         if (_cachedOffers != null && _cachedOffers!.isNotEmpty) {
-          return _buildOfferCard(context, _cachedOffers!.first);
+          return _buildOffersCarousel(context, _cachedOffers!);
         }
 
         return _buildEmptyOffersFallback(context);
@@ -54,172 +57,159 @@ class _OffersSectionWidgetState extends State<OffersSectionWidget> {
     );
   }
 
-  Widget _buildContainer(BuildContext context, {required Widget child}) {
-    return Container(
-       decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: strokeGrayColor(context), width: 1.5.w),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(8.w),
-        child: child,
-      ),
-    );
-  }
+  Widget _buildOffersCarousel(BuildContext context, List<OffersModel> offers) {
+    final locale = AppLocalizations.of(context)!;
 
-  Widget _buildOfferCard(BuildContext context, OffersModel offer) {
-    return _buildContainer(
-      context,
-      child: Column(
-        children: [
-          _buildHeader(context),
-          SizedBox(height: 8.h),
-          Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15.r),
-                child: Image.network(
-                  offer.image ?? '',
-                  height: 100.h,
-                  width: 168.w,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 100.h,
-                    width: 168.w,
-                    color: Colors.grey[300],
-                    child: Icon(Icons.image_not_supported),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildHeader(context, locale),
+        SizedBox(height: 10.h),
+        SizedBox(
+          height: 150.h,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: offers.length,
+            onPageChanged: (index) {
+              setState(() => _currentPage = index);
+            },
+            itemBuilder: (context, index) {
+              final offer = offers[index];
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2.w),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15.r),
+                  child: Image.network(
+                    offer.image ?? '',
+                    width: double.infinity,
+                    height: 150.h,
+                    fit: BoxFit.fill,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 150.h,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(15.r),
+                      ),
+                      child: Center(
+                        child: Icon(Icons.image_not_supported, size: 40.sp),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AutoSizeText(
-                      Directionality.of(context) == TextDirection.rtl
-                          ? "احصل على خصم ${offer.discountValue ?? 0}% عند الدفع بالفيزا"
-                          : "Get a ${offer.discountValue ?? 0}% discount when paying with Visa",
-                      style: AppTypography.headingColor10(context),
-                    ),
-                    SizedBox(height: 5.h),
-                    AutoSizeText(
-                      offer.description ?? '',
-                      style: AppTypography.paragraphColor12(context),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              );
+            },
           ),
-          SizedBox(height: 10.h),
-          _buildViewAllButton(context),
-        ],
-      ),
+        ),
+        SizedBox(height: 10.h),
+        _buildBottomRow(context, offers.length, locale),
+      ],
     );
   }
 
   Widget _buildEmptyOffersFallback(BuildContext context) {
+    final locale = AppLocalizations.of(context)!;
 
-    return _buildContainer(
-      context,
-      child: Column(
-        children: [
-          _buildHeader(context),
-          SizedBox(height: 8.h),
-          Row(
-            children: [
-              Image.asset(
-                'assets/images/3Cars.png',
-                height: 100.h,
-                width: 158.w,
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AutoSizeText(
-                      Directionality.of(context) == TextDirection.rtl
-                          ? "نجهّز لك حاليًا عروض وباقات مميزة"
-                          : "We are currently preparing special offers and packages for you",
-                      style: AppTypography.headingColor10(context),
-                    ),
-                    SizedBox(height: 5.h),
-                    AutoSizeText(
-                      Directionality.of(context) == TextDirection.rtl
-                          ? "تابعنا عشان تكون أول المستفيدين"
-                          : "Follow us to be among the first to benefit",
-                      style: AppTypography.paragraphColor12(context),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildHeader(context, locale),
+        SizedBox(height: 10.h),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(15.r),
+          child: Image.asset(
+            'assets/images/3Cars.png',
+            height: 150.h,
+            width: double.infinity,
+            fit: BoxFit.cover,
           ),
-          SizedBox(height: 10.h),
-          _buildViewAllButton(context),
-        ],
-      ),
+        ),
+        SizedBox(height: 10.h),
+        _buildBottomRow(context, 1, locale),
+      ],
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, AppLocalizations locale) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        SizedBox(
-          width: 21.w,
-          height: 21.h,
-          child: SvgPicture.asset(Assets.icon_offers,color: strokeMainColor(context),),
+        AutoSizeText(
+          locale.discoverOffers,
+          style: AppTypography.headingColor16(context),
         ),
         SizedBox(width: 5.w),
-        AutoSizeText(
-          Directionality.of(context) == TextDirection.rtl
-              ? "اسكتشف العروض الحصرية"
-              : "Discover exclusive offers",
-          style: AppTypography.headingColor16(context),
+        SizedBox(
+          width: 18.w,
+          height: 18.h,
+          child: SvgPicture.asset(
+            Assets.icon_offers,
+            color: strokeMainColor(context),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildViewAllButton(BuildContext context) {
-    final locale = AppLocalizations.of(context)!;
+  Widget _buildBottomRow(
+      BuildContext context, int dotsCount, AppLocalizations locale) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Divider(
-            color: strokeMainColor(context),
-            thickness: 2.h,
-          ),
-        ),
-        SizedBox(width: 6.w),
         GestureDetector(
           onTap: widget.onViewAllTap,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(10.r),
               border: Border.all(
                 color: strokeMainColor(context),
                 width: 1.5.w,
               ),
             ),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                AutoSizeText(
-                 locale.viewAll.toString(),
-                  style: AppTypography.headingColor12(context),
-                ),
                 Icon(
-                  Icons.arrow_forward,
+                  Icons.arrow_back,
                   color: iconDefaultColor(context),
+                  size: 16.sp,
+                ),
+                SizedBox(width: 4.w),
+                Text(
+                  locale.viewAll.toString(),
+                  style: AppTypography.headingColor12(context),
                 ),
               ],
             ),
           ),
         ),
+        if (dotsCount > 1)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(dotsCount, (index) {
+              final isActive = index == _currentPage;
+              return Padding(
+                padding: EdgeInsets.only(left: index > 0 ? 5.w : 0),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: isActive ? 32.w : 11.w,
+                  height: 11.h,
+                  decoration: ShapeDecoration(
+                    color: isActive
+                        ? iconDefaultColor(context)
+                        : iconGrayColor(context),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        isActive ? 17.r : 100.r,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
       ],
     );
   }
