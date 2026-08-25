@@ -415,6 +415,46 @@ class AppTypography {
         color: buttonWhiteColor(context),
       );
   // ===========================
+  // Hero Panel Text Styles
+  // ===========================
+  // These sit on the navy hero panel, which keeps the same colour in light and
+  // dark mode, so the colours here are fixed rather than theme-dynamic. Note
+  // that `buttonWhite*` is NOT a substitute — it resolves to `buttonWhiteColor`,
+  // which is `#0D1117` (near-black) in dark mode.
+  static TextStyle heroTitle22(BuildContext context) => TextStyle(
+        fontFamily: 'ThmanyahSans',
+        fontSize: 22.sp,
+        fontWeight: FontWeight.w700,
+        height: 1.23,
+        color: onHeroPrimary,
+      );
+  static TextStyle heroSubtitle16(BuildContext context) => TextStyle(
+        fontFamily: 'ThmanyahSans',
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w400,
+        height: 1.19,
+        color: onHeroSecondary,
+      );
+  static TextStyle heroGreeting16(BuildContext context) => TextStyle(
+        fontFamily: 'ThmanyahSans',
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w700,
+        color: onHeroPrimary,
+      );
+  static TextStyle heroLabel12(BuildContext context) => TextStyle(
+        fontFamily: 'ThmanyahSans',
+        fontSize: 12.sp,
+        fontWeight: FontWeight.w700,
+        color: onHeroPrimary,
+      );
+  static TextStyle heroField16(BuildContext context) => TextStyle(
+        fontFamily: 'ThmanyahSans',
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w500,
+        color: onHeroPrimary,
+      );
+
+  // ===========================
   // Green Button Text Styles
   // ===========================
   static TextStyle buttonGreen22(BuildContext context) => TextStyle(

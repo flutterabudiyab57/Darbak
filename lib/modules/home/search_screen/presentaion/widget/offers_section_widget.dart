@@ -133,13 +133,8 @@ class _OffersSectionWidgetState extends State<OffersSectionWidget> {
 
   Widget _buildHeader(BuildContext context, AppLocalizations locale) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        AutoSizeText(
-          locale.discoverOffers,
-          style: AppTypography.headingColor16(context),
-        ),
-        SizedBox(width: 5.w),
         SizedBox(
           width: 18.w,
           height: 18.h,
@@ -148,6 +143,11 @@ class _OffersSectionWidgetState extends State<OffersSectionWidget> {
             color: strokeMainColor(context),
           ),
         ),
+        SizedBox(width: 5.w),
+        AutoSizeText(
+          locale.discoverOffers,
+          style: AppTypography.headingColor16(context),
+        ),
       ],
     );
   }
@@ -155,7 +155,7 @@ class _OffersSectionWidgetState extends State<OffersSectionWidget> {
   Widget _buildBottomRow(
       BuildContext context, int dotsCount, AppLocalizations locale) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         GestureDetector(
           onTap: widget.onViewAllTap,
@@ -171,15 +171,15 @@ class _OffersSectionWidgetState extends State<OffersSectionWidget> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.arrow_back,
-                  color: iconDefaultColor(context),
-                  size: 16.sp,
-                ),
-                SizedBox(width: 4.w),
                 Text(
                   locale.viewAll.toString(),
                   style: AppTypography.headingColor12(context),
+                ),
+                SizedBox(width: 4.w),
+                Icon(
+                  Icons.arrow_forward,
+                  color: iconDefaultColor(context),
+                  size: 16.sp,
                 ),
               ],
             ),

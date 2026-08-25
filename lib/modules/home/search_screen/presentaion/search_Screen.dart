@@ -8,7 +8,6 @@ import 'package:darbak/modules/home/search_screen/blocs/search_bloc/search_cubit
 import 'package:darbak/modules/home/search_screen/presentaion/widget/monthly_package_widget.dart';
 import 'package:darbak/modules/home/search_screen/presentaion/widget/offers_section_widget.dart';
 import 'package:dio/dio.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -163,58 +162,113 @@ class _SearchState extends State<SearchScreen>
       child: Scaffold(
         backgroundColor: backgroundColor(context),
         extendBody: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          toolbarHeight: 80.hs(context),
-          leadingWidth: 1.sw,
-          leading: BlocBuilder<ProfileCubit, ProfileState>(
-            builder: (context, state) {
-              if (state is ProfileLoading) {
-                return _buildLoadingHeader(locale);
-              }
+        // No appBar: the hero panel is the first item of the scroll view so it
+        // travels up with the content. With no appBar the body starts at y=0,
+        // which is what lets the panel paint behind the status bar.
+        body: ListView(
+          controller: _scrollController,
+          // ListView would otherwise inject MediaQuery padding at the top and
+          // push the panel below the status bar; the panel's own SafeArea
+          // handles that inset instead.
+          padding: EdgeInsets.zero,
+          children: [
+            SizedBox(
+              height: _heroPanelHeight.hs(context) +
+                  MediaQuery.paddingOf(context).top,
+              child: _buildHeroPanel(locale),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              child: Column(
+                children: [
+                  SizedBox(height: 20.h,),
+                   Branches_Card(),
+                  // SizedBox(height: 20.h,),
+                  //  Image.asset(
+                  //    "assets/images/main-card.png",
+                  //    width: 78.w,
+                  //    height: 50.h,
+                  //    fit: BoxFit.fill,
+                  //  ),
 
-              if (state is ProfileSuccess || state is ProfileFailed) {
-                return _buildProfileHeader(state, locale);
-              }
+                   SizedBox(height: 20.h,),
+                   OffersSectionWidget(
+                     onViewAllTap: () {
+                       context.pushNamed(Routes.offers);
+                     },
+                   ),
 
-              if (state is ProfileLogout || state is ProfileInitial) {
-                return _buildLoadingHeader(locale);
-              }
-              return const SizedBox.shrink();
-            },
-          ),
-        ),
-        body: Padding(
-          padding:   EdgeInsets.all(12.w),
-          child: ListView(
-            controller: _scrollController,
-             children: [
-              _buildTripCard(locale),
-              SizedBox(height: 20.h,),
-               Branches_Card(),
-              // SizedBox(height: 20.h,),
-              //  Image.asset(
-              //    "assets/images/main-card.png",
-              //    width: 78.w,
-              //    height: 50.h,
-              //    fit: BoxFit.fill,
-              //  ),
-
-               SizedBox(height: 20.h,),
-               MonthlyPackageWidget(
-                 onTap: () {
-                   context.pushNamed(Routes.monthlyPackage);
-                 },
-               ),
-               SizedBox(height: 20.h,),
-
-               OffersSectionWidget(
-                onViewAllTap: () {
-                  context.pushNamed(Routes.offers);
-                },
+                   SizedBox(height: 20.h,),
+                   MonthlyPackageWidget(
+                     onTap: () {
+                       context.pushNamed(Routes.monthlyPackage);
+                     },
+                   ),
+                ],
               ),
-              SizedBox(height: shellBottomInset(context)),
-            ],
+            ),
+            SizedBox(height: shellBottomInset(context)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Height of the hero panel *below* the status bar.
+  ///
+  /// Figma frame is 390x844 — the same design size screenutil targets — so its
+  /// pixels map 1:1 onto `.w` / `.h`.
+  ///
+  /// The panel now lives inside the scroll view rather than in an `appBar`, so
+  /// nothing adds the status-bar inset for us any more: the call site adds
+  /// `MediaQuery.paddingOf(context).top` to this value explicitly.
+  static const double _heroPanelHeight = 400;
+
+  Widget _buildHeroPanel(dynamic locale) {
+    final radius = BorderRadius.only(
+      bottomLeft: Radius.circular(32.r),
+      bottomRight: Radius.circular(32.r),
+    );
+
+    // Two nested boxes rather than `foregroundDecoration`: Figma stacks the
+    // 10% black scrim over the gradient but *under* the content, and a
+    // foreground decoration would paint over the text too.
+    return DecoratedBox(
+      decoration: BoxDecoration(gradient: heroPanelGradient, borderRadius: radius),
+      child: DecoratedBox(
+        decoration: BoxDecoration(color: heroPanelScrim, borderRadius: radius),
+        child: SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(15.w, 15.h, 15.w, 32.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  child: BlocBuilder<ProfileCubit, ProfileState>(
+                    builder: (context, state) {
+                      if (state is ProfileSuccess || state is ProfileFailed) {
+                        return _buildProfileHeader(state, locale);
+                      }
+                      if (state is ProfileLoading ||
+                          state is ProfileLogout ||
+                          state is ProfileInitial) {
+                        return _buildLoadingHeader(locale);
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                ),
+                SizedBox(height: 27.h),
+                // Figma insets the trip content to x=36 while the greeting row
+                // sits at x=15; the extra 20 lands here.
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: _buildTripContent(locale),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -222,69 +276,11 @@ class _SearchState extends State<SearchScreen>
   }
 
   Widget _buildLoadingHeader(dynamic locale) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Bounce(
-                onTap: () {
-                  context.jumpToShellTab(3);
-                },
-                child: DottedBorder(
-                  borderType: BorderType.Circle,
-                  padding: EdgeInsets.all(2.sp),
-                  color: mainTypographyColor(context),
-                  strokeWidth: 2.w,
-                  child: Container(
-                    padding: EdgeInsets.all(2.sp),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color: strokeGrayColor(context), width: 1.0.w),
-                    ),
-                    child: CircleAvatar(
-                      radius: 20.sp,
-                      backgroundColor: Colors.transparent,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 7.h),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AutoSizeText(
-                    '${locale.welcome2}',
-                    style: TextStyle(
-                      fontFamily: 'ThmanyahSans',
-                      color: headingColor(context),
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    minFontSize: 8,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  AutoSizeText(
-                    '${locale.letsBookCar}',
-                    style: TextStyle(
-                      color: paragraphColor(context),
-                      fontFamily: 'ThmanyahSans',
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
+    return _buildGreetingRow(
+      title: '${locale.welcome2}',
+      subtitle: '${locale.letsBookCar}',
+      avatar: null,
+      onAvatarTap: () => context.jumpToShellTab(3),
     );
   }
 
@@ -310,70 +306,76 @@ class _SearchState extends State<SearchScreen>
       _fetchPointsData(idNumber: idNumber);
     }
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Bounce(
-            onTap: () async {
-              final prefs = await SharedPreferences.getInstance();
-              final token = prefs.getString('token');
-              if (token != null) {
-                context.pushNamed(Routes.editProfile);
-              }
-            },
-            child: DottedBorder(
-              borderType: BorderType.Circle,
-              padding: EdgeInsets.all(2.sp),
-              color: mainTypographyColor(context),
-              strokeWidth: 2.w,
-              child: Container(
-                padding: EdgeInsets.all(2.sp),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                      color: strokeGrayColor(context), width: 1.0.w),
-                ),
+    return _buildGreetingRow(
+      title: '${locale.welcome}$profileName',
+      subtitle: '${locale.letsBookCar}',
+      avatar: avatarImage,
+      onAvatarTap: () async {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('token');
+        if (token != null) {
+          context.pushNamed(Routes.editProfile);
+        }
+      },
+    );
+  }
+
+  /// Figma lays the bell at the far edge and the greeting + avatar at the
+  /// opposite one. Under RTL the first child of a `Row` resolves to the right,
+  /// so greeting-then-bell puts the bell on the visual left in Arabic and on
+  /// the right in English — which is what each direction wants.
+  Widget _buildGreetingRow({
+    required String title,
+    required String subtitle,
+    required ImageProvider<Object>? avatar,
+    required VoidCallback onAvatarTap,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Flexible(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Bounce(
+                onTap: onAvatarTap,
                 child: CircleAvatar(
-                  radius: 20.sp,
-                  backgroundImage: avatarImage,
-                  backgroundColor: Colors.transparent,
+                  radius: 30.sp,
+                  backgroundImage: avatar,
+                  backgroundColor: onHeroPrimary.withValues(alpha: 0.15),
                 ),
               ),
-            ),
-          ),
-          SizedBox(width: 7.w),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+              SizedBox(width: 8.w),
+              Flexible(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     AutoSizeText(
-                      '${locale.welcome}$profileName',
-                      style: AppTypography.headingColor16(context),
+                      title,
+                      style: AppTypography.heroGreeting16(context),
+                      minFontSize: 8,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     AutoSizeText(
-                      '${locale.letsBookCar}',
-                      style: AppTypography.paragraphColor16(context),
+                      subtitle,
+                      style: AppTypography.heroSubtitle16(context),
+                      minFontSize: 8,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
-                Spacer(),
-              //  _buildNotificationButton(),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        SizedBox(width: 12.w),
+        // _buildNotificationButton(),
+      ],
     );
   }
   Widget _buildNotificationButton() {
@@ -383,11 +385,10 @@ class _SearchState extends State<SearchScreen>
       width: 45.w,
       height: 45.w,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: strokeGrayColor(context),
-          width: 1.5.w,
-        ),
+        // Fixed white — the bell sits on the navy hero panel in both themes.
+        color: onHeroPrimary,
+        shape: BoxShape.circle,
+        boxShadow: heroBellShadows,
       ),
       child: Center(
         child: SizedBox(
@@ -401,7 +402,10 @@ class _SearchState extends State<SearchScreen>
                 top: 1.h,
                 child: SvgPicture.asset(
                   'assets/icons/notifications_Icon.svg',
-                  color:Colors.blue,
+                  colorFilter: ColorFilter.mode(
+                    buttonColor(context),
+                    BlendMode.srcIn,
+                  ),
                   width: 21.w,
                   height: 23.h,
                 ),
@@ -427,135 +431,126 @@ class _SearchState extends State<SearchScreen>
     );
   }
 
-  Widget _buildTripCard(dynamic locale) {
-    return Container(
-      padding:  EdgeInsets.all(20.w),
-      width: double.infinity,
-      decoration: BoxDecoration(
-          color: iconBlueColor(context).withValues(alpha: .5),
-
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: strokeGrayColor(context), width: 1.5.w),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AutoSizeText(
-            locale.makeYourTripEasier,
-            style: AppTypography.headingColor26(context),
-          ),
-          AutoSizeText(
-            locale.enjoyWithUsInEveryDestination,
-            style: AppTypography.paragraphColor16(context),
-          ),
-          SizedBox(height: 16.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    locale.receivingBranch,
-                    style: AppTypography.headingColor14(context),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6.h),
-                    child: _responsiveButton(
-                      locale.branchs,
-                          () {
-                        BlocProvider.of<SearchCubit>(context)
-                            .clearAllDataSearched();
-                        context.pushNamed(Routes.classic);
-                      },
-                      Icon(
-                        Icons.store_mall_directory,
-                        color: strokeMainColor(context),
-                        size: 25.sp,
-
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    locale.receiveFromAirport,
-                    style: AppTypography.headingColor14(context),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6.h),
-                    child: _responsiveButton(
-                      locale.airports,
-                          () {
-                        BlocProvider.of<SearchCubit>(context)
-                            .clearAllDataSearched();
-                        BlocProvider.of<SearchCubit>(context)
-                            .getAirPortBranches();
-                        context.pushNamed(Routes.airportPackage);
-                      },
-                      Icon(
-                        Icons.airplane_ticket_outlined,
-                        color: strokeMainColor(context),
-                        size: 25.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-
-          SizedBox(height: 16.h),
-          Center(
-            child: InkWell(
+  Widget _buildTripContent(dynamic locale) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // No explicit textAlign: under RTL `start` already resolves to the
+        // right edge, and to the left edge in English.
+        AutoSizeText(
+          locale.makeYourTripEasier,
+          style: AppTypography.heroTitle22(context),
+          maxLines: 1,
+          minFontSize: 12,
+        ),
+        SizedBox(height: 4.h),
+        AutoSizeText(
+          locale.enjoyWithUsInEveryDestination,
+          style: AppTypography.heroSubtitle16(context),
+          maxLines: 1,
+          minFontSize: 10,
+        ),
+        SizedBox(height: 16.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            _heroField(
+              label: locale.receivingBranch,
+              value: locale.branchs,
+              icon: Icons.store_mall_directory,
               onTap: () {
-                context.pushNamed(Routes.searchAboutCar);
+                BlocProvider.of<SearchCubit>(context).clearAllDataSearched();
+                context.pushNamed(Routes.classic);
               },
-              child: ADGradientButton(
-                locale.searchCar,
-                icon: Icons.search_rounded,
-                height:45.h,
-                iconSize: 21.sp,
-                textStyle:AppTypography.buttonText18(context),
-
-              )
-              ,
             ),
-          )
-        ],
-      ),
+            _heroField(
+              label: locale.receiveFromAirport,
+              value: locale.airports,
+              icon: Icons.airplane_ticket_outlined,
+              onTap: () {
+                BlocProvider.of<SearchCubit>(context).clearAllDataSearched();
+                BlocProvider.of<SearchCubit>(context).getAirPortBranches();
+                context.pushNamed(Routes.airportPackage);
+              },
+            ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+        InkWell(
+          onTap: () {
+            context.pushNamed(Routes.searchAboutCar);
+          },
+          // Passing a solid backgroundColor disables ADGradientButton's
+          // gradient, giving the white-on-navy CTA the design calls for.
+          child: ADGradientButton(
+            locale.searchCar,
+            icon: Icons.search_rounded,
+            height: 45.hs(context),
+            iconSize: 21.sp,
+            backgroundColor: onHeroPrimary,
+            textColor: heroPanelGradient.colors.first,
+            iconColor: heroPanelGradient.colors.first,
+            textStyle: AppTypography.buttonText18(context)
+                .copyWith(fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _responsiveButton(String label, VoidCallback onTap, Icon icon) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          border: Border.all(color: backgroundColor(context), width: 1.5.w),
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.h,vertical: 10.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.headingColor16(context),
-                ),
-              ),
-              SizedBox(width: 18.w),
-              icon,
-            ],
+  /// One of the two hero selectors: a small bold label sitting above a
+  /// white-outlined pill. Fixed 142 wide so the pair spans the 320 content
+  /// column exactly (142 + 36 gap + 142).
+  Widget _heroField({
+    required String label,
+    required String value,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return SizedBox(
+      width: 142.w,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AutoSizeText(
+            label,
+            style: AppTypography.heroLabel12(context),
+            maxLines: 1,
+            minFontSize: 8,
           ),
-        ),
+          SizedBox(height: 8.h),
+          InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(10.r),
+            child: Container(
+              height: 42.hs(context),
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              decoration: BoxDecoration(
+                border: Border.all(color: onHeroPrimary, width: 1.5.w),
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: AutoSizeText(
+                      value,
+                      style: AppTypography.heroField16(context),
+                      maxLines: 1,
+                      minFontSize: 10,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Icon(icon, color: onHeroPrimary, size: 22.sp),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

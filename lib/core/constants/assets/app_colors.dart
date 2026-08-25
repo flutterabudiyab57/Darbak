@@ -273,3 +273,47 @@ const List<BoxShadow> buttonShadows = [
     offset: Offset(0, 1),
   ),
 ];
+
+// ===========================
+// Hero panel — fixed brand surface
+// ===========================
+// The home hero panel is navy in BOTH light and dark mode: it is a brand
+// surface, not a theme surface. So every token that lands on it is a plain
+// const, not a *Light / *Dark pair. Do NOT swap these for the dynamic
+// heading/paragraph functions — those resolve to navy in light mode and would
+// render navy-on-navy.
+
+/// Figma "Typography-white".
+const Color onHeroPrimary = Color(0xFFFFFFFF);
+
+/// Figma "Typography-paragraph-2" — white @ 70%.
+const Color onHeroSecondary = Color(0xB3FFFFFF);
+
+/// Figma "Typography-paragraph" — navy @ 80%. Distinct from [paragraphLight]
+/// (`#3B3B3B`); this one is the tinted-navy body colour used on BG-2 cards.
+const Color paragraphNavyLight = Color(0xCC021E45);
+
+/// Black @ 10% scrim Figma lays over the hero gradient to deepen it.
+const Color heroPanelScrim = Color(0x1A000000);
+
+/// Hero panel gradient.
+///
+/// Figma: 390x354 box, `linearGradient` from (0,0) to (1,1) in **normalized**
+/// 0..1 space — i.e. top-left to bottom-right. Normalized values map to
+/// [Alignment] via `(v * 2) - 1`, so (0,0) is `topLeft` and (1,1) is
+/// `bottomRight`. Pasting the raw `0..1` pair straight into `Alignment` (as
+/// the export does) would start the sweep at the box *centre* instead.
+const LinearGradient heroPanelGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [Color(0xFF021E45), Color(0xFF2172EF)],
+);
+
+/// Drop shadow on the hero notification bell.
+const List<BoxShadow> heroBellShadows = [
+  BoxShadow(
+    color: Color(0x28000000),
+    blurRadius: 4,
+    offset: Offset(0, 2),
+  ),
+];

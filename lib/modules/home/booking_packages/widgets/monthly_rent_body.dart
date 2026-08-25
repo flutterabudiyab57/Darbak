@@ -97,7 +97,7 @@ class _MonthlyRentBodyState extends State<MonthlyRentBody> {
                 )
                     : const SizedBox.shrink(),
                 SizedBox(height: 8.h),
-                MonthlyPackageWidget(onTap: () {}),
+                MonthlyPackageWidget(),
                 SizedBox(height: 12.h),
                 GridView.builder(
                   shrinkWrap: true,

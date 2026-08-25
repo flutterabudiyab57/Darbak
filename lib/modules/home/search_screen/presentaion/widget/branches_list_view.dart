@@ -161,8 +161,8 @@ class _BranchesListViewState extends State<BranchesListView> {
                             // Address
                             Row(
                               children: [
-                                Image.asset(
-                                  "assets/icons/new_branch_2.png",
+                                SvgPicture.asset(
+                                  'assets/icons/new_branch_2.svg',
                                   height: 27.h,
                                   width: 27.w,
                                 ),
