@@ -99,7 +99,7 @@ Map<String, String> english() {
     "choseBranch": "Choose the branch to receive",
     "invoice": "Final invoice",
     "filterCars": "Filter Cars",
-    "pricewithtax": "The price with tax:",
+    "pricewithtax": "The price with tax",
     "selectRegion": "Select Region",
     "workTime": "Work Time",
     "finish": "Bookings",

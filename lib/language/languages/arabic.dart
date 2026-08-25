@@ -115,7 +115,7 @@ Map<String, String> arabic() {
     "additions": "الاضافات",
     "rent": "قيمة الإيجار",
     "filterCars": "بحث",
-    "pricewithtax": "السعر شامل الضريبة:",
+    "pricewithtax": "السعر شامل الضريبة",
     "tam": "رسوم تفويض",
     "transfer": "تكلفة الشحن",
     "memberDiscount": "خصم العضوية",

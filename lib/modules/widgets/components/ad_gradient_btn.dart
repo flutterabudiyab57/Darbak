@@ -43,14 +43,22 @@ class ADGradientButton extends StatelessWidget {
       color: textColor ?? (textStyle ?? baseStyle).color,
     );
 
+    // A solid backgroundColor always wins and disables the gradient.
+    // Otherwise: custom gradient, or the app-wide default.
+    final bool useSolidColor = backgroundColor != null;
+    final Gradient? resolvedGradient =
+    useSolidColor ? null : (gradient ?? buttonGradient);
+
     return SizedBox(
       width: width ?? double.infinity,
       height: height ?? 50.hs(context),
       child: Container(
         decoration: BoxDecoration(
-          color: backgroundColor ?? buttonPrimaryBgColor(context),
+          color: useSolidColor ? backgroundColor : null,
+          gradient: resolvedGradient,
           borderRadius: BorderRadius.circular(15.r),
           border: border,
+          boxShadow: buttonShadows,
         ),
         child: Padding(
           padding:   EdgeInsets.symmetric(vertical: 2.w),

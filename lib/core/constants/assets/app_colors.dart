@@ -63,7 +63,7 @@ const Color iconGreenLight = Color(0xFF009966);
 const Color iconGreenDark = Color(0xFF009966);
 
 const Color iconBlueLight = Color(0xFF155DFC);
-const Color iconBlueDark  = Color(0xFF155DFC);
+const Color iconBlueDark  = Color(0xFF2172EF);
 const Color iconnavLight = Color(0xFF354B6A);
 const Color iconnavDark  = Color(0xFFD8D9DA);
 
@@ -235,7 +235,22 @@ LinearGradient gradient1(BuildContext context) => const LinearGradient(
 //   ],
 //   stops: const [0.0, 1.0],
 // );
+// ===========================
+// Gradients
+// ===========================
 
+/// Primary button gradient (same in Light & Dark).
+/// Source: Figma "SlotClone" — SVG linearGradient (79.67, 22) -> (96.58, 71.77)
+/// on a 240x40 box, converted to Flutter Alignment space:
+///   alignX = (px - centerX) / (width  / 2)
+///   alignY = (py - centerY) / (height / 2)
+/// Do NOT re-run _figmaToFlutter on these values — they are already converted.
+const LinearGradient buttonGradient = LinearGradient(
+  begin: Alignment(-0.361, 0.0),
+  end: Alignment(-0.220, 2.488),
+  colors: [Color(0xFF021E45), Color(0xFF2172EF)],
+  stops: [0.0285, 1.0],
+);
 LinearGradient secondary =  LinearGradient(
   begin: _figmaToFlutter(0.0, 0.5),
   end: _figmaToFlutter(1.0, 0.5),
@@ -245,3 +260,16 @@ LinearGradient secondary =  LinearGradient(
   ],
   stops: [0.0, 1.0],
 );
+const List<BoxShadow> buttonShadows = [
+  BoxShadow(
+    color: Color(0x19000000),
+    blurRadius: 2,
+    offset: Offset(0, 1),
+    spreadRadius: -1,
+  ),
+  BoxShadow(
+    color: Color(0x19000000),
+    blurRadius: 3,
+    offset: Offset(0, 1),
+  ),
+];

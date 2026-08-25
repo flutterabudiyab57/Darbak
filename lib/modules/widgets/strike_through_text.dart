@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../core/constants/assets/app_colors.dart';
+import '../../core/constants/assets/app_colors.dart';
 
 class StrikethroughText extends StatelessWidget {
   final String text;
   final TextStyle? style;
+  final List<Widget>? children;
 
   const StrikethroughText({
     Key? key,
     required this.text,
     this.style,
+    this.children,
   }) : super(key: key);
 
   @override
@@ -18,16 +20,22 @@ class StrikethroughText extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Text(
-          text,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: style ??
-              TextStyle(
-                fontFamily: "ThmanyahSans",
-                fontSize: 14.sp,
-                color: paragraphColor(context),
-              ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              text,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: style ??
+                  TextStyle(
+                    fontFamily: "ThmanyahSans",
+                    fontSize: 14.sp,
+                    color: paragraphColor(context),
+                  ),
+            ),
+            if (children != null) ...children!,
+          ],
         ),
         Positioned.fill(
           child: Center(
