@@ -148,6 +148,17 @@ class AppTypography {
         color: headingColor(context),
       );
 
+  /// App bar title — Figma "Typography-heading" 20/w700 with the -0.2 tracking
+  /// the design applies to nav titles. Distinct from [headingColor20], which is
+  /// w500 and used for in-page section headings.
+  static TextStyle appBarTitle20(BuildContext context) => TextStyle(
+        fontFamily: 'ThmanyahSans',
+        fontSize: 20.sp,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.20,
+        color: headingColor(context),
+      );
+
   static TextStyle headingColor20(BuildContext context) => TextStyle(
         fontFamily: 'ThmanyahSans',
         fontSize: 20.sp,
