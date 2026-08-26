@@ -162,7 +162,7 @@ class _SearchCarScreenState extends State<SearchCarScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset("assets/images/Delivery_Car.png",
+        Image.asset("assets/images/no_car.png",
             width: 250.w, height: 200.h, fit: BoxFit.cover),
         Text(
           locale.noResultsFound,
