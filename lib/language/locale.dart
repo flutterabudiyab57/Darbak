@@ -1422,6 +1422,16 @@ class AppLocalizations {
   String get welcome2 => _localizedValues[locale.languageCode]!['welcome2']!;
 
   String get yes => _localizedValues[locale.languageCode]!['yes']!;
+  String get personalProfile => _localizedValues[locale.languageCode]!['personalProfile']!;
+
+  String get drivingLicense => _localizedValues[locale.languageCode]!['drivingLicense']!;
+
+  String get notUploadedYet => _localizedValues[locale.languageCode]!['notUploadedYet']!;
+
+  String get requiredToCompleteBooking => _localizedValues[locale.languageCode]!['requiredToCompleteBooking']!;
+
+  String get tapToUploadImage => _localizedValues[locale.languageCode]!['tapToUploadImage']!;
+
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

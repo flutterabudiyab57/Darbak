@@ -148,6 +148,82 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       }
     });
   }
+  /// The always-sent field set, taken from the cached profile.
+  ///
+  /// `POST /profile` appears to treat name/email/phone as required — the
+  /// original all-at-once [editProfile] backfilled them from the cached model
+  /// for exactly that reason — so every partial write ships them too and only
+  /// overrides the key the user actually touched.
+  Map<String, String> _baseFields(ProfileModel profileModel) => {
+        "name": profileModel.name ?? "",
+        "email": profileModel.email ?? "",
+        "phone": profileModel.phone ?? "",
+      };
+
+  /// Updates a single profile field.
+  ///
+  /// [EditProfileDataSource] passes its `data` map straight through to
+  /// `item.fields`, so no datasource change is needed for a partial write.
+  Future<void> updateField({
+    required String key,
+    required String value,
+    required ProfileModel profileModel,
+  }) async {
+    emit(EditProfileLoading());
+    try {
+      final data = _baseFields(profileModel);
+      data[key] = value;
+
+      await editProfileDataSource.editProfile(
+        image: "",
+        licenceImage: "",
+        data: data,
+      );
+      emit(EditProfileLoaded());
+    } catch (e) {
+      log(e.toString());
+      emit(EditProfileError(e.toString()));
+    }
+  }
+
+  /// Uploads a new avatar, leaving the text fields at their current values.
+  Future<void> uploadAvatar(
+    String path, {
+    required ProfileModel profileModel,
+  }) async {
+    emit(EditProfileLoading());
+    try {
+      await editProfileDataSource.editProfile(
+        image: path,
+        licenceImage: "",
+        data: _baseFields(profileModel),
+      );
+      emit(EditProfileLoaded());
+    } catch (e) {
+      log(e.toString());
+      emit(EditProfileError(e.toString()));
+    }
+  }
+
+  /// Uploads a new driving-licence image, leaving the text fields untouched.
+  Future<void> uploadLicence(
+    String path, {
+    required ProfileModel profileModel,
+  }) async {
+    emit(EditProfileLoading());
+    try {
+      await editProfileDataSource.editProfile(
+        image: "",
+        licenceImage: path,
+        data: _baseFields(profileModel),
+      );
+      emit(EditProfileLoaded());
+    } catch (e) {
+      log(e.toString());
+      emit(EditProfileError(e.toString()));
+    }
+  }
+
   Future<void> editProfile({
     required String image,
     required String name,

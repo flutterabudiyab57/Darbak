@@ -441,6 +441,28 @@ class AppTypography {
         fontWeight: FontWeight.w700,
         color: onHeroPrimary,
       );
+  // Profile info rows — navy-tinted body text on a BG-2 card.
+  static TextStyle infoLabel16(BuildContext context) => TextStyle(
+        fontFamily: 'ThmanyahSans',
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.16,
+        color: paragraphNavyColor(context),
+      );
+  static TextStyle infoValue16(BuildContext context) => TextStyle(
+        fontFamily: 'ThmanyahSans',
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w400,
+        letterSpacing: -0.16,
+        color: paragraphNavyColor(context),
+      );
+  static TextStyle heroAppBarTitle20(BuildContext context) => TextStyle(
+        fontFamily: 'ThmanyahSans',
+        fontSize: 20.sp,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.20,
+        color: onHeroPrimary,
+      );
   static TextStyle heroLabel12(BuildContext context) => TextStyle(
         fontFamily: 'ThmanyahSans',
         fontSize: 12.sp,

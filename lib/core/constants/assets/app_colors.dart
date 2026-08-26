@@ -293,6 +293,16 @@ const Color onHeroSecondary = Color(0xB3FFFFFF);
 /// (`#3B3B3B`); this one is the tinted-navy body colour used on BG-2 cards.
 const Color paragraphNavyLight = Color(0xCC021E45);
 
+/// Dark counterpart. The navy tint only reads on the light `#E2E8EF` card; in
+/// dark mode those cards are `#111C2C`, so this falls back to the standard
+/// light-on-dark paragraph colour.
+const Color paragraphNavyDark = Color(0xFFCFCFCF);
+
+Color paragraphNavyColor(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.light
+        ? paragraphNavyLight
+        : paragraphNavyDark;
+
 /// Black @ 10% scrim Figma lays over the hero gradient to deepen it.
 const Color heroPanelScrim = Color(0x1A000000);
 
@@ -308,6 +318,10 @@ const LinearGradient heroPanelGradient = LinearGradient(
   end: Alignment.bottomRight,
   colors: [Color(0xFF021E45), Color(0xFF2172EF)],
 );
+
+/// Navy used for content that sits on a white/BG-2 chip *inside* the hero
+/// panel (the back button's arrow, the white search CTA's label).
+const Color heroNavy = Color(0xFF021E45);
 
 /// Drop shadow on the hero notification bell.
 const List<BoxShadow> heroBellShadows = [

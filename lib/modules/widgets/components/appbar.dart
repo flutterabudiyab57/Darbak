@@ -64,9 +64,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 class AnimatedThemeToggleButton extends StatelessWidget {
   final VoidCallback? onToggle;
+
+  /// Overrides the icon colour. Pass a fixed colour when the button sits on a
+  /// surface that does not follow the theme, such as the navy hero panel.
+  final Color? color;
+
   const AnimatedThemeToggleButton({
     Key? key,
     this.onToggle,
+    this.color,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -99,7 +105,7 @@ class AnimatedThemeToggleButton extends StatelessWidget {
                   child: Icon(
                     isDark ? Icons.dark_mode : Icons.light_mode,
                     key: ValueKey<bool>(isDark),
-                    color: strokeMainColor(context),
+                    color: color ?? strokeMainColor(context),
                     size: 32.sp,
                   ),
                 ),

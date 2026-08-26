@@ -19,6 +19,7 @@ import 'package:darbak/modules/shell/shell_bottom_bar_metrics.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/assets/app_colors.dart';
 import '../../../widgets/components/ad_gradient_btn.dart';
+import '../../../widgets/components/gradient_hero_panel.dart';
 import '../../booking_from_cars/presentaion/view/widget/branches_card.dart';
 import '../../../../core/constants/api_path.dart';
 import '../../../../core/constants/langCode.dart';
@@ -172,11 +173,7 @@ class _SearchState extends State<SearchScreen>
           // handles that inset instead.
           padding: EdgeInsets.zero,
           children: [
-            SizedBox(
-              height: _heroPanelHeight.hs(context) +
-                  MediaQuery.paddingOf(context).top,
-              child: _buildHeroPanel(locale),
-            ),
+            _buildHeroPanel(locale),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.w),
               child: Column(
@@ -219,58 +216,39 @@ class _SearchState extends State<SearchScreen>
   /// Figma frame is 390x844 — the same design size screenutil targets — so its
   /// pixels map 1:1 onto `.w` / `.h`.
   ///
-  /// The panel now lives inside the scroll view rather than in an `appBar`, so
-  /// nothing adds the status-bar inset for us any more: the call site adds
-  /// `MediaQuery.paddingOf(context).top` to this value explicitly.
+  /// The panel lives inside the scroll view rather than in an `appBar`;
+  /// [GradientHeroPanel] adds the status-bar inset on top of this value.
   static const double _heroPanelHeight = 400;
 
   Widget _buildHeroPanel(dynamic locale) {
-    final radius = BorderRadius.only(
-      bottomLeft: Radius.circular(32.r),
-      bottomRight: Radius.circular(32.r),
-    );
-
-    // Two nested boxes rather than `foregroundDecoration`: Figma stacks the
-    // 10% black scrim over the gradient but *under* the content, and a
-    // foreground decoration would paint over the text too.
-    return DecoratedBox(
-      decoration: BoxDecoration(gradient: heroPanelGradient, borderRadius: radius),
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: heroPanelScrim, borderRadius: radius),
-        child: SafeArea(
-          bottom: false,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(15.w, 15.h, 15.w, 32.h),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  child: BlocBuilder<ProfileCubit, ProfileState>(
-                    builder: (context, state) {
-                      if (state is ProfileSuccess || state is ProfileFailed) {
-                        return _buildProfileHeader(state, locale);
-                      }
-                      if (state is ProfileLoading ||
-                          state is ProfileLogout ||
-                          state is ProfileInitial) {
-                        return _buildLoadingHeader(locale);
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                ),
-                SizedBox(height: 27.h),
-                // Figma insets the trip content to x=36 while the greeting row
-                // sits at x=15; the extra 20 lands here.
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: _buildTripContent(locale),
-                ),
-              ],
-            ),
+    return GradientHeroPanel(
+      height: _heroPanelHeight.hs(context),
+      padding: EdgeInsets.fromLTRB(15.w, 15.h, 15.w, 32.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          BlocBuilder<ProfileCubit, ProfileState>(
+            builder: (context, state) {
+              if (state is ProfileSuccess || state is ProfileFailed) {
+                return _buildProfileHeader(state, locale);
+              }
+              if (state is ProfileLoading ||
+                  state is ProfileLogout ||
+                  state is ProfileInitial) {
+                return _buildLoadingHeader(locale);
+              }
+              return const SizedBox.shrink();
+            },
           ),
-        ),
+          SizedBox(height: 27.h),
+          // Figma insets the trip content to x=36 while the greeting row
+          // sits at x=15; the extra 20 lands here.
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: _buildTripContent(locale),
+          ),
+        ],
       ),
     );
   }
