@@ -1,17 +1,10 @@
 import 'dart:developer';
 
-import 'package:darbak/core/style/style.dart';
 import 'package:darbak/modules/home/profile/data/models/profile_model.dart';
 import 'package:darbak/modules/home/profile/page/edit_profile/datasources/remote/edit_remote_dataSource.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../../../../core/constants/assets/app_colors.dart';
-import '../../../../../../../language/locale.dart';
-import '../../../../../../widgets/Dashed_divider.dart';
-import '../../../../../../widgets/components/ad_gradient_btn.dart';
 import 'edit_profile_state.dart';
 
 class EditProfileCubit extends Cubit<EditProfileState> {
@@ -24,130 +17,35 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   String imagePathFace = "";
   String imagePathFaceLicence = "";
 
-  Future<void> _showImageSourceSheet(
-      BuildContext context, {
-        required Future<void> Function(ImageSource) onPick,
-      }) async {
-    final locale = AppLocalizations.of(context)!;
-    final isRTL = locale.isDirectionRTL(context);
-
-    final source = await showModalBottomSheet<ImageSource>(
-      useRootNavigator: true,
-      context: context,
-      constraints: const BoxConstraints(
-        maxWidth: double.infinity,
-      ),
-      backgroundColor: backgroundColor(context),
-      shape:   RoundedRectangleBorder(
-
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      builder: (sheetContext) => Builder(
-        builder: (innerContext) => SafeArea(
-          child: Wrap(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                child: Center(
-                  child: Container(
-                    width: 40.w,
-                    height: 4.h,
-                    decoration: BoxDecoration(
-                      color: strokeGrayColor(context),
-                      borderRadius: BorderRadius.circular(2.r),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-                child: Text(
-                  isRTL ? 'اختر مصدر الصورة' : 'Choose image source',
-                  style: AppTypography.headingColor18(context),
-                ),
-              ),
-              Divider(height: 1.h, color: strokeGrayColor(context)),
-              ListTile(
-                leading:Icon(
-                    Icons.photo_library_rounded,
-                    color: iconDefaultColor(context),
-                      size:18.sp
-                ),
-                title: Text(
-                  isRTL ? 'معرض الصور' : 'Photo Library',
-                  style: AppTypography.paragraphColor15(context),
-                ),
-                onTap: () => Navigator.pop(sheetContext, ImageSource.gallery),
-              ),
-              dashedDivider(context),
-              ListTile(
-                leading:  Icon(
-                    Icons.camera_alt_rounded,
-                    color: iconDefaultColor(context),
-                      size:18.sp
-                  ),
-
-                title: Text(
-                  isRTL ? 'الكاميرا' : 'Camera',
-                  style: AppTypography.paragraphColor15(context),
-                ),
-                onTap: () => Navigator.pop(sheetContext, ImageSource.camera),
-              ),
-              dashedDivider(context),
-
-              SizedBox(height: 8.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                child: GestureDetector(
-                  onTap: () => Navigator.pop(sheetContext),
-                  child: ADGradientButton(
-                    isRTL ? 'إلغاء' : 'Cancel',
-                    height: 50.h,
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 4.h),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    if (source != null) {
-      await onPick(source);
+  /// Picks a new avatar. The caller chooses the [source] — see
+  /// `showImageSourceSheet` — so this stays free of BuildContext and widgets.
+  Future<void> pickAvatar(ImageSource source) async {
+    emit(ImageProfileLodingState());
+    try {
+      final XFile? picked = await _picker.pickImage(source: source);
+      if (picked != null) {
+        imagePathFace = picked.path;
+      }
+      emit(ImageProfileScussesState());
+    } catch (e) {
+      emit(ImageProfileErrorState(error: e.toString()));
     }
   }
 
-  Future<void> getImage(BuildContext context) async {
-    await _showImageSourceSheet(context, onPick: (source) async {
-      emit(ImageProfileLodingState());
-      try {
-        final XFile? picked = await _picker.pickImage(source: source);
-        if (picked != null) {
-          imagePathFace = picked.path;
-          emit(ImageProfileScussesState());
-        }
-      } catch (e) {
-        emit(ImageProfileErrorState(error: e.toString()));
+  /// Picks a new driving-licence image.
+  Future<void> pickLicence(ImageSource source) async {
+    emit(ImageLicenceLoadingState());
+    try {
+      final XFile? picked = await _picker.pickImage(source: source);
+      if (picked != null) {
+        imagePathFaceLicence = picked.path;
       }
-    });
+      emit(ImageLicenceLSuccessState());
+    } catch (e) {
+      emit(ImageLicenceLErrorState(error: e.toString()));
+    }
   }
 
-  Future<void> getImageLicence(BuildContext context) async {
-    await _showImageSourceSheet(context, onPick: (source) async {
-      emit(ImageLicenceLoadingState());
-      try {
-        final XFile? picked = await _picker.pickImage(source: source);
-        if (picked != null) {
-          imagePathFaceLicence = picked.path;
-          emit(ImageLicenceLSuccessState());
-        }
-      } catch (e) {
-        emit(ImageLicenceLErrorState(error: e.toString()));
-      }
-    });
-  }
   /// The always-sent field set, taken from the cached profile.
   ///
   /// `POST /profile` appears to treat name/email/phone as required — the

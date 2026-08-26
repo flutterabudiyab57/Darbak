@@ -191,6 +191,8 @@ Map<String, String> english() {
     'days': 'Days',
     'done': 'Done',
     'to': 'TO: ',
+    'camera': 'Camera',
+    'chooseImageSource': 'Choose image source',
     'personalProfile': 'Personal Profile',
     'drivingLicense': 'Driving License',
     'notUploadedYet': 'Not uploaded yet ',

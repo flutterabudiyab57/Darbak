@@ -1422,6 +1422,10 @@ class AppLocalizations {
   String get welcome2 => _localizedValues[locale.languageCode]!['welcome2']!;
 
   String get yes => _localizedValues[locale.languageCode]!['yes']!;
+  String get camera => _localizedValues[locale.languageCode]!['camera']!;
+
+  String get chooseImageSource => _localizedValues[locale.languageCode]!['chooseImageSource']!;
+
   String get personalProfile => _localizedValues[locale.languageCode]!['personalProfile']!;
 
   String get drivingLicense => _localizedValues[locale.languageCode]!['drivingLicense']!;

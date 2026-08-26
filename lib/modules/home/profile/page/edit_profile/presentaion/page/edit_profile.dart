@@ -25,6 +25,7 @@ import '../../../../blocs/profile_cubit/profile_cubit.dart';
 import '../bloc/edit_profile_cubit.dart';
 import '../bloc/edit_profile_state.dart';
 import '../widget/edit_field_dialog.dart';
+import '../widget/image_source_sheet.dart';
 
 class EditProfile extends StatelessWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -243,7 +244,9 @@ class _EditProfileBody extends StatelessWidget {
             bottom: 0,
             child: Bounce(
               onTap: () async {
-                await cubit.getImage(context);
+                final source = await showImageSourceSheet(context);
+                if (source == null) return;
+                await cubit.pickAvatar(source);
                 if (cubit.imagePathFace.isNotEmpty) {
                   await cubit.uploadAvatar(
                     cubit.imagePathFace,
@@ -515,7 +518,9 @@ class _LicenceCard extends StatelessWidget {
   }
 
   Future<void> _pickAndUpload(BuildContext context) async {
-    await cubit.getImageLicence(context);
+    final source = await showImageSourceSheet(context);
+    if (source == null) return;
+    await cubit.pickLicence(source);
     if (cubit.imagePathFaceLicence.isNotEmpty) {
       await cubit.uploadLicence(
         cubit.imagePathFaceLicence,

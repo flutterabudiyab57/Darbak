@@ -197,6 +197,8 @@ Map<String, String> arabic() {
     'days': 'أيام',
     'done': 'تم',
     'to': 'إلي : ',
+    'camera': 'الكاميرا',
+    'chooseImageSource': 'اختر مصدر الصورة',
     'personalProfile': 'الملف الشخصي',
     'drivingLicense': 'رخصة القيادة',
     'notUploadedYet': 'لم ترفع بعد ',
