@@ -1,3 +1,4 @@
+import 'package:darbak/modules/home/selectLanguage/language_dialog.dart';
 import 'dart:ui';
 import 'package:darbak/core/style/style.dart';
 import 'package:flutter/material.dart';
@@ -184,8 +185,9 @@ class LoginNoAuth extends StatelessWidget {
             CardTileWidget(
                 title: locale.changeLanguage.toString(),
                 icon: Assets.profile_language,
+                trailing: const ActiveLanguageFlag(),
                 ontap: () {
-                  context.pushNamed(Routes.selectLanguage);
+                  showLanguageDialog(context);
                 }),
              CardTileWidget(
                 title: locale.privacyPolicy.toString(),

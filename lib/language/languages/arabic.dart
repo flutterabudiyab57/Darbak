@@ -212,7 +212,7 @@ Map<String, String> arabic() {
     'dummyRating': '4.5',
     'profile': 'الملف الشخصي',
     'english': 'الإنجليزية',
-    'arabic': 'عربى',
+    'arabic': 'العربية',
     'dummyDate1': '21 فبراير 2021',
     'sun': 'شمس',
     'mon': 'الإثنين',

@@ -1143,6 +1143,15 @@ class AppLocalizations {
     return _localizedValues[locale.languageCode]!['selectLanguage'];
   }
 
+  // Named *Language, not `english`/`arabic`: those are the top-level dictionary
+  // functions imported above, and an instance getter of the same name shadows
+  // them inside this class — breaking the _localizedValues initializer.
+  String get englishLanguage =>
+      _localizedValues[locale.languageCode]!['english']!;
+
+  String get arabicLanguage =>
+      _localizedValues[locale.languageCode]!['arabic']!;
+
   String? get wallet {
     return _localizedValues[locale.languageCode]!['wallet'];
   }

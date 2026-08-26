@@ -8,6 +8,8 @@ class Assets {
   static const String profile_favorites = "assets/icons/fav.svg";
   static const String profile_privacy = "assets/icons/lock.svg";
   static const String profile_language = "assets/icons/language.svg";
+  static const String flag_ar = "assets/icons/Flags.svg";
+  static const String flag_en = "assets/icons/england.svg";
   static const String logout = 'assets/icons/logouts1.svg';
   static const String callUs = 'assets/icons/callUs.svg';
   static const String prooff = 'assets/icons/prooff.svg';

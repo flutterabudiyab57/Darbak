@@ -1,3 +1,4 @@
+import 'package:darbak/modules/home/selectLanguage/language_dialog.dart';
 import 'package:darbak/core/router/routes.dart';
 import 'package:darbak/core/style/style.dart';
 import 'package:darbak/modules/home/profile/page/widget/login_noAuth.dart';
@@ -144,8 +145,9 @@ class _ProfileContentState extends State<_ProfileContent> {
           CardTileWidget(
             title: locale.selectLanguage.toString(),
             icon: Assets.profile_language,
+            trailing: const ActiveLanguageFlag(),
             ontap: () {
-              context.pushNamed(Routes.selectLanguage);
+              showLanguageDialog(context);
             },
           ),
           CardTileWidget(

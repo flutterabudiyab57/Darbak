@@ -14,6 +14,7 @@ class CardTileWidget extends StatelessWidget {
     this.textcolor,
     this.isLogout = false,
     this.isBorder = true,
+    this.trailing,
   }) : super(key: key);
 
   final String title;
@@ -22,6 +23,10 @@ class CardTileWidget extends StatelessWidget {
   final bool isBorder;
   final Function()? ontap;
   final Color? textcolor;
+
+  /// Replaces the trailing chevron. Use it when the tile shows its current
+  /// value inline instead of navigating to a page that owns that value.
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +38,14 @@ class CardTileWidget extends StatelessWidget {
           height: 55.h,
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           decoration: BoxDecoration(
+            color: bg2Color(context),
             borderRadius: BorderRadius.circular(16.r),
-            border: isBorder
-                ? Border.all(
-              color: Colors.grey,
-              width: 2.w,
-            )
-                : null,
+            // border: isBorder
+            //     ? Border.all(
+            //   color: Colors.grey,
+            //   width: 2.w,
+            // )
+            //     : null,
           ),
           child: Row(
             children: [
@@ -59,7 +65,9 @@ class CardTileWidget extends StatelessWidget {
                   style: AppTypography.headingColor18(context),
                 ),
               ),
-              if (!isLogout)
+              if (trailing != null)
+                trailing!
+              else if (!isLogout)
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: textcolor ?? mainTypographyColor(context),
