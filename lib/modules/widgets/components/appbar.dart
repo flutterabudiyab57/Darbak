@@ -35,66 +35,106 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.only(
-      bottomLeft: Radius.circular(20.r),
-      bottomRight: Radius.circular(20.r),
-    );
-
-    // The shadow is painted here rather than through `elevation`: Material's
-    // elevation draws an ambient halo on every side, while Figma drops the
-    // shadow straight down. The bar is full-width, so the horizontal spread
-    // falls off-screen and only the bottom edge reads.
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: radius,
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0x33000000),
-            blurRadius: 6.r,
-            offset: Offset(0, 1.h),
-          ),
-        ],
+    return AppBar(
+      backgroundColor: backgroundColor(context),
+      // Material 3 tints the surface when content scrolls under the bar, which
+      // would drift the background off the design colour.
+      surfaceTintColor: Colors.transparent,
+      shadowColor: const Color(0x33000000),
+      elevation: 4,
+      scrolledUnderElevation: 4,
+      shape: _BottomBorderShape(
+        radius: Radius.circular(20.r),
+        side: BorderSide(width: 1.w, color: strokeGrayColor(context)),
       ),
-      child: AppBar(
-        backgroundColor: backgroundColor(context),
-        // Material 3 tints the surface when content scrolls under the bar, which
-        // would drift the background off the design colour.
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(width: 1.w, color: strokeGrayColor(context)),
-          borderRadius: radius,
-        ),
-        toolbarHeight: barHeight.hs(context),
-        centerTitle: true,
-        title: Text(title, style: AppTypography.appBarTitle20(context)),
-        leadingWidth: 55.w,
-        leading: showBackButton
-            ? Padding(
-                padding: EdgeInsetsDirectional.only(start: 20.w),
-                child: _CircleBackButton(
-                  onPressed: onBackPressed ?? () => Navigator.pop(context),
-                ),
-              )
-            : null,
-        automaticallyImplyLeading: showBackButton,
-        actions: [
-          if (showThemeToggle)
-            Padding(
-              padding: EdgeInsetsDirectional.only(end: 12.w),
-              child: AnimatedThemeToggleButton(
-                onToggle: onThemeToggle,
-                size: 23.sp,
+      toolbarHeight: barHeight.hs(context),
+      centerTitle: true,
+      title: Text(title, style: AppTypography.appBarTitle20(context)),
+      leadingWidth: 55.w,
+      leading: showBackButton
+          ? Padding(
+              padding: EdgeInsetsDirectional.only(start: 20.w),
+              child: _CircleBackButton(
+                onPressed: onBackPressed ?? () => Navigator.pop(context),
               ),
+            )
+          : null,
+      automaticallyImplyLeading: showBackButton,
+      actions: [
+        if (showThemeToggle)
+          Padding(
+            padding: EdgeInsetsDirectional.only(end: 12.w),
+            child: AnimatedThemeToggleButton(
+              onToggle: onThemeToggle,
+              size: 23.sp,
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 
   @override
   Size get preferredSize => Size.fromHeight(barHeight.h);
+}
+
+/// App bar outline: bottom-rounded silhouette, stroked on the bottom edge only.
+///
+/// Neither built-in option covers this. `Border(bottom: ...)` cannot be given a
+/// border radius, and `RoundedRectangleBorder`'s `side` strokes all four edges.
+/// Here [getOuterPath] still returns the full rounded rectangle — so Material's
+/// elevation shadow follows the real silhouette on every side — while [paint]
+/// clips to the bottom corner band before stroking, leaving only the bottom
+/// edge and its two corner arcs visible.
+class _BottomBorderShape extends ShapeBorder {
+  const _BottomBorderShape({required this.radius, required this.side});
+
+  final Radius radius;
+  final BorderSide side;
+
+  RRect _rrect(Rect rect) => RRect.fromRectAndCorners(
+        rect,
+        bottomLeft: radius,
+        bottomRight: radius,
+      );
+
+  @override
+  EdgeInsetsGeometry get dimensions => EdgeInsets.only(bottom: side.width);
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) =>
+      Path()..addRRect(_rrect(rect));
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
+      Path()..addRRect(_rrect(rect).deflate(side.width));
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+    if (side.style == BorderStyle.none) return;
+
+    canvas.save();
+    // The rounding begins at `bottom - radius.y`, so this band holds the bottom
+    // edge and the two corner arcs and nothing else. Clipping the full outline
+    // is exact, unlike rebuilding the arcs by hand.
+    canvas.clipRect(
+      Rect.fromLTRB(rect.left, rect.bottom - radius.y, rect.right, rect.bottom),
+    );
+    canvas.drawRRect(_rrect(rect).deflate(side.width / 2), side.toPaint());
+    canvas.restore();
+  }
+
+  @override
+  ShapeBorder scale(double t) =>
+      _BottomBorderShape(radius: radius * t, side: side.scale(t));
+
+  @override
+  bool operator ==(Object other) =>
+      other is _BottomBorderShape &&
+      other.radius == radius &&
+      other.side == side;
+
+  @override
+  int get hashCode => Object.hash(radius, side);
 }
 
 /// 35x35 BG-2 circle holding the back chevron, per the Figma nav spec.

@@ -84,8 +84,8 @@ class ShellBottomNavBar extends StatelessWidget {
     final pillHeight = 40.hs(context);
     final pillTop = (barHeight - pillHeight) / 2;
     // Constant regardless of selection — every slot reserves the same label
-    // offset in its (identical) widget tree; it's only visible where the
-    // slot is wide enough to reveal it (see ClipRect below).
+    // offset in its (identical) widget tree; only the selected slot actually
+    // shows the label (see the AnimatedOpacity in _NavSlot).
     final labelStart = leadingPadWidth + iconWidth + gapWidth;
 
     return Container(
@@ -272,22 +272,33 @@ class _NavSlot extends StatelessWidget {
               padding: EdgeInsetsDirectional.only(start: labelStart),
               child: Align(
                 alignment: AlignmentDirectional.centerStart,
-                // Lays the label out at its natural (or ellipsis-capped)
-                // width, independent of the slot's current animated width,
-                // so it never reflows/squeezes mid-slide — only how much of
-                // it the ClipRect above reveals changes.
-                child: OverflowBox(
-                  alignment: AlignmentDirectional.centerStart,
-                  minWidth: 0,
-                  maxWidth: double.infinity,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: reservedLabelWidth),
-                    child: Text(
-                      label,
-                      maxLines: 1,
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                      style: labelStyle,
+                // Visibility is driven by selection, not by geometry. The
+                // ClipRect above cannot hide an unselected label on its own:
+                // the label starts `labelStart` (38.w) into the slot while an
+                // unselected slot is (barWidth - pillWidth) / 3 wide — ~83.w
+                // at the 390 design width — so the clip reveals it instead of
+                // cutting it. That went unnoticed because the label colour is
+                // white in both themes and the light-mode bar is also white.
+                child: AnimatedOpacity(
+                  opacity: isSelected ? 1 : 0,
+                  duration: _kNavAnimDuration,
+                  curve: _kNavAnimCurve,
+                  // Still laid out while hidden: keeping the label in the tree
+                  // at its natural (or ellipsis-capped) width is what stops it
+                  // reflowing when the slot's width animates.
+                  child: OverflowBox(
+                    alignment: AlignmentDirectional.centerStart,
+                    minWidth: 0,
+                    maxWidth: double.infinity,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: reservedLabelWidth),
+                      child: Text(
+                        label,
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        style: labelStyle,
+                      ),
                     ),
                   ),
                 ),
