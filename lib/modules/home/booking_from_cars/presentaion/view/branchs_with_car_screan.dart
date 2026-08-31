@@ -88,8 +88,6 @@ class _BranchWithCarScreenState extends State<BranchWithCarScreen> {
                           cubit.updateDates(receiveDate, driveDate);
 
                           return RentalSummaryCard(
-                            receiveDate: receiveDate,
-                            driveDate: driveDate,
                             differenceInDays: cubit.differenceInDays,
                           );
                         },

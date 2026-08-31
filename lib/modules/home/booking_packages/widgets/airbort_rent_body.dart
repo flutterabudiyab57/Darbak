@@ -79,8 +79,6 @@ class _AirPortRentBodyState extends State<AirPortRentBody> {
                   ),
                  time_select_twoBox(context),
                 RentalSummaryCard(
-                  receiveDate: receiveDate,
-                  driveDate: driveDate,
                   differenceInDays: differenceInDays,
                 ),
                 dashedDivider(context),

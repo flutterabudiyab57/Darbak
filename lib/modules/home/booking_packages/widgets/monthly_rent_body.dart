@@ -138,8 +138,6 @@ class _MonthlyRentBodyState extends State<MonthlyRentBody> {
                 time_select_twoBox(context),
                 SizedBox(height: 12.h),
                 RentalSummaryCard(
-                  receiveDate: receiveDate,
-                  driveDate: driveDate,
                   differenceInDays: differenceInDays,
                 ),
                 SizedBox(height: 12.h),

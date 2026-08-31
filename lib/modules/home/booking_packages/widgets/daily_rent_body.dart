@@ -169,8 +169,6 @@ class _DailyRentBodyState extends State<DailyRentBody> {
                   time_select_twoBox(context),
                   SizedBox(height: 14.h,),
                   RentalSummaryCard(
-                    receiveDate: receiveDate,
-                    driveDate: driveDate,
                     differenceInDays: differenceInDays,
                   ),                  SizedBox(height: 20.h),
                   dashedDivider(context),

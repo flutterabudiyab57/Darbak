@@ -456,8 +456,6 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
                 time_select_twoBox(context),
                 SizedBox(height: 14.h),
                 RentalSummaryCard(
-                  receiveDate: receiveDate,
-                  driveDate: driveDate,
                   differenceInDays: differenceInDays,
                 ),
                 SizedBox(height: 12.h),
