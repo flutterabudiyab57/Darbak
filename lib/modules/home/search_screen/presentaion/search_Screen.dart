@@ -218,12 +218,12 @@ class _SearchState extends State<SearchScreen>
   ///
   /// The panel lives inside the scroll view rather than in an `appBar`;
   /// [GradientHeroPanel] adds the status-bar inset on top of this value.
-  static const double _heroPanelHeight = 400;
+  static const double _heroPanelHeight = 355;
 
   Widget _buildHeroPanel(dynamic locale) {
     return GradientHeroPanel(
       height: _heroPanelHeight.hs(context),
-      padding: EdgeInsets.fromLTRB(15.w, 15.h, 15.w, 32.h),
+      padding: EdgeInsets.fromLTRB(15.w, 15.h, 15.w, 16.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,

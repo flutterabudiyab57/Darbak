@@ -6,7 +6,9 @@ import 'package:darbak/modules/home/payment/data/models/invoice_model.dart' hide
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/constants/assets/app_colors.dart';
 import '../../../../core/helpers/interceptors/loading_indicator.dart';
+import '../../../../core/style/style.dart';
 import '../../../../shared/commponents.dart';
 import '../../additions/presentaion/blocs/addition_cubit/additions_cubit.dart';
 import '../../all_bookings/data/model/booking_model.dart';
@@ -360,7 +362,7 @@ class _InfoInvoiceNotCompletedWidgetState
                       ],
                     ),
                     SizedBox(
-                      height: 36.0,
+                      height: 36.h,
                       child: Divider(
                         color: Theme.of(context).colorScheme.primary,
                       ),
@@ -399,7 +401,14 @@ class _InfoInvoiceNotCompletedWidgetState
                         RowRentDetails(
                             title: locale.grandTotal.toString(),
                             resultTitle:
-                                stepModel.order!.generalTotal.toString()),
+                                stepModel.order!.generalTotal.toString(),
+                          titleColor: buttonRedColor(context),
+
+
+                        ),
+
+
+
                       ],
                     ),
                   ],

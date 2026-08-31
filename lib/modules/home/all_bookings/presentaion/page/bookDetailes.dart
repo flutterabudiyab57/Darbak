@@ -694,14 +694,13 @@ class RowRentDetails extends StatelessWidget {
     Key? key,
     required this.title,
     required this.resultTitle,
-    this.titleStyle,
-    this.resultStyle,
+    this.titleColor,
+
   }) : super(key: key);
 
   final String title;
   final String resultTitle;
-  final TextStyle? titleStyle;
-  final TextStyle? resultStyle;
+  final Color? titleColor;
 
   @override
   Widget build(BuildContext context) {
@@ -716,7 +715,9 @@ class RowRentDetails extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: titleStyle ?? AppTypography.headingColor16(context),
+            style:  AppTypography.headingColor16(context).copyWith(
+              color: titleColor ?? headingColor(context),
+            ),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           ),
@@ -724,14 +725,16 @@ class RowRentDetails extends StatelessWidget {
         SizedBox(width: 8.w),
         Text(
           resultTitle,
-          style: resultStyle ?? AppTypography.mainTypographyColor16(context),
+          style: AppTypography.mainTypographyColor16(context).copyWith(
+            color: titleColor ?? mainTypographyColor(context),
+          ),
         ),
         SizedBox(width: 5.w),
         SvgPicture.asset(
           Assets.icon_riyal,
           height: 18.h,
           width: 18.w,
-          color: mainTypographyColor(context),
+          color:titleColor?? mainTypographyColor(context),
         ),
         SizedBox(width: 4.w),
       ],

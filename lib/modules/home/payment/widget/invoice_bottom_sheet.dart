@@ -1,5 +1,6 @@
 import 'package:darbak/core/constants/assets/app_colors.dart';
 import 'package:darbak/core/style/style.dart';
+import 'package:darbak/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -87,7 +88,6 @@ class _InvoiceBottomSheetState extends State<InvoiceBottomSheet> {
                           ),
                         ),
                       ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -101,16 +101,12 @@ class _InvoiceBottomSheetState extends State<InvoiceBottomSheet> {
                           ),
                         ],
                       ),
-
                       dashedDivider(context),
-
                       RowRentDetails(
                         title: locale.total.toString(),
                         resultTitle: invoiceModel.total.toString(),
                       ),
-
                       dashedDivider(context),
-
                       Center(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -123,16 +119,14 @@ class _InvoiceBottomSheetState extends State<InvoiceBottomSheet> {
                           ],
                         ),
                       ),
-
                       if (_isNotZero(invoiceModel.carPrice))
                         RowRentDetails(
                           title:
                               "${widget.invoiceModel.diff} ${locale.daySuffix} / ${locale.rent.toString()}",
                           resultTitle:
-                          (double.parse(invoiceModel.carPrice ?? '0.0'))
-                              .toString(),
+                              (double.parse(invoiceModel.carPrice ?? '0.0'))
+                                  .toString(),
                         ),
-
                       ...invoiceModel.order!.orderAdditions
                           .where((addition) => _isNotZero(addition.price))
                           .map((addition) {
@@ -141,95 +135,82 @@ class _InvoiceBottomSheetState extends State<InvoiceBottomSheet> {
                           resultTitle: addition.price.toString(),
                         );
                       }).toList(),
-
                       if (_isNotZero(invoiceModel.authorizationFee))
                         RowRentDetails(
                           title: locale.tam.toString(),
                           resultTitle: invoiceModel.authorizationFee.toString(),
                         ),
-
                       if (_isNotZero(invoiceModel.areaPricing))
                         RowRentDetails(
                           title: locale.transfer.toString(),
                           resultTitle: invoiceModel.areaPricing.toString(),
                         ),
-
                       if (_isNotZero(invoiceModel.order?.visaAmout ?? 0))
                         RowRentDetails(
                           title: locale.visaDiscount.toString(),
                           resultTitle:
-                          invoiceModel.order?.visaAmout.toString() ?? 'N/A',
+                              invoiceModel.order?.visaAmout.toString() ?? 'N/A',
                         ),
-
                       dashedDivider(context),
-
                       if (_isNotZero(invoiceModel.price))
                         RowRentDetails(
                           title: locale.total2.toString(),
                           resultTitle: invoiceModel.price.toString(),
                         ),
-
                       dashedDivider(context),
-
                       if (_isNotZero(invoiceModel.membershipDiscount))
                         RowRentDetails(
                           title: locale.memberDiscount.toString(),
-                          resultTitle: invoiceModel.membershipDiscount.toString(),
+                          resultTitle:
+                              invoiceModel.membershipDiscount.toString(),
                         ),
-
                       if (_isNotZero(invoiceModel.carDiscount))
                         RowRentDetails(
                           title: locale.carDiscount.toString(),
+                          titleColor: buttonRedColor(context),
                           resultTitle: invoiceModel.carDiscount.toString(),
-                        ),
 
+                        ),
                       if (_isNotZero(invoiceModel.cashbackDiscount))
                         RowRentDetails(
                           title: locale.CashbackDiscount.toString(),
                           resultTitle: invoiceModel.cashbackDiscount.toString(),
                         ),
-
                       if (_isNotZero(widget.invoiceModel.deliveryValue))
                         RowRentDetails(
                           title: locale.deliveryValue,
                           resultTitle:
-                          widget.invoiceModel.deliveryValue.toString(),
+                              widget.invoiceModel.deliveryValue.toString(),
                         ),
-
                       dashedDivider(context),
-
                       if (_isNotZero(invoiceModel.beforeTax))
                         RowRentDetails(
                           title: locale.netAmount.toString(),
                           resultTitle: invoiceModel.beforeTax.toString(),
                         ),
-
                       dashedDivider(context),
-
                       if (_isNotZero(invoiceModel.taxValue))
                         RowRentDetails(
                           title: locale.taxValue.toString(),
                           resultTitle: invoiceModel.taxValue.toString(),
                         ),
-
                       if (_isNotZero(invoiceModel.couponValue))
                         RowRentDetails(
                           title: locale.couponDiscount,
                           resultTitle: invoiceModel.couponValue.toString(),
                         ),
-
                       if (_isNotZero(invoiceModel.pointsValue))
                         RowRentDetails(
                           title: locale.pointsDiscount,
                           resultTitle: invoiceModel.pointsValue.toString(),
                         ),
-
                       dashedDivider(context),
                       RowRentDetails(
                         title: locale.grandTotal.toString(),
-                        resultTitle: invoiceModel.total.toString(),
-                      ),
 
+                        resultTitle: invoiceModel.total.toString(),
+                        titleColor: buttonRedColor(context),
+                      ),
                       SizedBox(height: 10.h),
                     ],
                   ),
