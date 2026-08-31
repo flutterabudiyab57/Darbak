@@ -336,6 +336,12 @@ class AppTypography {
     fontWeight: FontWeight.bold,
     color: SecondaryTypographyColor(context),
   );
+  static TextStyle secondaryTypographyColor20w500(BuildContext context) => TextStyle(
+    fontFamily: 'ThmanyahSans',
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w500,
+    color: SecondaryTypographyColor(context),
+  );
   // ===========================
   // Primary Button Text Styles
   // ===========================

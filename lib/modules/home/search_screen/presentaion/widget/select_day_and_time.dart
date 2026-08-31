@@ -76,51 +76,68 @@ class _SelectDayAndTimeWidgetState extends State<SelectDayAndTimeWidget> {
         return GestureDetector(
           onTap: () => _showPicker(context, isRTL),
           child: Container(
-            width: double.infinity,
             padding:
-            EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+            EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
             decoration: BoxDecoration(
-              border: Border.all(
-                  color: strokeGrayColor(context), width: 1.5.w),
-              borderRadius: BorderRadius.circular(16.r),
+              color: backgroundColor(context),
+              borderRadius: BorderRadius.circular(15.r),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   widget.isReceive
-                      ? (isRTL ? 'حدد تاريخ الاستلام' : 'Pick-up')
-                      : (isRTL ? 'حدد تاريخ التسليم' : 'Drop-off'),
-                  style: AppTypography.headingColor16(context),
+                      ? (isRTL ? 'وقت الإستلام' : 'Pick-up')
+                      : (isRTL ? 'وقت التسليم' : 'Drop-off'),
+                  textAlign: TextAlign.center,
+                  style: AppTypography.secondaryTypographyColor20w500(context),
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 18.h),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.calendar_today_rounded,
-                        size: 15.sp,
-                        color: iconDefaultColor(context)),
-                    SizedBox(width: 6.w),
                     Text(
-                      DateFormat('EEE, d MMMM yyyy')
-                          .format(selectedDateTime),
-                      style:
-                      AppTypography.mainTypographyColor14(context),
+                      selectedDateTime.day.toString(),
+                      textAlign: TextAlign.center,
+                      style: AppTypography.headingColor18(context).copyWith(
+                        fontSize: 55.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                    const Spacer(),
-                    Icon(Icons.access_time_rounded,
-                        size: 15.sp,
-                        color: iconDefaultColor(context)),
-                    SizedBox(width: 4.w),
-                    Text(
-                      DateFormat('hh:mm a').format(selectedDateTime),
-                      style:
-                      AppTypography.mainTypographyColor14(context),
+
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          DateFormat('MMM').format(selectedDateTime),
+                          textAlign: TextAlign.center,
+                          style: AppTypography.headingColor18(context).copyWith(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          DateFormat('EEE').format(selectedDateTime),
+                          textAlign: TextAlign.center,
+                          style: AppTypography.headingColor18(context).copyWith(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 8.w),
-                    Icon(Icons.edit_outlined,
-                        size: 20.sp,
-                        color: mainTypographyColor(context)),
                   ],
+                ),
+                SizedBox(height: 18.h),
+                Text(
+                  DateFormat('h:mm a').format(selectedDateTime),
+                  textAlign: TextAlign.center,
+                  style: AppTypography.headingColor18(context).copyWith(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w700,
+                    color: paragraphNavyColor(context),
+                  ),
                 ),
               ],
             ),

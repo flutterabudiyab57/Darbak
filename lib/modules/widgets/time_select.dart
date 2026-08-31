@@ -1,43 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../core/constants/assets/app_colors.dart';
 import '../../core/style/style.dart';
 import '../../language/locale.dart';
 import '../home/search_screen/presentaion/widget/select_day_and_time.dart';
 
-Widget time_select_twoBox(BuildContext context) {
-  final locale = AppLocalizations.of(context);
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(20.r),
-    ),
-    child: Column(
+class TimeSelectTwoBox extends StatelessWidget {
+  const TimeSelectTwoBox({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = AppLocalizations.of(context);
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           locale!.selectDateAndTime.toString(),
           style: AppTypography.headingColor18(context),
         ),
-        SizedBox(height: 14.h),
-        SelectDayAndTimeWidget(isReceive: true),
-        SizedBox(height: 10.h),
-        // Center(
-        //   child: Cont ainer(
-        //     padding: EdgeInsets.all(6.r),
-        //     decoration: BoxDecoration(
-        //       color: mainTypographyColor(context).withValues(alpha: 0.08),
-        //       shape: BoxShape.circle,
-        //     ),
-        //     child: Icon(
-        //       Icons.arrow_downward_rounded,
-        //       size: 35.r,
-        //       color: mainTypographyColor(context),
-        //     ),
-        //   ),
-        // ),
-        SizedBox(height: 10.h),
-        SelectDayAndTimeWidget(isReceive: false),
+        SizedBox(height: 12.h),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(10.w),
+          decoration: BoxDecoration(
+            color: bg2Color(context),
+            borderRadius: BorderRadius.circular(18.r),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0x2D000000),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Expanded(child: SelectDayAndTimeWidget(isReceive: true)),
+              SizedBox(width: 6.w),
+              Expanded(child: SelectDayAndTimeWidget(isReceive: false)),
+            ],
+          ),
+        ),
       ],
-    ),
-  );
+    );
+  }
 }

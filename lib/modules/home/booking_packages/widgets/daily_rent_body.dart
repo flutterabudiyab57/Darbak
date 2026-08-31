@@ -166,7 +166,7 @@ class _DailyRentBodyState extends State<DailyRentBody> {
                   ),
 
                   SizedBox(height: 14.h),
-                  time_select_twoBox(context),
+                  const TimeSelectTwoBox(),
                   SizedBox(height: 14.h,),
                   RentalSummaryCard(
                     differenceInDays: differenceInDays,

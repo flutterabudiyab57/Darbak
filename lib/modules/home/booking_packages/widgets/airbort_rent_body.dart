@@ -77,7 +77,7 @@ class _AirPortRentBodyState extends State<AirPortRentBody> {
                     regions: airportBranchesList,
                     isRecieve: true,
                   ),
-                 time_select_twoBox(context),
+                 const TimeSelectTwoBox(),
                 RentalSummaryCard(
                   differenceInDays: differenceInDays,
                 ),

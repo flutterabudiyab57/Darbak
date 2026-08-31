@@ -76,7 +76,7 @@ class _BranchWithCarScreenState extends State<BranchWithCarScreen> {
                       BranchTile(regions: state.branchModel.data, isRecieve: true),
                       SizedBox(height: 6.h),
 
-                      time_select_twoBox(context),
+                      const TimeSelectTwoBox(),
                       SizedBox(height: 10.h),
 
                       BlocBuilder<SearchCubit, SearchState>(
