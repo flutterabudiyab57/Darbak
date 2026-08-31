@@ -78,9 +78,7 @@ class _AirPortRentBodyState extends State<AirPortRentBody> {
                     isRecieve: true,
                   ),
                  const TimeSelectTwoBox(),
-                RentalSummaryCard(
-                  differenceInDays: differenceInDays,
-                ),
+                Center(child: RentalSummaryCard(differenceInDays: differenceInDays,)),
                 dashedDivider(context),
 
                 GestureDetector(

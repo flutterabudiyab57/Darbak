@@ -137,9 +137,8 @@ class _MonthlyRentBodyState extends State<MonthlyRentBody> {
                 SizedBox(height: 12.h),
                 const TimeSelectTwoBox(),
                 SizedBox(height: 12.h),
-                RentalSummaryCard(
-                  differenceInDays: differenceInDays,
-                ),
+                Center(child: RentalSummaryCard(differenceInDays: differenceInDays,)),
+
                 SizedBox(height: 12.h),
                 dashedDivider(context),
                 SizedBox(height: 15.h),

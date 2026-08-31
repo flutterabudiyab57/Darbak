@@ -168,9 +168,8 @@ class _DailyRentBodyState extends State<DailyRentBody> {
                   SizedBox(height: 14.h),
                   const TimeSelectTwoBox(),
                   SizedBox(height: 14.h,),
-                  RentalSummaryCard(
-                    differenceInDays: differenceInDays,
-                  ),                  SizedBox(height: 20.h),
+                  Center(child: RentalSummaryCard(differenceInDays: differenceInDays,)),
+                  SizedBox(height: 20.h),
                   dashedDivider(context),
                   SizedBox(height: 20.h),
                   GestureDetector(
