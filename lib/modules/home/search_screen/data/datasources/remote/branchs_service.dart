@@ -7,34 +7,48 @@ import 'package:http/http.dart' as http;
 class BranchesService {
   static Future<List<BranchModel>> getBranches({
     String languageCode = 'en',
-    int pageIndex = 1,
     int? regionId,
     int perPage = 60,
   }) async {
-    final queryParams = {
-      "home_delivery": "0",
-      "page": pageIndex.toString(),
-      "regions": regionId?.toString(),
-      "perPage": perPage.toString(),
-    };
+    const int maxPages = 10;
+    final List<BranchModel> allBranches = [];
 
-    final uri = Uri.parse(mainApi + '/branches').replace(queryParameters: queryParams);
-    var response = await http.get(
-      uri,
-      headers: {
-        "Content-Type": "application/json",
-        "Accept-Language": langCode.isEmpty ? "en" : langCode,
-      },
-    );
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body) as Map<String, dynamic>;
-      List list = data['data'] as List;
-      List<BranchModel> list2 = list.map((item) => BranchModel.fromMap(item)).toList();
-      return list2;
-    } else {
-      print(response.statusCode);
-      throw Exception(response.body);
-    }
+    int currentPage = 1;
+    int lastPage = 1;
+
+    do {
+      final queryParams = {
+        "home_delivery": "0",
+        "page": currentPage.toString(),
+        "regions": regionId?.toString(),
+        "perPage": perPage.toString(),
+      };
+
+      final uri = Uri.parse(mainApi + '/branches').replace(queryParameters: queryParams);
+      var response = await http.get(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+          "Accept-Language": langCode.isEmpty ? "en" : langCode,
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body) as Map<String, dynamic>;
+        List list = data['data'] as List;
+        allBranches.addAll(list.map((item) => BranchModel.fromMap(item)));
+
+        final meta = data['meta'] as Map<String, dynamic>?;
+        final metaLastPage = meta != null ? meta['last_page'] : null;
+        lastPage = metaLastPage != null ? int.tryParse(metaLastPage.toString()) ?? 1 : 1;
+      } else {
+        print(response.statusCode);
+        throw Exception(response.body);
+      }
+
+      currentPage++;
+    } while (currentPage <= lastPage && currentPage <= maxPages);
+
+    return allBranches;
   }
   static Future<List<BranchModel>> getDeliveryBranches() async {
     var response = await http.get(

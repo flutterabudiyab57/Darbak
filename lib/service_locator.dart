@@ -84,7 +84,7 @@ Future<void> setup() async {
   sl.registerFactory(() => InvoiceCubit(sl(), sl(), sl(), sl()));
 
   // ✅ UPDATED: Branch Cubit with Repository
-  sl.registerFactory(() => AllBranchCubit(sl<BranchRepository>()));
+  sl.registerLazySingleton(() => AllBranchCubit(sl<BranchRepository>()));
 
   sl.registerFactory(() => BookingFromCarsCubit(sl()));
   sl.registerFactory(() => AllCarsCubit(sl()));

@@ -13,7 +13,6 @@ import '../../../core/helpers/helper_fun.dart';
 import '../../../core/router/routes.dart';
 import '../../../language/locale.dart';
 import '../../widgets/components/appbar.dart';
-import '../all_branching/bloc/all_branching_cubit.dart';
 import '../booking_packages/widgets/daily_rent_body.dart';
 import '../cars/presentaion/bloc/cubit/cars_cubit.dart';
 import '../profile/blocs/profile_cubit/profile_cubit.dart';
@@ -26,7 +25,6 @@ class Clasic extends StatefulWidget {
 
   static Widget entry() => MultiBlocProvider(
         providers: [
-          BlocProvider<AllBranchCubit>(create: (_) => sl<AllBranchCubit>()),
           BlocProvider<CarsCubit>(create: (_) => sl<CarsCubit>()),
         ],
         child: const Clasic(),

@@ -12,7 +12,10 @@ class AreasRemoteDatasource {
   Future<List<AreasModel>> getAreas({int pageIndex = 1, int? regionId}) async {
     try {
       final Response response = await _dio.get(
-          areas + "?region_id=$regionId",
+          areas,
+          queryParameters: {
+            if (regionId != null) "region_id": regionId,
+          },
           options: Options(
             headers: {
               "Content-Type": "application/json",

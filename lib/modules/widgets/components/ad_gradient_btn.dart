@@ -56,7 +56,7 @@ class ADGradientButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: useSolidColor ? backgroundColor : null,
           gradient: resolvedGradient,
-          borderRadius: BorderRadius.circular(15.r),
+          borderRadius: BorderRadius.circular(40.r),
           border: border,
           boxShadow: buttonShadows,
         ),

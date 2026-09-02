@@ -30,16 +30,12 @@ import '../../../shell/tab_jump.dart';
 import '../../../shell/tab_scroll_registry.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../../auth/signin/presentation/pages/signin_screen.dart';
-import 'package:darbak/service_locator.dart';
 
 
 class SearchScreen extends StatefulWidget {
   SearchScreen({Key? key}) : super(key: key);
 
-  static Widget entry() => BlocProvider<AllBranchCubit>(
-        create: (_) => sl<AllBranchCubit>(),
-        child: SearchScreen(),
-      );
+  static Widget entry() => SearchScreen();
 
   @override
   _SearchState createState() => _SearchState();

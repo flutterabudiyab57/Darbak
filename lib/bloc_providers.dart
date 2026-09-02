@@ -16,6 +16,7 @@ import 'modules/home/blocs/booking_cubit/booking_cubit.dart';
 import 'modules/home/payment/blocs/invoice_cubit.dart';
 import 'modules/home/profile/blocs/profile_cubit/profile_cubit.dart';
 import 'modules/home/search_screen/blocs/search_bloc/search_cubit.dart';
+import 'modules/home/all_branching/bloc/all_branching_cubit.dart';
 
 MultiBlocProvider CreateBlocProviders(BuildContext context) {
   return MultiBlocProvider(
@@ -27,6 +28,7 @@ MultiBlocProvider CreateBlocProviders(BuildContext context) {
       BlocProvider<AdditionsCubit>(create: (context) => sl<AdditionsCubit>()),
       BlocProvider<InvoiceCubit>(create: (context) => sl<InvoiceCubit>()),
       BlocProvider<SearchCubit>(create: (context) => sl<SearchCubit>()),
+      BlocProvider<AllBranchCubit>(create: (context) => sl<AllBranchCubit>()),
       BlocProvider<AllBookingCubit>(create: (context) => sl<AllBookingCubit>()),
       BlocProvider<ThemeCubit>(create: (context) => ThemeCubit()),
     ],

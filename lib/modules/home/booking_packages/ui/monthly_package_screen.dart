@@ -25,7 +25,6 @@ class MonthlyPackageScreen extends StatefulWidget {
 
   static Widget entry() => MultiBlocProvider(
         providers: [
-          BlocProvider<AllBranchCubit>(create: (_) => sl<AllBranchCubit>()),
           BlocProvider<CarsCubit>(create: (_) => sl<CarsCubit>()),
         ],
         child: const MonthlyPackageScreen(),

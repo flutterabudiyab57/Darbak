@@ -72,16 +72,20 @@ class _BranchesListViewState extends State<BranchesListView> {
     } else {
       BlocProvider.of<SearchCubit>(context).selectedDriveBranch =
           selectedBranch.name;
-      BlocProvider.of<SearchCubit>(context).selectedReceiveModel =
+      BlocProvider.of<SearchCubit>(context).selectedDriveModel =
           context.read<AllBranchCubit>().branchesData.firstWhere(
                 (b) => b.name == selectedBranch.name,
             orElse: () => fallbackBranch,
           );
     }
 
-    if (BlocProvider.of<SearchCubit>(context).selectedReceiveModel !=
-        fallbackBranch) {
-      BlocProvider.of<SearchCubit>(context).changeState();
+    final searchCubit = BlocProvider.of<SearchCubit>(context);
+    final justSelectedModel = widget.isReceive
+        ? searchCubit.selectedReceiveModel
+        : searchCubit.selectedDriveModel;
+
+    if (justSelectedModel != fallbackBranch) {
+      searchCubit.changeState();
     }
   }
 

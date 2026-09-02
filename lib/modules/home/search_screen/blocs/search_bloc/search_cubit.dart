@@ -136,21 +136,14 @@ class SearchCubit extends Cubit<SearchState> {
     }
   }
 
-  Future getBranches({int pageNumber = 1, int? regionId}) async {
+  Future getBranches({int? regionId}) async {
     emit(SearchLoading());
     try {
       final branches = await BranchesService.getBranches(
-        pageIndex: pageNumber,
         regionId: regionId,
       );
-      regionId != null
-          ? branchesData = branches
-          : branchesData.addAll(branches);
-      pageNumber++;
+      branchesData = branches;
       emit(SearchSuccess(branches));
-      if (pageNumber <= 3 && regionId == null) {
-        getBranches(pageNumber: pageNumber);
-      }
     } catch (error) {
       emit(SearchFailed(error.toString()));
     }
@@ -184,20 +177,12 @@ class SearchCubit extends Cubit<SearchState> {
     }
   }
 
-  Future getAllBranches({int pageNumber = 1, int? regionId}) async {
+  Future getAllBranches({int? regionId}) async {
     emit(SearchLoading());
     try {
-      final branches = await BranchesService.getBranches(
-        pageIndex: pageNumber,
-      );
-      regionId != null
-          ? branchesData = branches
-          : branchesData.addAll(branches);
-      pageNumber++;
+      final branches = await BranchesService.getBranches();
+      branchesData = branches;
       emit(SearchSuccess(branches));
-      if (pageNumber <= 3 && regionId == null) {
-        getBranches(pageNumber: pageNumber);
-      }
     } catch (error) {
       emit(SearchFailed(error.toString()));
     }
@@ -261,7 +246,7 @@ class SearchCubit extends Cubit<SearchState> {
         return dateFormat.format(date);
       }
 
-      String receivingId = selectedDriveModel!.id.toString();
+      String receivingId = selectedReceiveModel!.id.toString();
       String deliveryId = selectedDriveModel?.id.toString() ?? receivingId;
       String receivingDate = formatDateTime(receiveDateValue);
       String deliveryDate = formatDateTime(driveDateValue);
