@@ -1,6 +1,21 @@
 <!--
 SYNC IMPACT REPORT
 ==================
+Version change: 1.0.0 → 1.0.1 (PATCH — factual correction, no principle changed)
+
+Amended 2026-09-02:
+  Technology Constraints → Networking paragraph.
+  Corrected the factual claim that package:http "exists only in branchs_service.dart".
+  Codebase verification during /speckit-plan for feature 001 found 11 importing files
+  (see specs/001-region-branch-selection/research.md, R1). The paragraph now states that
+  package:http is legacy, that no new usage may be added, that branchs_service.dart is one
+  importer among several and the only one in feature 001's deletion scope, and that removing
+  the package entirely is separate, larger work.
+  The bans on package:http and bare Dio() for new code are UNCHANGED.
+  No principle was added, removed, or redefined. No other section touched.
+
+---- Previous entry ----
+
 Version change: [unfilled scaffold] → 1.0.0 (initial ratification)
 
 Modified principles:
@@ -71,9 +86,11 @@ begin a phase before the previous one has been device-verified.
 Equatable, get_it. Arabic-first RTL with English support.
 
 **Networking**: All HTTP goes through the shared configured Dio instance so interceptors and auth
-headers apply. Never use `package:http`. Never construct a bare `Dio()`. `package:http` is legacy
-and exists only in `branchs_service.dart`, which is scheduled for deletion; when it is removed,
-check whether `http` can be dropped from `pubspec.yaml` entirely.
+headers apply. Never use `package:http`. Never construct a bare `Dio()`. `package:http` is legacy.
+Never add a new usage — all new networking goes through the shared configured Dio. It is currently
+imported by multiple files across the codebase; `branchs_service.dart` is only one of them and is
+the only one in this feature's deletion scope. Removing the package entirely is a separate, larger
+piece of work and is not a goal of this feature.
 
 **Local storage**: This project uses the Hive CE fork — `hive_ce` and `hive_ce_flutter`. Never
 import `package:hive` or `package:hive_flutter`. Prefer storing raw JSON over generated
@@ -121,4 +138,4 @@ be updated on every amendment.
 **Compliance**: All PRs must verify compliance with these principles. A PR that introduces a
 violation of a NON-NEGOTIABLE principle MUST NOT be merged regardless of other review status.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-02 | **Last Amended**: 2026-09-02
+**Version**: 1.0.1 | **Ratified**: 2026-09-02 | **Last Amended**: 2026-09-02
