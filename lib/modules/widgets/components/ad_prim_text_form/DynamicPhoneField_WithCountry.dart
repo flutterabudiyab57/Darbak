@@ -179,16 +179,17 @@ class _DynamicPhoneFieldWithCountryState
                   child: Row(
                     children: [
                       Text(
-                        widget.selectedCountry?.flagEmoji ?? '🏳️',
-                        style: TextStyle(fontSize: 18.sp),
-                      ),
-                      Spacer(),
-                      Text(
                         widget.selectedCountry != null
                             ? '+${widget.selectedCountry!.phoneCode}'
                             : '+',
                         style: AppTypography.headingColor14(context),
                       ),
+                      Spacer(),
+                      Text(
+                        widget.selectedCountry?.flagEmoji ?? '🏳️',
+                        style: TextStyle(fontSize: 18.sp),
+                      ),
+
                     ],
                   ),
                 ),
