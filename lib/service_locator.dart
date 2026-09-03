@@ -55,6 +55,9 @@ import 'modules/home/search_screen/blocs/search_bloc/search_cubit.dart';
 import 'modules/home/search_screen/data/datasources/remote/areas_remote_datasource.dart';
 import 'modules/home/search_screen/data/datasources/remote/check_date_remote.dart';
 import 'modules/home/search_screen/data/datasources/remote/regions_remote_datasource.dart';
+import 'modules/location/data/location_cache.dart';
+import 'modules/location/data/location_remote_datasource.dart';
+import 'modules/location/data/location_repository.dart';
 
 GetIt sl = GetIt.instance;
 
@@ -137,6 +140,12 @@ Future<void> setup() async {
   sl.registerLazySingleton(() => CouponRemoteDatasource(sl()));
   sl.registerLazySingleton(() => AreasRemoteDatasource(sl()));
   sl.registerLazySingleton(() => NotificationsRemoteDataSource(sl<Dio>()));
+
+  // ==================== Location module (feature 001) ====================
+  // Data layer only in this phase — nothing wired to bloc_providers.dart yet.
+  sl.registerLazySingleton(() => LocationRemoteDataSource(sl<Dio>()));
+  sl.registerLazySingleton(() => LocationCache());
+  sl.registerLazySingleton(() => LocationRepository(sl<LocationRemoteDataSource>(), sl<LocationCache>()));
 
   // ✅ NEW: Branch Local DataSource
   sl.registerLazySingleton<BranchLocalDataSource>(
