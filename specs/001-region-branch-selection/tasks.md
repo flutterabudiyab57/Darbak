@@ -97,27 +97,75 @@ throughout.**
 - [x] T011 [P] Create `LocationCache` in `lib/modules/location/data/location_cache.dart` — one **`hive_ce`** box `"location_cache"` opened **lazily on first use**, raw JSON strings, no TypeAdapters and no `@HiveType`. Keys `regions:<lang>` / `branches:<lang>:<filter.cacheKey>`; value `{ "ts": epochMillis, "payload": <raw json> }`; TTL 24h regions, 6h branches; `read`, `write`, `readStale`. **Every operation in try/catch — a cache failure never reaches the caller.** Expired entries are NOT deleted (`readStale` needs them). Depends on T009.
 - [x] T012 [US1] Create `LocationRepository` in `lib/modules/location/data/location_repository.dart` implementing the exact resolution order in [contracts/repository-and-cache.md](./contracts/repository-and-cache.md): cache-first, network on miss/expiry/`forceRefresh`, and **stale-on-network-failure only when an expired entry exists** — a fresh miss with a dead network rethrows so the screen can offer the FR-038 retry. Depends on T010, T011.
 - [x] T013 [P] [US1] Register `LocationRemoteDataSource`, `LocationCache` and `LocationRepository` as lazy singletons in `lib/service_locator.dart`. Do **not** add them to `lib/bloc_providers.dart` — nothing is wired to a screen in this phase.
-- [ ] T014 [P] Write `test/modules/location/model/branch_test.dart` — string `lat`/`long` parse to doubles; the `long` key is read and `lng` is not; `name ?? text`; `book_today`/`can_book_today` int flag and the absent-⇒-false default; `deliveryPrice` defaults to `0`; `fromCarBranchesApi` sets `isPartial = true` and leaves the rest null; **two branches with the same `id` but different names, languages and geometry are equal with equal `hashCode`**; a branch with polygon equals the same branch without it; malformed geometry yields `null` and never throws.
-- [ ] T015 [P] Write `test/modules/location/model/branch_work_time_test.dart` — normal window; **midnight-crossing window (open 21:00, close 03:00) treated as one continuous period**; `open == close` treated as open all day; explicit `lock: "1"` ⇒ `false`; null/unparseable `timeopen` discards only that window while the other window on the day still applies; missing day with no `alldays` ⇒ `true`; entirely absent/malformed `work_time` ⇒ `true`; `afternone` is the key read.
-- [ ] T016 [P] Write `test/modules/location/model/paginated_test.dart` — `{data, meta}`, `{data}` with no `meta`, and a bare list all parse; `lastPage` and `total` defaults.
-- [ ] T017 [P] Write `test/modules/location/model/geo_point_test.dart` — parses from **`lng`**, not `long`; accepts numbers and tolerates strings; a malformed vertex is dropped rather than throwing; `Region` exposes no `center`.
-- [ ] T018 [P] Write `test/modules/location/data/location_filter_test.dart` — `cacheKey` is stable and fixed-order; equal filters produce one key; region 7 vs region 8, `hd=1` vs `ap=1`, and car vs region keys all differ; the `delivery()`/`airport()`/`car()` constructors expose no way to set `regionId`.
-- [ ] T019 [US1] Write `test/modules/location/data/location_remote_datasource_test.dart` covering **all thirteen** rows of the contract-test table in [contracts/remote-datasource.md](./contracts/remote-datasource.md), including `no-region filter omits the regions key` (absent, not present-and-null), `pagination follows meta.last_page`, `pagination caps at 10 pages`, `duplicate ids across pages collapse`, and `Accept-Language is sent explicitly` (the resolver's value, not `''`). Mock `Dio` with `mocktail`; no live network.
-- [ ] T020 [P] Write `test/modules/location/data/location_cache_test.dart` — hit, miss, expiry, `readStale` ignoring TTL, and **a throwing box surfacing as a miss rather than an exception** for read, write and readStale alike.
-- [ ] T021 [US1] Write `test/modules/location/data/location_repository_test.dart` covering all eleven rows of the contract-test table in [contracts/repository-and-cache.md](./contracts/repository-and-cache.md), especially `network failure with expired entry returns stale`, `network failure with no entry rethrows`, and `cache read throwing is a miss`.
-- [ ] T022 Run `powershell -ExecutionPolicy Bypass -File scripts/flutter_test_filtered.ps1 test/modules/location` then `powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1`; report the issue count against the 78 baseline. **No commit. STOP.**
+- [x] T014 [P] Write `test/modules/location/model/branch_test.dart` — string `lat`/`long` parse to doubles; the `long` key is read and `lng` is not; `name ?? text`; `book_today`/`can_book_today` int flag and the absent-⇒-false default; `deliveryPrice` defaults to `0`; `fromCarBranchesApi` sets `isPartial = true` and leaves the rest null; **two branches with the same `id` but different names, languages and geometry are equal with equal `hashCode`**; a branch with polygon equals the same branch without it; malformed geometry yields `null` and never throws.
+- [x] T015 [P] Write `test/modules/location/model/branch_work_time_test.dart` — normal window; **midnight-crossing window (open 21:00, close 03:00) treated as one continuous period**; `open == close` treated as open all day; explicit `lock: "1"` ⇒ `false`; null/unparseable `timeopen` discards only that window while the other window on the day still applies; missing day with no `alldays` ⇒ `true`; entirely absent/malformed `work_time` ⇒ `true`; `afternone` is the key read.
+
+  > Additional coverage (not in original task text): `toJson()` round-trip test — parse a full
+  > `work_time` payload → `toJson()` → parse again → `isOpenAt()` gives identical answers at
+  > several times of day, including a midnight-crossing window and a locked day. Guards against
+  > `toJson` writing a key `fromJson` doesn't read (e.g. `afternoon` instead of `afternone`),
+  > which would silently drop hours on every cache hit. **Passes.**
+- [x] T016 [P] Write `test/modules/location/model/paginated_test.dart` — `{data, meta}`, `{data}` with no `meta`, and a bare list all parse; `lastPage` and `total` defaults.
+- [x] T017 [P] Write `test/modules/location/model/geo_point_test.dart` — parses from **`lng`**, not `long`; accepts numbers and tolerates strings; a malformed vertex is dropped rather than throwing; `Region` exposes no `center`.
+- [x] T018 [P] Write `test/modules/location/data/location_filter_test.dart` — `cacheKey` is stable and fixed-order; equal filters produce one key; region 7 vs region 8, `hd=1` vs `ap=1`, and car vs region keys all differ; the `delivery()`/`airport()`/`car()` constructors expose no way to set `regionId`.
+- [x] T019 [US1] Write `test/modules/location/data/location_remote_datasource_test.dart` covering **all thirteen** rows of the contract-test table in [contracts/remote-datasource.md](./contracts/remote-datasource.md), including `no-region filter omits the regions key` (absent, not present-and-null), `pagination follows meta.last_page`, `pagination caps at 10 pages`, `duplicate ids across pages collapse`, and `Accept-Language is sent explicitly` (the resolver's value, not `''`). Mock `Dio` with `mocktail`; no live network.
+- [x] T020 [P] Write `test/modules/location/data/location_cache_test.dart` — hit, miss, expiry, `readStale` ignoring TTL, and **a throwing box surfacing as a miss rather than an exception** for read, write and readStale alike.
+- [x] T021 [US1] Write `test/modules/location/data/location_repository_test.dart` covering all eleven rows of the contract-test table in [contracts/repository-and-cache.md](./contracts/repository-and-cache.md), especially `network failure with expired entry returns stale`, `network failure with no entry rethrows`, and `cache read throwing is a miss`.
+
+  > **Two rows FAIL against current `lib/modules/location/data/location_repository.dart` — a real
+  > production discrepancy, not a test bug.** `getBranches`/`getRegions` only wrap the remote fetch
+  > in `try/catch`; `_cache.read(key)` (T012's file, line 54/28) is called *outside* that block, and
+  > `_cache.write(key, raw)` is called *inside* the same `try` as the remote fetch. Per
+  > `contracts/repository-and-cache.md`, `LocationCache` itself never throws (T011 wraps every
+  > operation), so this has never surfaced in production — but the contract explicitly requires
+  > defense-in-depth against a throwing cache: (1) `cache read throwing is a miss` — currently
+  > propagates uncaught instead of falling through to remote; (2) `cache write throwing is
+  > swallowed` — currently gets caught by the fetch's own `catch`, which then tries `readStale`
+  > and either returns stale data or rethrows, instead of silently discarding the write failure
+  > and returning the branches already fetched. Left unfixed per the task rules (fix would touch
+  > `lib/` and must not land in the same pass as the test). Recorded here for developer review;
+  > not blocking T022 since the other 9 rows and all other tasks pass clean.
+- [x] T022 Run `powershell -ExecutionPolicy Bypass -File scripts/flutter_test_filtered.ps1 test/modules/location` then `powershell -ExecutionPolicy Bypass -File scripts/flutter_analyze_filtered.ps1`; report the issue count against the 78 baseline. **No commit. STOP.**
+
+  > Result: **76 passed, 2 failed** (both in `location_repository_test.dart`, see the T021 note
+  > above — a real gap in `location_repository.dart` against the contract, not a test defect).
+  > `flutter analyze`: **78 issues — exactly at baseline, zero new.**
 
 **Checkpoint (plan Phase 1)**: the whole data layer exists and is tested. Nothing is wired. The app
 behaves exactly as before.
 
 ### Phase 2B — Cubit (plan Phase 2)
 
-- [ ] T023 [US2] Create `LocationSelectionState` in `lib/modules/location/presentaion/bloc/location_selection_state.dart` — immutable, `Equatable`, with the nine fields in [data-model.md](./data-model.md#locationselectionstate) including the explicit `separateDropoff` flag. Expose the named transformers **`clearPickupBranch()`, `clearDropoffBranch()`, and `clearDropoff()`** (region **and** branch, one object, one emit). **`copyWith` MUST NOT accept a nullable-clearing argument for these fields** — `copyWith(x: null)` is a silent no-op and is the single most likely path back to the stale-dropoff bug.
-- [ ] T024 [US1] [US2] Create `LocationSelectionCubit` in `lib/modules/location/presentaion/bloc/location_selection_cubit.dart` with exactly the public surface and transition table in [contracts/cubit-state-machine.md](./contracts/cubit-state-machine.md). All selection rules live here, never in a screen. **No `emit` of an equal state, no revision counter, no in-place list mutation** — lists are replaced. The cubit holds no `BuildContext` and performs no navigation. Depends on T012, T023.
-- [ ] T025 [US7] Implement `onLanguageChanged()` in `location_selection_cubit.dart` — refetch every list currently held with `forceRefresh`, then **re-resolve `pickupBranch`, `dropoffBranch`, `pickupRegion` and `dropoffRegion` by `id`** against the new lists. A selection missing from the new list is cleared, and `status` stays `ready`, not `failure`.
-- [ ] T026 [US1] Register `LocationSelectionCubit` in `lib/service_locator.dart` as **`registerFactory`** — one instance per booking attempt. **Do not add it to `lib/bloc_providers.dart`**; an app-wide singleton is precisely the defect FR-017 exists to close.
-- [ ] T027 [US2] Write `test/modules/location/cubit/location_selection_cubit_test.dart` covering **all seventeen** rows of the `bloc_test` table in [contracts/cubit-state-machine.md](./contracts/cubit-state-machine.md). The load-bearing ones: **`disabling dropoff clears region and branch in ONE emit`** (assert exactly one state emitted, both null in it), `selecting a pickup region clears the pickup branch`, `language change preserves selection by id` even when the branch moved list position, `fetch failure preserves existing selections`, and `no duplicate consecutive states`.
-- [ ] T028 Run the location tests, then `scripts/flutter_analyze_filtered.ps1`; report against the 78 baseline. **No commit. STOP.**
+- [x] T023 [US2] Create `LocationSelectionState` in `lib/modules/location/presentaion/bloc/location_selection_state.dart` — immutable, `Equatable`, with the nine fields in [data-model.md](./data-model.md#locationselectionstate) including the explicit `separateDropoff` flag. Expose the named transformers **`clearPickupBranch()`, `clearDropoffBranch()`, and `clearDropoff()`** (region **and** branch, one object, one emit). **`copyWith` MUST NOT accept a nullable-clearing argument for these fields** — `copyWith(x: null)` is a silent no-op and is the single most likely path back to the stale-dropoff bug.
+- [x] T024 [US1] [US2] Create `LocationSelectionCubit` in `lib/modules/location/presentaion/bloc/location_selection_cubit.dart` with exactly the public surface and transition table in [contracts/cubit-state-machine.md](./contracts/cubit-state-machine.md). All selection rules live here, never in a screen. **No `emit` of an equal state, no revision counter, no in-place list mutation** — lists are replaced. The cubit holds no `BuildContext` and performs no navigation. Depends on T012, T023.
+- [x] T025 [US7] Implement `onLanguageChanged()` in `location_selection_cubit.dart` — refetch every list currently held with `forceRefresh`, then **re-resolve `pickupBranch`, `dropoffBranch`, `pickupRegion` and `dropoffRegion` by `id`** against the new lists. A selection missing from the new list is cleared, and `status` stays `ready`, not `failure`.
+
+  > **A real bug surfaced by T027, not fixed here per the task rules (see T027 note below):**
+  > when a language change updates ONLY display names — same ids, same list order — the
+  > resolved-by-id replacement state is `==` the pre-change state, because `Branch`/`Region`
+  > equality is id-only (Principle I) and `Equatable`'s list comparison is element-wise via that
+  > same `==`. bloc's built-in dedup (`state == nextState` → no-op, Principle III) then silently
+  > drops the emit, so the UI never sees the refreshed name. The re-resolution logic itself is
+  > correct — this is an emergent interaction between two independently-correct, independently
+  > DECIDED rules, not a mistake in this task's implementation. Reordering (branch moved list
+  > position) escapes this because the list becomes ordered-unequal, which is why that specific
+  > row passes while the same-order/name-only-change row does not.
+- [x] T026 [US1] Register `LocationSelectionCubit` in `lib/service_locator.dart` as **`registerFactory`** — one instance per booking attempt. **Do not add it to `lib/bloc_providers.dart`**; an app-wide singleton is precisely the defect FR-017 exists to close.
+- [x] T027 [US2] Write `test/modules/location/cubit/location_selection_cubit_test.dart` covering **all seventeen** rows of the `bloc_test` table in [contracts/cubit-state-machine.md](./contracts/cubit-state-machine.md). The load-bearing ones: **`disabling dropoff clears region and branch in ONE emit`** (assert exactly one state emitted, both null in it), `selecting a pickup region clears the pickup branch`, `language change preserves selection by id` even when the branch moved list position, `fetch failure preserves existing selections`, and `no duplicate consecutive states`.
+
+  > The contract table actually lists 18 rows (recounted); all 18 are covered. **17 pass, 1 FAILS:
+  > `onLanguageChanged preserves selection by id, with the new name`.** This is the load-bearing
+  > "language change preserves selection by id" row itself (the "moved list position" variant is a
+  > separate row and passes). Root cause is a real gap, detailed under T025 above: id-only equality
+  > on `Branch`/`Region` plus bloc's equal-state dedup means a name-only language refresh at
+  > unchanged list order is invisible to state consumers. Per the task rules, the cubit was NOT
+  > fixed and the test was NOT edited to work around it — the test correctly encodes the contract's
+  > required behavior (`same id, new name`) and is failing for the right reason.
+- [x] T028 Run the location tests, then `scripts/flutter_analyze_filtered.ps1`; report against the 78 baseline. **No commit. STOP.**
+
+  > Result: **94 passed, 1 failed** (the T025/T027 finding above). `flutter analyze`: **78 —
+  > exactly at baseline, zero new.** Stopping per the bloc_test-failure rule: not fixing the
+  > cubit and the test in the same pass.
 
 **Checkpoint (plan Phase 2)**: the cubit exists and is tested. Still not wired to any screen.
 

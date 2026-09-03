@@ -145,6 +145,39 @@ Read as a description of the API payload rather than a modelling requirement, th
 conflict. Recorded so the narrowing is a visible decision rather than an omission. No action
 needed unless the developer disagrees.
 
+### BD-3 — `LocationSelectionState` carries `languageCode` — **RESOLVED: add the field**
+
+**Decision (developer): APPROVED. Add `languageCode` to `LocationSelectionState`.**
+
+Discovered during Phase 2's `bloc_test` coverage, not anticipated by the original architecture:
+`Branch`/`Region` equality is id-only (Principle I), and `Equatable`'s list comparison is
+element-wise on that same `==`. A language-only refresh that changes display names but not ids or
+list order produced a next-state genuinely `==` the current one — bloc's built-in equal-state
+dedup (Principle III) then correctly, silently dropped the emit, and a selected branch's name never
+refreshed after a language switch. FR-033 requires it to.
+
+**Rationale.** The state's actual meaning is not "these branches are selected" — it is "these
+branches are selected, rendered in a given language". `languageCode` was missing from that
+meaning, so two states differing only in display language were indistinguishable to `Equatable`.
+Adding it makes them genuinely different objects, so the emit passes under the ordinary equality
+rules. This is not a revision counter and does not violate Principle III: a revision counter
+increments to force a rebuild with no meaning attached to its value; `languageCode` carries real,
+user-visible meaning and changes only when the language actually changes.
+
+**Rejected alternatives:**
+
+- **Add `name` to `Branch`/`Region` equality.** Violates Principle I, and breaks Phase 6: the car
+  endpoint returns the name under `text`, in the request's language; cross-endpoint id equality
+  between `/branches`' `name` and `/available/branches/{carId}`'s `text` is load-bearing there.
+- **A forced emit or a revision counter.** Violates Principle III directly.
+
+**Known residual, accepted.** This resolves the language case only. A backend rename with no
+language change involved would still be swallowed by the same dedup. Considered much rarer than a
+language switch; not addressed here.
+
+Full writeup, including the incidental-pass note on the "branch moved list position" test row:
+[contracts/cubit-state-machine.md](./contracts/cubit-state-machine.md#languagecode--why-the-state-carries-the-active-language).
+
 ## Project Structure
 
 ### Documentation (this feature)

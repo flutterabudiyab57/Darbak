@@ -25,51 +25,88 @@ class LocationRepository {
     final key = 'regions:$_lang';
 
     if (!forceRefresh) {
-      final cached = await _cache.read(key);
+      final cached = await _safeCacheRead(key);
       if (cached != null) {
         final decoded = _tryDecodeRegions(cached);
         if (decoded != null) return decoded;
       }
     }
 
+    final List<Region> regions;
     try {
-      final regions = await _remote.getRegions();
-      final raw = json.encode(regions.map(_regionToJson).toList());
-      await _cache.write(key, raw);
-      return regions;
+      regions = await _remote.getRegions();
     } catch (e) {
-      final stale = await _cache.readStale(key);
+      final stale = await _safeCacheReadStale(key);
       if (stale != null) {
         final decoded = _tryDecodeRegions(stale);
         if (decoded != null) return decoded;
       }
       rethrow;
     }
+
+    // The fetch already succeeded — a cache write failure must never affect
+    // what the caller receives, so it is guarded independently of the fetch.
+    await _safeCacheWrite(key, json.encode(regions.map(_regionToJson).toList()));
+    return regions;
   }
 
   Future<List<Branch>> getBranches(LocationFilter filter, {bool forceRefresh = false}) async {
     final key = 'branches:$_lang:${filter.cacheKey}';
 
     if (!forceRefresh) {
-      final cached = await _cache.read(key);
+      final cached = await _safeCacheRead(key);
       if (cached != null) {
         final decoded = _tryDecodeBranches(cached);
         if (decoded != null) return decoded;
       }
     }
 
+    final List<Branch> branches;
     try {
-      final branches = await _remote.getBranches(filter);
-      final raw = json.encode(branches.map(_branchToJson).toList());
-      await _cache.write(key, raw);
-      return branches;
+      branches = await _remote.getBranches(filter);
     } catch (e) {
-      final stale = await _cache.readStale(key);
+      final stale = await _safeCacheReadStale(key);
       if (stale != null) {
         final decoded = _tryDecodeBranches(stale);
         if (decoded != null) return decoded;
       }
       rethrow;
+    }
+
+    // The fetch already succeeded — a cache write failure must never affect
+    // what the caller receives, so it is guarded independently of the fetch.
+    await _safeCacheWrite(key, json.encode(branches.map(_branchToJson).toList()));
+    return branches;
+  }
+
+  // A second, repository-level guard against a throwing LocationCache — the
+  // contract requires this independently of LocationCache's own try/catch,
+  // so a future regression in that layer degrades to a cache miss here
+  // rather than turning into an unhandled exception or a wrong fallback path.
+
+  Future<String?> _safeCacheRead(String key) async {
+    try {
+      return await _cache.read(key);
+    } catch (e) {
+      log('⚠️ LocationRepository: cache.read threw for "$key", treating as a miss: $e');
+      return null;
+    }
+  }
+
+  Future<String?> _safeCacheReadStale(String key) async {
+    try {
+      return await _cache.readStale(key);
+    } catch (e) {
+      log('⚠️ LocationRepository: cache.readStale threw for "$key", treating as a miss: $e');
+      return null;
+    }
+  }
+
+  Future<void> _safeCacheWrite(String key, String payload) async {
+    try {
+      await _cache.write(key, payload);
+    } catch (e) {
+      log('⚠️ LocationRepository: cache.write threw for "$key", ignoring: $e');
     }
   }
 

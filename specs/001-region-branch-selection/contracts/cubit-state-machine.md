@@ -17,6 +17,64 @@ State fields are in [data-model.md](../data-model.md#locationselectionstate).
   place then re-emitted. Lists are replaced, never mutated.
 - The cubit holds **no `BuildContext`** and performs **no navigation**.
 
+## `languageCode` — why the state carries the active language
+
+`LocationSelectionState` carries a `languageCode` field (a `String`, initialised from
+`currentLocationLanguage()` — [T009](../research.md#r5), the same resolver the datasource and
+cache use). It is included in `Equatable`'s `props`.
+
+**The problem it fixes.** `Branch`/`Region` equality is id-only (Constitution Principle I), and
+`Equatable`'s list comparison is element-wise using that same `==`. A language-only refresh that
+changes display names but not ids or list order therefore produces a next-state that is genuinely
+`==` the current one. bloc's built-in equal-state dedup (Principle III — no manual emit of an
+unchanged value) then correctly, silently drops the emit, and the UI never sees the refreshed
+names. This was caught by `bloc_test` in Phase 2 ("language change preserves selection by id, with
+the new name") — the test failed, correctly, against an implementation that was otherwise faithful
+to this contract.
+
+**The fix.** The state's actual meaning is not "these branches are selected" — it is "these
+branches are selected, rendered in a given language". `languageCode` was missing from that
+meaning, so two states that differed only in display language were indistinguishable to
+`Equatable`. Adding it makes them genuinely different objects, so the emit passes under the
+**ordinary** equality rules — no special-casing, no bypass.
+
+`onLanguageChanged()` sets `languageCode` to the new code as part of the same single state object
+it already builds from the re-resolved selections. **One emit, not two** — it is set via the same
+`copyWith` call that sets `status`/`pickupOptions`/`dropoffOptions`/`pickupRegion`, not a separate
+one.
+
+**Why this is not a revision counter, and does not violate Principle III.** A revision counter
+increments on every rebuild-forcing intent with no meaning attached to its value — it exists only
+to defeat equality. `languageCode` carries real, user-visible meaning (which language the renter
+is looking at) and changes **only** when the language actually changes. Principle III prohibits
+manufacturing inequality to force a rebuild; this is not that — it is completing the state's
+definition so that equality itself is correct.
+
+**Rejected alternatives:**
+
+- **Add `name` to `Branch`/`Region` equality.** Rejected: violates Principle I directly, and
+  breaks Phase 6 (book-from-a-specific-car). The car endpoint returns the branch name under
+  `text`, localized to the request's `Accept-Language`; cross-endpoint id equality between
+  `/branches`' `name` and `/available/branches/{carId}`'s `text` is load-bearing there. Making
+  equality name-sensitive would make the same branch, arriving from two endpoints in one
+  language, compare unequal.
+- **A forced emit or a revision counter.** Rejected: violates Principle III directly — "no manual
+  state emission to force rebuilds" is explicit and non-negotiable in this contract's Governing
+  rules above.
+
+**An incidental near-miss, recorded so it isn't mistaken for coverage.** The `bloc_test` row
+"language change preserves selection when the branch moved list position" passed even *before*
+`languageCode` existed. That was not the fix working — reordering makes the two option lists
+compare unequal at the index level (element 0 differs) regardless of id-only equality on the
+elements themselves, so that specific case escaped the dedup by accident. It says nothing about
+the same-order, name-only case, which is why that needed — and has — its own row.
+
+**Known residual, accepted, not fixed here.** This resolves the *language* case only. If the
+backend renames a branch with no language change involved (a data correction, a rebrand), the same
+dedup-on-id-equality still swallows the emit, since nothing in the state changed under this fix's
+model of "state = selection + language". This is considered much rarer than a language switch and
+is accepted for now — it is not addressed by this change.
+
 ## Public surface
 
 ```text

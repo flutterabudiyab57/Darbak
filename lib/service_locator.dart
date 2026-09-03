@@ -58,6 +58,7 @@ import 'modules/home/search_screen/data/datasources/remote/regions_remote_dataso
 import 'modules/location/data/location_cache.dart';
 import 'modules/location/data/location_remote_datasource.dart';
 import 'modules/location/data/location_repository.dart';
+import 'modules/location/presentaion/bloc/location_selection_cubit.dart';
 
 GetIt sl = GetIt.instance;
 
@@ -146,6 +147,9 @@ Future<void> setup() async {
   sl.registerLazySingleton(() => LocationRemoteDataSource(sl<Dio>()));
   sl.registerLazySingleton(() => LocationCache());
   sl.registerLazySingleton(() => LocationRepository(sl<LocationRemoteDataSource>(), sl<LocationCache>()));
+  // One instance per booking attempt — an app-wide singleton is precisely
+  // the defect FR-017 exists to close. NOT added to bloc_providers.dart.
+  sl.registerFactory(() => LocationSelectionCubit(sl<LocationRepository>()));
 
   // ✅ NEW: Branch Local DataSource
   sl.registerLazySingleton<BranchLocalDataSource>(
