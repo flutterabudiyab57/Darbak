@@ -173,12 +173,35 @@ behaves exactly as before.
 
 Built **alongside** the old picker. `BranchesListView` and the old flow keep working untouched.
 
-- [ ] T029 [P] [US1] Create `BranchTile` in `lib/modules/location/presentaion/pages/branch_picker/branch_tile.dart` — renders name, address/region when present, and same-day availability, tolerating every field being null except `id` and `name` (US6 scenario 2). **Reads no cubit.** Keep it under `branch_picker/`, not in a shared widgets folder, so the Principle II grep gate covers it.
-- [ ] T030 [US1] [US2] Create `BranchPickerScreen` in `lib/modules/location/presentaion/pages/branch_picker_screen.dart` per [contracts/navigation-contract.md](./contracts/navigation-contract.md) — constructor parameters `List<Branch> branches`, `int? selectedId`, `String? emptyMessage` and **nothing else** (no callback). Returns via `Navigator.pop(context, branch)` typed `Branch`. **Reads no cubit, scoped or global. Contains no `isReceive` flag or any equivalent by another name.** Marks the current selection by **`id`**, never by name or index. Renders `emptyMessage` for an empty list. All strings arrive already localized or come from `AppLocalizations` — no hardcoded UI text.
-- [ ] T031 [US1] [US2] Write `test/modules/location/pages/branch_picker_screen_test.dart` covering all six rows of the test table in [contracts/navigation-contract.md](./contracts/navigation-contract.md). **The first test is the guard**: pump the **full screen bare, with no `BlocProvider` ancestor at all**, in both the populated-list and empty-state cases so every helper widget actually builds. If it ever fails, remove the cubit read — **never "fix" it by wrapping the pump in a provider.**
-- [ ] T032 [US1] Run the Principle II static gate and confirm **zero** matches:
+- [x] T029 [P] [US1] Create `BranchTile` in `lib/modules/location/presentaion/pages/branch_picker/branch_tile.dart` — renders name, address/region when present, and same-day availability, tolerating every field being null except `id` and `name` (US6 scenario 2). **Reads no cubit.** Keep it under `branch_picker/`, not in a shared widgets folder, so the Principle II grep gate covers it.
+- [x] T030 [US1] [US2] Create `BranchPickerScreen` in `lib/modules/location/presentaion/pages/branch_picker_screen.dart` per [contracts/navigation-contract.md](./contracts/navigation-contract.md) — constructor parameters `List<Branch> branches`, `int? selectedId`, `String? emptyMessage` and **nothing else** (no callback). Returns via `Navigator.pop(context, branch)` typed `Branch`. **Reads no cubit, scoped or global. Contains no `isReceive` flag or any equivalent by another name.** Marks the current selection by **`id`**, never by name or index. Renders `emptyMessage` for an empty list. All strings arrive already localized or come from `AppLocalizations` — no hardcoded UI text.
+
+  > Added two new localization keys (`availableToday`, `noBranchesToShow`) to `english.dart`,
+  > `arabic.dart` and `locale.dart` per CLAUDE.md's no-hardcoded-UI-string rule — reused the
+  > existing `selectBranch` key for the app bar title. Uses `CustomAppBar` with
+  > `showThemeToggle` left at its `false` default, so its internal `AnimatedThemeToggleButton`
+  > (which does read `ThemeCubit`, a *global* singleton provided above the router) never
+  > mounts — the widget tree conditionally builds it only `if (showThemeToggle)`, so no cubit
+  > read occurs on this screen at all, satisfying the "reads no cubit, scoped or global" rule
+  > literally, not just for scoped cubits.
+- [x] T031 [US1] [US2] Write `test/modules/location/pages/branch_picker_screen_test.dart` covering all six rows of the test table in [contracts/navigation-contract.md](./contracts/navigation-contract.md). **The first test is the guard**: pump the **full screen bare, with no `BlocProvider` ancestor at all**, in both the populated-list and empty-state cases so every helper widget actually builds. If it ever fails, remove the cubit read — **never "fix" it by wrapping the pump in a provider.**
+
+  > All six rows covered, all pass. The guard test's own instruction ("never fix it by wrapping
+  > the pump in a provider — remove the cubit read instead") is written directly into that
+  > test's comment, not just here.
+- [x] T032 [US1] Run the Principle II static gate and confirm **zero** matches:
   `grep -rnE "context\.(read|watch)|BlocProvider\.of|BlocBuilder|BlocListener|BlocConsumer|BlocSelector|sl<" lib/modules/location/presentaion/pages/branch_picker_screen.dart lib/modules/location/presentaion/pages/branch_picker/`
-- [ ] T033 Run the location tests, then `scripts/flutter_analyze_filtered.ps1`; report against the 78 baseline. **No commit. STOP.**
+
+  > **Zero matches, confirmed** — but the first attempt was 3 false-positive hits, all inside
+  > `branch_picker_screen.dart`'s own doc comment, which had spelled out the forbidden API names
+  > literally (`context.read`, `BlocBuilder`, etc.) to explain the rule. The gate does not
+  > distinguish code from comments, so documenting the prohibition by name tripped it. Reworded
+  > the comment to describe the prohibition without using the literal tokens; re-ran, zero
+  > matches. Worth keeping in mind for any future doc comment near this file.
+- [x] T033 Run the location tests, then `scripts/flutter_analyze_filtered.ps1`; report against the 78 baseline. **No commit. STOP.**
+
+  > Result: **104 passed, 0 failed** (98 from Phase 2 + 6 new in `branch_picker_screen_test.dart`).
+  > `flutter analyze`: **78 — exactly at baseline, zero new.**
 
 **Checkpoint (plan Phase 3)**: the full new stack exists and is tested end to end in isolation. The
 old picker still serves every flow. **Foundation complete — flow conversion may begin.**

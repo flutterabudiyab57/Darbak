@@ -137,6 +137,8 @@ Map<String, String> english() {
     "newPassword": "New Password",
     "changePassword": "Change Password",
     'selectBranch': 'Select Branch',
+    'availableToday': 'Available Today',
+    'noBranchesToShow': 'No branches available',
     "forgetPassword": "Do You Forget Password?",
     "dontHaveAccount": "you don't have an account?  ",
     "uploadLicense": "Upload a picture of the license",

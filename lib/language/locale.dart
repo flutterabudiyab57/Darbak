@@ -907,6 +907,12 @@ class AppLocalizations {
     return _localizedValues[locale.languageCode]!['selectBranch'];
   }
 
+  String get availableToday =>
+      _localizedValues[locale.languageCode]!['availableToday']!;
+
+  String get noBranchesToShow =>
+      _localizedValues[locale.languageCode]!['noBranchesToShow']!;
+
   ///******************************************
   String? get titleOnboarding1 {
     return _localizedValues[locale.languageCode]!['titleOnboarding1'];

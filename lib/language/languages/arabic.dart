@@ -151,6 +151,8 @@ Map<String, String> arabic() {
     "noMethodSelected":
         "الرجاء اختيار طريقة الدفع \n والموافقه علي الشروط والاحكام لأستكمال الحجز ",
     'selectBranch': 'اختر فرع ',
+    'availableToday': 'متاح اليوم',
+    'noBranchesToShow': 'لا توجد فروع متاحة',
     'searchCar': 'ابحث عن سيارتك',
     "signIn": "تسجيل الدخول",
     'confirmPassword': "تاكيد كلمة المرور",
