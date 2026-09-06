@@ -13,19 +13,30 @@ import '../../../../core/constants/assets/app_colors.dart';
 import '../../../../core/router/routes.dart';
 import '../../../../language/locale.dart';
 import '../../../widgets/components/appbar.dart';
-import '../../all_branching/bloc/all_branching_cubit.dart';
 import '../../cars/presentaion/bloc/cubit/cars_cubit.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
 import '../widgets/monthly_rent_body.dart';
 import 'package:darbak/service_locator.dart';
+import 'package:darbak/modules/location/data/location_filter.dart';
+import 'package:darbak/modules/location/presentaion/bloc/location_selection_cubit.dart';
 
+/// T043: `LocationSelectionCubit` is provided here, screen-scoped
+/// (`registerFactory`, never added to `lib/bloc_providers.dart`), mirroring
+/// `Clasic`/`DailyPackages`'s existing convention. `/monthly-package` is a
+/// live route (pushed from `search_Screen.dart`), so — unlike the dead
+/// `/daily-package` route — this screen's `AllBranchCubit` usage is removed
+/// outright rather than left in place.
 class MonthlyPackageScreen extends StatefulWidget {
   const MonthlyPackageScreen({super.key});
 
   static Widget entry() => MultiBlocProvider(
         providers: [
           BlocProvider<CarsCubit>(create: (_) => sl<CarsCubit>()),
+          BlocProvider<LocationSelectionCubit>(
+            create: (_) => sl<LocationSelectionCubit>()
+              ..start(const LocationFilter.allRegions()),
+          ),
         ],
         child: const MonthlyPackageScreen(),
       );
@@ -38,7 +49,6 @@ class _MonthlyPackageScreenState extends State<MonthlyPackageScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<AllBranchCubit>(context).getAllBranch();
     _getRegions();
   }
 
@@ -69,17 +79,20 @@ class _MonthlyPackageScreenState extends State<MonthlyPackageScreen> {
                   body: state.props.first.toString(),
                 );
               } else if (state is SearchValidate) {
-                final matchingBranches = context
-                    .read<SearchCubit>()
-                    .branchesData
-                    .where((element) =>
-                        element.name ==
-                        context.read<SearchCubit>().selectedReceiveBranch)
-                    .toList();
+                // Was: name-matching against `branchesData`
+                // (`element.name == selectedReceiveBranch`), which the new
+                // location flow never populates — MonthlyRentBody sets only
+                // `selectedReceiveModel`/`selectedDriveModel` (the id/name
+                // bridge built from LocationSelectionCubit's Branch,
+                // Constitution Principle I). `validate()` already requires
+                // `selectedReceiveModel != null` before it can emit
+                // SearchValidate, so it is safe to read directly here
+                // rather than re-deriving it by name. Same fix as
+                // clasic.dart's SearchValidate listener (T042).
+                final triggeredBranchModel =
+                    context.read<SearchCubit>().selectedReceiveModel;
 
-                if (matchingBranches.isNotEmpty) {
-                  final triggeredBranchModel = matchingBranches.first;
-
+                if (triggeredBranchModel != null) {
                   final filterModel = FilterModel(
                     selectedBranch: triggeredBranchModel,
                     receiveTimeValue: context

@@ -168,7 +168,7 @@ class _DailyRentBodyState extends State<DailyRentBody> {
                                   width: 64.w,
                                   child: FittedBox(
                                     child: Switch.adaptive(
-                                      activeColor: iconDefaultColor(context),
+                                      activeThumbColor: iconDefaultColor(context),
                                       inactiveTrackColor: Colors.grey,
                                       // T037: the widget calls
                                       // setSeparateDropoff and nothing else —

@@ -327,10 +327,38 @@ other flow is still on the old code and still works.
 
 **Independent test**: repeat the entire Phase 3 independent test in the monthly-rent flow.
 
-- [ ] T043 [US5] Provide and start `LocationSelectionCubit` with `LocationFilter.allRegions()` in `lib/modules/home/booking_packages/ui/monthly_package_screen.dart`, removing that screen's `AllBranchCubit` usage.
-- [ ] T044 [US5] Convert region selection, both branch pickers, the dropoff toggle, the time guard, the language hook and the failure/retry UI in `lib/modules/home/booking_packages/widgets/monthly_rent_body.dart`, mirroring T035–T040 exactly. Reuse the same `BranchPickerScreen` — do not fork it.
-- [ ] T045 Run `scripts/flutter_analyze_filtered.ps1`; report against the 78 baseline. **No commit.**
-- [ ] T046 [US5] **Device-verify monthly rent** against the same checklist as T042. **STOP.**
+- [x] T043 [US5] Provide and start `LocationSelectionCubit` with `LocationFilter.allRegions()` in `lib/modules/home/booking_packages/ui/monthly_package_screen.dart`, removing that screen's `AllBranchCubit` usage.
+
+  > `/monthly-package` confirmed **live** (`search_Screen.dart:197` → `context.pushNamed(Routes.monthlyPackage)`), unlike the dead `/daily-package` route — so `AllBranchCubit.getAllBranch()` was removed outright from `MonthlyPackageScreen`'s `initState`, along with the now-unused `AllBranchCubit` import, rather than left in place. `LocationSelectionCubit` added to `MonthlyPackageScreen.entry()`'s existing `MultiBlocProvider`, `registerFactory` via `sl<...>()`, `..start(const LocationFilter.allRegions())` on creation — same pattern as `Clasic`/`DailyPackages`. `SearchCubit.getRegions()` (`_getRegions()`) was left in `initState`: nothing in this task asked for its removal, and deleting more than instructed is Phase 8/9 scope, not this one.
+- [x] T044 [US5] Convert region selection, both branch pickers, the dropoff toggle, the time guard, the language hook and the failure/retry UI in `lib/modules/home/booking_packages/widgets/monthly_rent_body.dart`, mirroring T035–T040 exactly. Reuse the same `BranchPickerScreen` — do not fork it.
+
+  > Mirrored `daily_rent_body.dart` structurally: `BlocListener<LanguageCubit, Locale>` (language hook) wraps a `BlocBuilder<SearchCubit, SearchState>` (dates, untouched) wraps a `BlocBuilder<LocationSelectionCubit, LocationSelectionState>` (new). Region selection replaced the old `RegionTile(regions: cubit.regionsData)` (whose `onTap` was literally `() {}` — a no-op even before this change) with the same in-file `_showRegionPicker` modal `daily_rent_body.dart` uses, driven by `locCubit.regions`/`state.pickupRegion`. Both branch pickers replaced `MapListSelectionViewTile` (old, `AllBranchCubit`) with `_pickBranch`, using the **corrected** navigator call from `contracts/navigation-contract.md` (`Navigator.of(context, rootNavigator: true).push<Branch>(CupertinoPageRoute<Branch>(...))`) — not the original contract's `PersistentNavBarNavigator.pushNewScreen<Branch>`, which throws in this library version. Dropoff toggle wired to `setSeparateDropoff`/`selectDropoffRegion`, identical to T037. Time guard: `TimeSelectTwoBox(enableGuarding: true, pickupWorkTime:, dropoffWorkTime:)`, identical to T038. Failure/retry UI: same private `_FailureBanner`, rendered above the selection rows on `status: failure`, identical to T040. `_SelectionRow`/`_FailureBanner`/`_showRegionPicker`/`_pickBranch` are duplicated file-local, not shared, for the same reason T035 gives: screen-specific, and touching a shared file risks the other not-yet-converted flows.
+  >
+  > **Watch item 1 — months grid**: the `GridView.builder` (1/3/6/9/12) and `_onPackageSelected` read/write only `SearchCubit.receiveDateValue`/`driveDateValue` via `updateDates`/`changeState` — grepped for any reference to `regionsData`/`branchesData`/`selectedRegion`/`selectedReceiveBranch`/`selectedDriveBranch` inside `_onPackageSelected` and the grid `itemBuilder`: zero matches. Left untouched, unmoved, unreordered relative to the rest of the body.
+  >
+  > **Watch item 2 — route liveness**: see T043 note above. `/monthly-package` is live; `MonthlyPackageScreen.entry()` is where the cubit is provided.
+  >
+  > **Watch item 3 — initState**: `MonthlyRentBody` (the widget, not the screen) has never had an `initState` — it is a `StatefulWidget` only for `searchError`/`isLoading`/`selectedMonths` local UI state, same as `DailyRentBody`. Region/branch loading is started once, on mount, by `MonthlyPackageScreen.entry()`'s `..start(const LocationFilter.allRegions())` (T043) — identical mechanism to `Clasic`/`DailyPackages`. Opening `/monthly-package` directly (without passing through daily) reaches `MonthlyPackageScreen.entry()` first regardless of prior navigation, so regions load unconditionally on that screen's mount. The pre-existing "no initState at all" bug this note guards against was in the OLD `MonthlyRentBody`/`MonthlyPackageScreen`, which relied on `SearchCubit.getRegions()` never being re-triggered from the rent body itself — moot now, since `LocationSelectionCubit.start()` at the screen level is the sole trigger.
+  >
+  > Dropped one line from the old `onTap` while mirroring: `if (custClass == '1') setState(() => searchError = false);`, unconditionally overwritten two lines later regardless of branch, a pre-existing no-op. Removing it changes no behavior; the `ProfileCubit` import it was the only user of was removed with it.
+- [x] T045 Run `scripts/flutter_analyze_filtered.ps1`; report against the 78 baseline. **No commit.**
+
+  > First run: **79** — one over baseline, from `Switch.adaptive(activeColor: ...)` in `monthly_rent_body.dart:189`, a duplicate of the identical pre-existing deprecation already at `daily_rent_body.dart:171` (counted in the 78 baseline, never fixed there). Rather than tolerate a second copy of a known deprecation, `activeColor` was replaced with `activeThumbColor` (same value, same behavior, no visual change) in **both** files — `daily_rent_body.dart` is in scope since this feature already converted it. Re-run: **77**.
+  >
+  > **Baseline moves to 77 from this point on.** T041's "78, zero new" no longer applies as the comparison point for T052/T053, T060, T067, or any later analyze check in this feature — compare against 77.
+
+  > **A third real bug found and fixed**, same class as T042's #2, this time in `monthly_package_screen.dart` (device log from the developer, monthly-rent search tap: `SearchValidate: success` immediately followed by `No matching branch found for the selected receive branch`). `monthly_package_screen.dart`'s own `SearchValidate` listener had the identical stale pattern `clasic.dart` had — name-matching against `branchesData`/`selectedReceiveBranch`, which `MonthlyRentBody` (T044) never populates. Same fix: read `context.read<SearchCubit>().selectedReceiveModel` directly, safe because `validate()` requires it non-null to reach `SearchValidate`. `flutter analyze` re-confirmed at 77 (zero new), `test/modules/location` re-confirmed at 104/104 after this fix.
+- [x] T046 [US5] **Device-verify monthly rent** against the same checklist as T042. **STOP.**
+
+  > Developer verified all eight Phase 4 checklist items on a physical device: full branch count,
+  > pickup then dropoff in a different region, changing pickup region clears the pickup branch,
+  > disabling dropoff submits nothing stale, every tap gives feedback, time guard disables the
+  > right slots, language switch keeps the selection and changes the names, and end-to-end search →
+  > cars list (after the `monthly_package_screen.dart` `SearchValidate` fix above). Two failures
+  > observed during this pass are **pre-existing, out-of-scope defects** in `SearchCubit`'s
+  > date/package logic and the months grid, confirmed by the developer to predate this conversion —
+  > recorded in [spec.md](./spec.md)'s new "Known Defects — Out of Scope" section rather than fixed
+  > here. Not phase 4 work; do not let them block Phase 5.
 
 **Checkpoint**: daily and monthly both on the new module.
 

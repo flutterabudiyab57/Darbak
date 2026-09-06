@@ -459,6 +459,22 @@ that can be revisited during `/speckit-clarify` or planning.
 - The time-validation endpoint remains the final authority on availability.
 - The areas feature keeps its existing implementation untouched and is not depended upon.
 
+## Known Defects — Out of Scope
+
+These predate this rewrite and were confirmed on a physical device during Phase 4 (monthly-rent)
+verification. They are recorded here because this feature's device-verification pass surfaced
+them, not because the rewrite caused them — both live entirely in `SearchCubit`'s date/package
+logic and the monthly months grid, which are explicitly out of scope below.
+
+- **DEFECT A — selecting a monthly package updates the rental duration but not the displayed date
+  fields.** Duration correctly becomes 90 days for "3 months"; the pickup and dropoff date fields
+  keep their old values. Confirmed pre-existing.
+- **DEFECT B — the package highlight does not clear when the date is changed manually.** The
+  duration recalculates, but the grid tile stays selected. Confirmed pre-existing. This is a
+  regression of a bug previously fixed with an `onManualDateChanged` callback, so the earlier fix
+  either did not hold or did not address the real cause. A future fix should establish why before
+  repeating that approach.
+
 ## Out of Scope
 
 - **The areas feature** (geographic boundaries constraining map location selection). Its user flow is
