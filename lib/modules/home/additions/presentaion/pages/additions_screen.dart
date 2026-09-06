@@ -24,6 +24,7 @@ import '../../../cash_back/repository/applycashback.dart';
 import '../../../cash_back/repository/cashback_balance.dart';
 import '../../../payment/paymentMethods.dart';
 import '../../../search_screen/presentaion/widget/shimmer_list.dart';
+import '../../../../location/data/models/booking_draft.dart';
 
 // ignore: must_be_immutable
 class AdditionsScreen extends StatefulWidget {
@@ -32,13 +33,17 @@ class AdditionsScreen extends StatefulWidget {
   Datum? bookDetails;
   bool? fromNotCompleted;
   bool? fromAddAdditions;
+  /// FR-018: readable here and passed onward to payment as a constructor
+  /// parameter (T063) — this screen never mutates it.
+  final BookingDraft? bookingDraft;
 
   AdditionsScreen(
       {this.datum,
       this.checkOrderStepModel,
       this.fromNotCompleted,
       this.fromAddAdditions,
-      this.bookDetails});
+      this.bookDetails,
+      this.bookingDraft});
 
   @override
   _AdditionsScreenState createState() => _AdditionsScreenState();
@@ -214,6 +219,7 @@ class _AdditionsScreenState extends State<AdditionsScreen>
                                             orderId: widget
                                                 .checkOrderStepModel!.order!.id
                                                 .toString(),
+                                            bookingDraft: widget.bookingDraft,
                                           ))
                                       : BlocProvider(create: (context) => CashbackCubit(
                                             CashbackRemoteDataSource(Dio(), SharedPreferencesHelper()),
@@ -227,6 +233,7 @@ class _AdditionsScreenState extends State<AdditionsScreen>
                                                 BlocProvider.of<AdditionsCubit>(
                                                         context)
                                                     .stepOneOrderModel,
+                                            bookingDraft: widget.bookingDraft,
                                           ),
                                         ),
                                 ),

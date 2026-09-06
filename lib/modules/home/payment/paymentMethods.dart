@@ -26,6 +26,7 @@ import '../blocs/booking_cubit/booking_cubit.dart';
 import '../cars/data/models/cars_model.dart';
 import '../cash_back/bloc/cashback__cubit.dart';
 import '../cash_back/screen/widgets/Cashback_Balance.dart';
+import '../../location/data/models/booking_draft.dart';
 import 'blocs/invoice_cubit.dart';
 import 'data/datasources/remote/all_coupons_service.dart';
 import 'data/models/credit_card_model.dart';
@@ -43,6 +44,11 @@ class PaymentMethodsScreen extends StatefulWidget {
   final DataCars? datum;
   final String? orderId;
   final CreditCardModel? cardModel;
+  /// FR-018/FR-019: readable here, never mutated. T064 confirmed this
+  /// screen has no existing write path into location state to remove —
+  /// this param only makes the (already-true) read-only relationship
+  /// explicit and satisfies "readable by payment".
+  final BookingDraft? bookingDraft;
 
   PaymentMethodsScreen(
     this.newBooking, {
@@ -53,6 +59,7 @@ class PaymentMethodsScreen extends StatefulWidget {
     this.isNotCompleted,
     this.orderId,
     this.cardModel,
+    this.bookingDraft,
   });
 
   @override

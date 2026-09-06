@@ -33,6 +33,7 @@ import '../../../../location/data/models/branch.dart';
 import '../../../../location/presentaion/bloc/location_selection_cubit.dart';
 import '../../../../location/presentaion/bloc/location_selection_state.dart';
 import '../../../../location/presentaion/pages/branch_picker_screen.dart';
+import '../../../../location/data/models/booking_draft.dart';
 
 /// T054: `LocationSelectionCubit` is provided here, screen-scoped
 /// (`registerFactory`), started with `LocationFilter.car(carId)` — this
@@ -272,8 +273,19 @@ class _BranchWithCarScreenState extends State<BranchWithCarScreen> {
       );
       return;
     } else if (state is SearchValidate) {
-      additionsCubit.getCarFeatures(context, widget.carModel.id.toString(), null);
-      context.pushNamed(Routes.additions, extra: AdditionsArgs(datum: widget.carModel));
+      // T062: this flow has the car already (it's the screen's own
+      // constructor param), so the full BookingDraft is built directly here
+      // rather than threaded through a FilterModel first.
+      final draft = BookingDraft(
+        pickupBranch: completedBranch,
+        dropoffBranch: null, // no separate dropoff picker in this flow
+        pickupAt: receiveDate,
+        dropoffAt: driveDate,
+        car: widget.carModel,
+      );
+      additionsCubit.getCarFeatures(context, widget.carModel.id.toString(), null, draft: draft);
+      context.pushNamed(Routes.additions,
+          extra: AdditionsArgs(datum: widget.carModel, bookingDraft: draft));
     }
   }
 }

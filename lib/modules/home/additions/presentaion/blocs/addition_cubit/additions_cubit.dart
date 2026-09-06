@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../all_bookings/data/model/check_order_step_model.dart';
 import '../../../../search_screen/data/models/filter_model.dart';
+import '../../../../../location/data/models/booking_draft.dart';
 import '../../../data/datasource/remote/order_addition_remote_datasource.dart';
 
 part 'additions_state.dart';
@@ -34,23 +35,34 @@ class AdditionsCubit extends Cubit<AdditionsState> {
   AutomatedStepOneOrderModel? automatedStepOneOrderModel;
   FilterModel? filterModel;
 
+  /// [draft] is Phase 7's (T063) replacement for reading
+  /// `searchCubit.selectedReceiveModel`/`selectedDriveModel`/
+  /// `receiveDateValue`/`driveDateValue` here — both live callers
+  /// (`cars_info.dart`, `branchs_with_car_screan.dart`) now build one before
+  /// calling this. `filterModel` is kept only for the delivery-address
+  /// `pickupLat`/`pickupLong`/`dropoffLat`/`dropoffLong` fields, which are
+  /// not part of `BookingDraft`'s shape (a different concern — a map pin,
+  /// not branch/date identity) and are `null` for every non-delivery flow
+  /// already. `receiveTimeValue`/`driveTimeValue` stay sourced from
+  /// `searchCubit` — they are passed into `getCarOrder` but not used in the
+  /// step1 request body, so they carry no order-correctness risk.
   Future<void> getCarFeatures(
       BuildContext context,
       String carId,
-      FilterModel? filterModel,
-      ) async {
+      FilterModel? filterModel, {
+      required BookingDraft draft,
+      }) async {
     this.filterModel = filterModel;
     emit(AdditionsLoading());
 
     try {
       final order = await additionRepository.getCarOrder(
-        receiveBranchId: searchCubit.selectedReceiveModel?.id?.toString()
-            ?? searchCubit.selectedDriveModel?.id?.toString() ?? '',
-        driveBranchId: searchCubit.selectedDriveModel?.id?.toString() ?? '',
+        receiveBranchId: draft.pickupBranch.id.toString(),
+        driveBranchId: draft.effectiveDropoffBranch.id.toString(),
         receiveTimeValue: searchCubit.receiveTimeValue.toString(),
         driveTimeValue: searchCubit.driveTimeValue.toString(),
-        receiveDate: searchCubit.receiveDateValue,
-        driveDate: searchCubit.driveDateValue,
+        receiveDate: draft.pickupAt,
+        driveDate: draft.dropoffAt,
         carId: carId,
         pickupLat: filterModel?.pickupLat,
         pickupLong: filterModel?.pickupLong,

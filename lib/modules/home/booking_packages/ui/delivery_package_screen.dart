@@ -93,16 +93,15 @@ class _DeliveryPackageScreenState extends State<DeliveryPackageScreen> {
                     context.read<SearchCubit>().selectedReceiveModel;
 
                 if (triggeredBranchModel != null) {
-                  final filterModel = FilterModel(
+                  final searchCubit = context.read<SearchCubit>();
+                  final filterModel = FilterModel.fromSelection(
                     selectedBranch: triggeredBranchModel,
-                    receiveTimeValue: context.read<SearchCubit>().receiveTimeValue.hour.toString(),
-                    driveTimeValue: context.read<SearchCubit>().driveTimeValue.hour.toString(),
-                    receiveDateValue: context.read<SearchCubit>().receiveDateValue.toString(),
-                    driveDateValue: context.read<SearchCubit>().driveDateValue.toString(),
-                    pickupLat: context.read<SearchCubit>().pickupLat,
-                    pickupLong: context.read<SearchCubit>().pickupLong,
-                    dropoffLat: context.read<SearchCubit>().dropoffLat,
-                    dropoffLong: context.read<SearchCubit>().dropoffLong,
+                    locationCubit: context.read<LocationSelectionCubit>(),
+                    searchCubit: searchCubit,
+                    pickupLat: searchCubit.pickupLat,
+                    pickupLong: searchCubit.pickupLong,
+                    dropoffLat: searchCubit.dropoffLat,
+                    dropoffLong: searchCubit.dropoffLong,
                   );
                   await BlocProvider.of<CarsCubit>(context)
                       .getAllCars(

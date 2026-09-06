@@ -98,22 +98,10 @@ class _AirportPackagesState extends State<AirportPackageScreen> {
                       context.read<SearchCubit>().selectedReceiveModel;
 
                   if (triggeredBranchModel != null) {
-                    final filterModel = FilterModel(
+                    final filterModel = FilterModel.fromSelection(
                       selectedBranch: triggeredBranchModel,
-                      receiveTimeValue: context
-                          .read<SearchCubit>()
-                          .receiveTimeValue
-                          .hour
-                          .toString(),
-                      driveTimeValue: context
-                          .read<SearchCubit>()
-                          .driveTimeValue
-                          .hour
-                          .toString(),
-                      receiveDateValue:
-                          context.read<SearchCubit>().receiveDateValue.toString(),
-                      driveDateValue:
-                          context.read<SearchCubit>().driveDateValue.toString(),
+                      locationCubit: context.read<LocationSelectionCubit>(),
+                      searchCubit: context.read<SearchCubit>(),
                     );
 
                     await BlocProvider.of<CarsCubit>(context)

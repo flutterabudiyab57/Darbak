@@ -29,6 +29,7 @@ import '../../modules/home/booking_packages/ui/daily_package_screen.dart';
 import '../../modules/home/booking_packages/ui/delivery_package_screen.dart';
 import '../../modules/home/booking_packages/ui/monthly_package_screen.dart';
 import '../../modules/home/cars/data/models/cars_model.dart';
+import '../../modules/location/data/models/booking_draft.dart';
 import '../../modules/home/cars/presentaion/all_cars_screen.dart';
 import '../../modules/home/cars/presentaion/page/cars_info.dart';
 import '../../modules/home/cars/presentaion/page/filter_cars.dart';
@@ -292,6 +293,7 @@ final appRouter = GoRouter(
           bookDetails: a?.bookDetails,
           fromNotCompleted: a?.fromNotCompleted,
           fromAddAdditions: a?.fromAddAdditions,
+          bookingDraft: a?.bookingDraft,
         );
       },
     ),
@@ -525,12 +527,19 @@ class AdditionsArgs {
   final Datum? bookDetails;
   final bool? fromNotCompleted;
   final bool? fromAddAdditions;
+  /// Phase 7 (T062/T063): the completed selection, built once by the
+  /// booking flow. `null` on the pre-existing call sites that don't build
+  /// one yet (`bookDetailes.dart`, `invouce_notCompleted.dart`,
+  /// `invoice.dart`'s re-order flow) — additions/payment tolerate that the
+  /// same way they always tolerated a null `datum`.
+  final BookingDraft? bookingDraft;
   const AdditionsArgs({
     this.datum,
     this.checkOrderStepModel,
     this.bookDetails,
     this.fromNotCompleted,
     this.fromAddAdditions,
+    this.bookingDraft,
   });
 }
 

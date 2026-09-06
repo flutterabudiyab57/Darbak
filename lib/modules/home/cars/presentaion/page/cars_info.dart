@@ -14,6 +14,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
 import '../../../../../core/constants/assets/assets.dart';
+import '../../../../../core/helpers/helper_fun.dart';
 import '../../../../../core/helpers/interceptors/loading_indicator.dart';
 import '../../../../widgets/Dashed_divider.dart';
 import '../../../../widgets/components/appbar.dart';
@@ -23,6 +24,7 @@ import '../../../../../core/router/app_router.dart';
 import '../../../../../core/router/routes.dart';
 import '../../../search_screen/blocs/search_bloc/search_cubit.dart';
 import '../../../search_screen/presentaion/widget/monthly_package_widget.dart';
+import '../../../../location/data/models/booking_draft.dart';
 
 class CarsInformation extends StatefulWidget {
   CarsInformation(
@@ -540,8 +542,44 @@ class _CarsInformationState extends State<CarsInformation> {
                                     builder: (context, state) {
                                       return Bounce(
                                         onTap: () async {
-                                          await BlocProvider.of<AdditionsCubit>(context)
-                                              .getCarFeatures(context, widget.datum!.id.toString(), widget.filterModel);
+                                          // T062/T063: filterModel != null only ever arrives here
+                                          // from one of the four converted rent bodies
+                                          // (daily/monthly/delivery/airport), all of which now
+                                          // populate pickupBranch/pickupAt/dropoffAt (T062). The
+                                          // car is only known here, so the full BookingDraft is
+                                          // built at this point, not earlier.
+                                          final fm = widget.filterModel;
+                                          final draft = (fm?.pickupBranch != null &&
+                                                  fm?.pickupAt != null &&
+                                                  fm?.dropoffAt != null &&
+                                                  widget.datum != null)
+                                              ? BookingDraft(
+                                                  pickupBranch: fm!.pickupBranch!,
+                                                  dropoffBranch: fm.dropoffBranch,
+                                                  pickupAt: fm.pickupAt!,
+                                                  dropoffAt: fm.dropoffAt!,
+                                                  car: widget.datum!,
+                                                )
+                                              : null;
+
+                                          if (fm != null && draft == null) {
+                                            // Should be unreachable — every live filterModel-carrying
+                                            // path populates these fields. Fail loud with feedback
+                                            // rather than crash on the force-unwraps below.
+                                            HelperFunctions.dialog(
+                                              context: context,
+                                              title: locale.branchError,
+                                              body: locale.invalidBranchSelected,
+                                            );
+                                            return;
+                                          }
+
+                                          if (draft != null) {
+                                            await BlocProvider.of<AdditionsCubit>(context)
+                                                .getCarFeatures(context, widget.datum!.id.toString(),
+                                                    widget.filterModel,
+                                                    draft: draft);
+                                          }
 
                                           if (context.mounted) {
                                             final newState = BlocProvider.of<AdditionsCubit>(context).state;
@@ -557,7 +595,8 @@ class _CarsInformationState extends State<CarsInformation> {
                                                   newState is AdditionsInitial) {
                                                 if (context.mounted) {
                                                   context.pushNamed(Routes.additions,
-                                                      extra: AdditionsArgs(datum: widget.datum));
+                                                      extra: AdditionsArgs(
+                                                          datum: widget.datum, bookingDraft: draft));
                                                 }
                                               }
                                               if (newState is AdditionsFailed) {
