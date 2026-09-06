@@ -373,13 +373,124 @@ region step**, and the out-of-scope areas map picker behaves exactly as it does 
 region selector, that a branch seen in delivery is the same entity (same id) as in daily rent, and
 that an empty result explains itself rather than showing a blank list.
 
-- [ ] T047 [US5] Provide and start `LocationSelectionCubit` with **`LocationFilter.delivery()`** in `lib/modules/home/booking_packages/ui/delivery_package_screen.dart` and convert `lib/modules/home/booking_packages/widgets/delivery_rent_body.dart` to it. **Remove the region step from this flow** — `start` fetches branches directly. Retire `lib/modules/home/booking_packages/Delivery_widgets/region_selection_bottom_sheet.dart` and `delivery_branch_selection_sheet.dart` from this path in favour of `BranchPickerScreen`.
-- [ ] T048 [US5] Repoint the areas geometry accessors in `delivery_rent_body.dart` — `_buildBoundsFromBranch()` (`:96`), `_buildBoundsFromRegion()` (`:114`), `_getCenterFromBranch()` (`:133`), `_getCenterFromRegion()` (`:139`) — at the new `Branch.polygon` / `Branch.center` and `Region.polygon` (BD-1). **This is behaviour preservation on an out-of-scope feature.** Do not improve, extend or redesign the areas feature; keep the null handling at `:98` and the `_pickLocation()` permission fallback (`:168`) exactly as they are.
-- [ ] T049 [US5] Provide and start `LocationSelectionCubit` with **`LocationFilter.airport()`** in `lib/modules/home/booking_packages/ui/airboart_package_screen.dart` and convert `lib/modules/home/booking_packages/widgets/airbort_rent_body.dart`. No region step.
-- [ ] T050 [US5] Add the FR-039 empty-state message to both flows via `BranchPickerScreen`'s `emptyMessage`, localized through `AppLocalizations` — add the key to **both** `lib/language/languages/english.dart` and `arabic.dart` plus a getter in `lib/language/locale.dart`. No hardcoded UI string.
-- [ ] T051 Run `scripts/flutter_analyze_filtered.ps1`; report against the 78 baseline. **No commit.**
-- [ ] T052 [US5] **Device-verify delivery and airport**: branch list appears with no region step; the same branch carries the same id as in daily rent; dropoff behaves as in US2; empty result is explained.
-- [ ] T053 [US5] **Device-verify the areas behaviour-preservation acceptance item** ([plan.md](./plan.md#phase-6-acceptance--areas-behaviour-preservation)): the delivery map location picker receives the **same `bounds` and the same `centerOverride` it received before**, for both the branch-derived and the region-derived case — same boundary, same centre, same point-in-polygon rejection, and the same permission fallback when there is no polygon. Compiling is not evidence. **The only acceptable outcome is "indistinguishable from before". STOP.**
+- [x] T047 [US5] Provide and start `LocationSelectionCubit` with **`LocationFilter.delivery()`** in `lib/modules/home/booking_packages/ui/delivery_package_screen.dart` and convert `lib/modules/home/booking_packages/widgets/delivery_rent_body.dart` to it. **Remove the region step from this flow** — `start` fetches branches directly. Retire `lib/modules/home/booking_packages/Delivery_widgets/region_selection_bottom_sheet.dart` and `delivery_branch_selection_sheet.dart` from this path in favour of `BranchPickerScreen`.
+
+  > **Route liveness**: `/deliveryPackage` confirmed **live** — reached from
+  > `booking_from_cars/presentaion/view/widget/branches_card.dart:24`
+  > (`context.pushNamed(Routes.deliveryPackage)`), a book-from-car card offering delivery as a
+  > booking method. `LocationSelectionCubit` provided in `DeliveryPackageScreen.entry()`'s
+  > `MultiBlocProvider`, `registerFactory` via `sl<...>()`, `..start(const LocationFilter.delivery())`
+  > — same pattern as daily/monthly.
+  >
+  > **`region_selection_bottom_sheet.dart` and `delivery_branch_selection_sheet.dart`**: both retired
+  > from this path (no longer imported by `delivery_rent_body.dart`), **not deleted** — Phase 8
+  > deletes. `delivery_branch_selection_sheet.dart` (the branch picker) is replaced by
+  > `BranchPickerScreen` via the corrected root-navigator push, per contract. `region_selection_bottom_sheet.dart`
+  > is **not** a branch-filtering "region step" — the branch list here is unfiltered by region
+  > (delivery has none). It served a different, out-of-scope purpose: bounding the dropoff **map
+  > location** picker (the areas feature, T048) by a chosen region's polygon. That purpose survives
+  > as a small file-local `_showRegionPicker` modal (same pattern as `daily_rent_body.dart`'s region
+  > picker), sourced from `sl<LocationRepository>().getRegions()` fetched directly in `initState`
+  > (bypassing the cubit, which never fetches regions for a direct filter — `LocationSelectionCubit.start()`
+  > only fetches branches when `_isDirect(filter)` is true) — filtered to `polygon != null && polygon.isNotEmpty`,
+  > matching the old `RegionSelectionBottomSheet`'s own `regionsWithPolygon` filter exactly.
+  >
+  > Also fixed the same name-matching `SearchValidate` bug already diagnosed twice before (`clasic.dart`
+  > T042, `monthly_package_screen.dart` T045) in `delivery_package_screen.dart`'s own listener — this
+  > was **REQUIRED, not proactive**. T047 removed the branch bottom sheet, which was the only code
+  > that ever assigned `selectedReceiveBranch`. The old listener force-unwraps that field with `!`, so
+  > after the conversion the delivery search tap would have thrown "Null check operator used on a null
+  > value" every time — a guaranteed crash, not a silent mismatch like the `clasic.dart` case. Removing
+  > a field's only writer means removing its readers too; that is part of the conversion, not extra
+  > work.
+  >
+  > **The region picker in delivery is NOT a region step.** The branch list loads on mount from
+  > `LocationFilter.delivery()` and is never gated on a region — the branch field's `onTap` and
+  > `pickupOptions` have no dependency on `_selectedRegion`. The region selector is an independent
+  > field that only bounds the areas map (`_buildBoundsFromRegion`/`_getCenterFromRegion`, T048), and
+  > that relationship is unchanged from before the conversion.
+
+- [x] T048 [US5] Repoint the areas geometry accessors in `delivery_rent_body.dart` — `_buildBoundsFromBranch()` (`:96`), `_buildBoundsFromRegion()` (`:114`), `_getCenterFromBranch()` (`:133`), `_getCenterFromRegion()` (`:139`) — at the new `Branch.polygon` / `Branch.center` and `Region.polygon` (BD-1). **This is behaviour preservation on an out-of-scope feature.** Do not improve, extend or redesign the areas feature; keep the null handling at `:98` and the `_pickLocation()` permission fallback (`:168`) exactly as they are.
+
+  > **Shape verification, done before changing, as required.** All four accessors returned, and still
+  > return, the identical shape:
+  > - `_buildBoundsFromBranch()` / `_buildBoundsFromRegion()`: `LocationBounds?` built from a
+  >   polygon's points — `null` if the polygon is null/empty or has no point with both `lat` and `lng`
+  >   non-null; otherwise `LocationBounds(minLat, maxLat, minLng, maxLng, customBoundary: List<LatLng>)`.
+  > - `_getCenterFromBranch()`: `LatLng?` from the branch's own `center` field — `null` if absent or
+  >   either coordinate is null.
+  > - `_getCenterFromRegion()`: `LatLng?` — a centroid **computed from the polygon** (never a `center`
+  >   field on the region; the old code didn't read one either, and BD-1/plan.md confirm `Region.center`
+  >   is "not even parsed today" and intentionally not added to the new model).
+  >
+  > Old `BranchModel.polygon`/`.center` (`all_branching/data/models/branch_model.dart:66,68` —
+  > `List<PolygonPoint>?`/`BranchCenter?`, each `{double? lat, double? lng}`) and old
+  > `RegionModel.polygon` (`regions_model.dart:47` — `List<PolygonPoint>?`, same `{lat, lng}` shape) are
+  > **field-for-field identical** to new `Branch.polygon`/`.center` (`List<GeoPoint>?`/`GeoPoint?`) and
+  > `Region.polygon` (`List<GeoPoint>?`) — `GeoPoint` also exposes `.lat`/`.lng` as nullable doubles,
+  > parsed from the numeric `{lat, lng}` geometry shape (never the branch's own stringly-typed
+  > `lat`/`long` pair, per BD-1's explicit warning). Because the shapes are identical, converting the
+  > four methods was a pure type swap — `_selectedBranch`/`_selectedRegion` changed from the old
+  > `BranchModel?`/`RegionModel?` to the new `Branch?`/`Region?` — with **zero change to any method
+  > body's logic**. The null handling at `:98` (empty/malformed polygon → `null` → permission-based
+  > fallback in `_pickLocation()`) and the `_pickLocation()` fallback itself are untouched, byte-for-byte.
+  > No new model was missing anything either accessor needed — nothing to report per the "STOP if a
+  > model can't supply the shape" instruction.
+
+- [x] T049 [US5] Provide and start `LocationSelectionCubit` with **`LocationFilter.airport()`** in `lib/modules/home/booking_packages/ui/airboart_package_screen.dart` and convert `lib/modules/home/booking_packages/widgets/airbort_rent_body.dart`. No region step.
+
+  > **Route liveness**: `/airportPackage` confirmed **live** — reached from `search_Screen.dart:449`.
+  > `LocationSelectionCubit` provided in `AirportPackageScreen.entry()`'s `MultiBlocProvider`,
+  > `..start(const LocationFilter.airport())`. The screen's own vestigial `_getRegions()`
+  > (`SearchCubit.getRegions()`) call in `initState` was left in place — nothing in `airbort_rent_body.dart`
+  > (old or new) reads `regionsData`, so it is unused dead weight, not a dependency; removing more than
+  > instructed is Phase 8/9 scope (same precedent as T043's note on monthly).
+  >
+  > **Watch item 3 — `airportBranchesData` read removed**: `AirPortRentBody` no longer reads
+  > `searchCubit.airportBranchesData`, and no longer builds the book-from-car `Datum`/`BranchTile`
+  > bridge it used to map that list through. It now reads `LocationSelectionCubit`'s `pickupOptions`
+  > directly and opens `BranchPickerScreen` via the same corrected root-navigator push as delivery/daily/monthly.
+  > `booking_from_cars/presentaion/view/widget/branchs.dart` (owns `BranchTile`) was **not touched** —
+  > airport no longer depends on it, satisfying "do not touch book-from-car" by removing the
+  > cross-flow dependency rather than editing the shared file. There is no dropoff-branch concept in
+  > airport (never was): the one picked branch is submitted as both receive and drive, exactly as
+  > before.
+  >
+  > Also fixed the same name-matching `SearchValidate` bug in `airboart_package_screen.dart`'s own
+  > listener, proactively, for the same reason as T047's delivery fix.
+
+- [x] T050 [US5] Add the FR-039 empty-state message to both flows via `BranchPickerScreen`'s `emptyMessage`, localized through `AppLocalizations` — add the key to **both** `lib/language/languages/english.dart` and `arabic.dart` plus a getter in `lib/language/locale.dart`. No hardcoded UI string.
+
+  > Added `noBranchesOfferService` (English: "No branches offer this service"; Arabic: "لا توجد فروع
+  > تقدم هذه الخدمة") to `english.dart`/`arabic.dart` plus a non-nullable getter in `locale.dart`,
+  > distinct from the existing generic `noBranchesToShow` (T030) — the wording in spec.md's US5
+  > scenario 4 ("no branches offer the requested service") is meaningfully different from the picker's
+  > generic default, so per CLAUDE.md's "reuse a key only when both translations match exactly" rule a
+  > new key was added rather than forced. Passed as `emptyMessage:` in both `DeliveryRentBody._pickBranch`
+  > and `AirPortRentBody._pickBranch`. The branch-picking tap target in both flows is **never
+  > disabled**, even when `pickupOptions` is empty — tapping always opens `BranchPickerScreen`, which
+  > then renders this message itself (US5 scenario 4: "every tap MUST produce a visible outcome").
+
+- [x] T051 Run `scripts/flutter_analyze_filtered.ps1`; report against the 78 baseline. **No commit.**
+
+  > **77 — exactly at the (moved, per T045) baseline, zero new.** `test/modules/location` re-run as a
+  > regression check: **104 passed, 0 failed**, unchanged.
+- [x] T052 [US5] **Device-verify delivery and airport**: branch list appears with no region step; the same branch carries the same id as in daily rent; dropoff behaves as in US2; empty result is explained.
+
+  > Developer verified all twelve Phase 5/6 checks on a physical device: delivery and airport both
+  > show their branch list immediately with no region step; branch selection works in both; search
+  > works in both (the `SearchValidate` crash from the missing `selectedReceiveBranch` writer is gone);
+  > the same branch carries the same identity across delivery and daily rent; daily and monthly still
+  > work.
+
+- [x] T053 [US5] **Device-verify the areas behaviour-preservation acceptance item** ([plan.md](./plan.md#phase-6-acceptance--areas-behaviour-preservation)): the delivery map location picker receives the **same `bounds` and the same `centerOverride` it received before**, for both the branch-derived and the region-derived case — same boundary, same centre, same point-in-polygon rejection, and the same permission fallback when there is no polygon. Compiling is not evidence. **The only acceptable outcome is "indistinguishable from before". STOP.**
+
+  > Verified on-device: the areas map behaves exactly as before — branch-derived bounds,
+  > region-derived bounds, out-of-bounds pin rejection, in-bounds pin acceptance, and the
+  > no-permission fallback all unchanged. **Out-of-bounds pin rejection was verified specifically**:
+  > geometry arrives as numbers while the branch's own coordinates are strings, so a type conflation
+  > would have yielded a null polygon and an unbounded map that still looked correct — only this check
+  > would have caught it.
 
 **Checkpoint**: US5 complete. Four of five flows converted.
 

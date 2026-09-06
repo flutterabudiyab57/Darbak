@@ -913,6 +913,9 @@ class AppLocalizations {
   String get noBranchesToShow =>
       _localizedValues[locale.languageCode]!['noBranchesToShow']!;
 
+  String get noBranchesOfferService =>
+      _localizedValues[locale.languageCode]!['noBranchesOfferService']!;
+
   ///******************************************
   String? get titleOnboarding1 {
     return _localizedValues[locale.languageCode]!['titleOnboarding1'];

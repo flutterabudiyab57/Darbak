@@ -19,12 +19,26 @@ import '../../search_screen/data/models/filter_model.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
 import '../widgets/delivery_rent_body.dart';
 import 'package:darbak/service_locator.dart';
+import 'package:darbak/modules/location/data/location_filter.dart';
+import 'package:darbak/modules/location/presentaion/bloc/location_selection_cubit.dart';
 
+/// T047: `LocationSelectionCubit` is provided here, screen-scoped
+/// (`registerFactory`, never added to `lib/bloc_providers.dart`), started
+/// with `LocationFilter.delivery()` — this flow has no region step, so
+/// `start()` fetches the delivery-capable branch list directly.
+/// `/deliveryPackage` is a live route, reached from
+/// `branches_card.dart` (book-from-car).
 class DeliveryPackageScreen extends StatefulWidget {
   const DeliveryPackageScreen({super.key});
 
-  static Widget entry() => BlocProvider<CarsCubit>(
-        create: (_) => sl<CarsCubit>(),
+  static Widget entry() => MultiBlocProvider(
+        providers: [
+          BlocProvider<CarsCubit>(create: (_) => sl<CarsCubit>()),
+          BlocProvider<LocationSelectionCubit>(
+            create: (_) => sl<LocationSelectionCubit>()
+              ..start(const LocationFilter.delivery()),
+          ),
+        ],
         child: const DeliveryPackageScreen(),
       );
 
@@ -64,30 +78,21 @@ class _DeliveryPackageScreenState extends State<DeliveryPackageScreen> {
                   body: state.props.first.toString(),
                 );
               } else if (state is SearchValidate) {
-                // Matching logic for branches
-                final matchingBranches = context.read<SearchCubit>()
-                    .deliveryBranchesData.where((element) =>
-                element.name!.trim().toLowerCase() ==
-                    context
-                        .read<SearchCubit>()
-                        .selectedReceiveBranch!
-                        .trim()
-                        .toLowerCase())
-                    .toList();
+                // Was: name-matching against `deliveryBranchesData`
+                // (`element.name == selectedReceiveBranch`), which the new
+                // location flow never populates — `DeliveryRentBody` sets
+                // only `selectedReceiveModel`/`selectedDriveModel` (the
+                // id/name bridge built from `LocationSelectionCubit`'s
+                // `Branch`, Constitution Principle I).
+                // `validateDelivery()` force-unwraps `selectedReceiveModel`,
+                // so by the time this listener runs it is already
+                // guaranteed non-null. Same fix as `clasic.dart`'s (T042)
+                // and `monthly_package_screen.dart`'s (T045) SearchValidate
+                // listeners.
+                final triggeredBranchModel =
+                    context.read<SearchCubit>().selectedReceiveModel;
 
-                print("selectedReceiveBranch: ${ context
-                    .read<SearchCubit>()
-                    .selectedReceiveBranch!
-                    .trim()
-                    .toLowerCase()}");
-
-                print("matchingBranches: ${ matchingBranches}");
-
-                if (matchingBranches.isNotEmpty) {
-                  // Handle matched branch
-                  final triggeredBranchModel = matchingBranches.first;
-                  print("Matching branch found: ${triggeredBranchModel.name}");
-
+                if (triggeredBranchModel != null) {
                   final filterModel = FilterModel(
                     selectedBranch: triggeredBranchModel,
                     receiveTimeValue: context.read<SearchCubit>().receiveTimeValue.hour.toString(),
@@ -112,8 +117,6 @@ class _DeliveryPackageScreenState extends State<DeliveryPackageScreen> {
                     context.pushNamed(Routes.carsListPackage, extra: filterModel);
                   });
                 } else {
-                  print(
-                      "No matching branch found for the selected receive branch: ${context.read<SearchCubit>().selectedReceiveBranch}");
                   HelperFunctions.dialog(
                     context: context,
                     title: locale.branchError,

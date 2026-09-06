@@ -19,12 +19,25 @@ import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
 import '../widgets/airbort_rent_body.dart';
 import 'package:darbak/service_locator.dart';
+import 'package:darbak/modules/location/data/location_filter.dart';
+import 'package:darbak/modules/location/presentaion/bloc/location_selection_cubit.dart';
 
+/// T049: `LocationSelectionCubit` is provided here, screen-scoped
+/// (`registerFactory`), started with `LocationFilter.airport()` — this flow
+/// has no region step, so `start()` fetches the airport-capable branch list
+/// directly. `/airportPackage` is a live route, reached from
+/// `search_Screen.dart`.
 class AirportPackageScreen extends StatefulWidget {
   const AirportPackageScreen({super.key});
 
-  static Widget entry() => BlocProvider<CarsCubit>(
-        create: (_) => sl<CarsCubit>(),
+  static Widget entry() => MultiBlocProvider(
+        providers: [
+          BlocProvider<CarsCubit>(create: (_) => sl<CarsCubit>()),
+          BlocProvider<LocationSelectionCubit>(
+            create: (_) => sl<LocationSelectionCubit>()
+              ..start(const LocationFilter.airport()),
+          ),
+        ],
         child: const AirportPackageScreen(),
       );
 
@@ -69,17 +82,22 @@ class _AirportPackagesState extends State<AirportPackageScreen> {
                     body: state.props.first.toString(),
                   );
                 } else if (state is SearchValidate) {
-                  final matchingBranches = context
-                      .read<SearchCubit>()
-                      .airportBranchesData
-                      .where((element) =>
-                          element.name ==
-                          context.read<SearchCubit>().selectedReceiveBranch)
-                      .toList();
+                  // Was: name-matching against `airportBranchesData`
+                  // (`element.name == selectedReceiveBranch`), which the new
+                  // location flow never populates — `AirPortRentBody` sets
+                  // only `selectedReceiveModel`/`selectedDriveModel` (the
+                  // id/name bridge built from `LocationSelectionCubit`'s
+                  // `Branch`, Constitution Principle I).
+                  // `validateDelivery()` force-unwraps `selectedReceiveModel`,
+                  // so by the time this listener runs it is already
+                  // guaranteed non-null. Same fix as `clasic.dart`'s (T042),
+                  // `monthly_package_screen.dart`'s (T045) and
+                  // `delivery_package_screen.dart`'s (T047) SearchValidate
+                  // listeners.
+                  final triggeredBranchModel =
+                      context.read<SearchCubit>().selectedReceiveModel;
 
-                  if (matchingBranches.isNotEmpty) {
-                    final triggeredBranchModel = matchingBranches.first;
-
+                  if (triggeredBranchModel != null) {
                     final filterModel = FilterModel(
                       selectedBranch: triggeredBranchModel,
                       receiveTimeValue: context
@@ -107,8 +125,11 @@ class _AirportPackagesState extends State<AirportPackageScreen> {
                       context.pushNamed(Routes.carsListPackage, extra: filterModel);
                     });
                   } else {
-                    print(
-                        "No matching branch found for the selected receive branch");
+                    HelperFunctions.dialog(
+                      context: context,
+                      title: locale.branchError,
+                      body: locale.invalidBranchSelected,
+                    );
                   }
                 } else if (state is SearchCheckLoading) {
                   Center(

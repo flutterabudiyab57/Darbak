@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,14 +16,35 @@ import '../../../../language/locale.dart';
 import '../../../widgets/Dashed_divider.dart';
 import '../../../widgets/components/ad_gradient_btn.dart';
 import '../../../widgets/time_select.dart';
-import '../../all_branching/data/models/branch_model.dart';
+import '../../all_branching/data/models/branch_model.dart' show BranchModel;
 import '../../search_screen/blocs/search_bloc/search_cubit.dart';
 import '../../search_screen/blocs/search_bloc/search_state.dart';
-import '../../search_screen/data/models/regions_model.dart';
 import '../../search_screen/presentaion/widget/rental_summary_card.dart';
-import '../Delivery_widgets/delivery_branch_selection_sheet.dart';
-import '../Delivery_widgets/region_selection_bottom_sheet.dart';
+import 'package:darbak/service_locator.dart';
+import '../../../location/data/location_repository.dart';
+import '../../../location/data/models/branch.dart';
+import '../../../location/data/models/region.dart';
+import '../../../location/presentaion/bloc/location_selection_cubit.dart';
+import '../../../location/presentaion/bloc/location_selection_state.dart';
+import '../../../location/presentaion/pages/branch_picker_screen.dart';
 
+/// Delivery's branch picking, per specs/001-region-branch-selection/tasks.md
+/// T047-T048. Reads [LocationSelectionCubit] only for the delivery-capable
+/// branch list (screen-scoped, `registerFactory`, started with
+/// `LocationFilter.delivery()` — no region step) — mirroring
+/// `DailyRentBody`'s pattern from T035-T040 for the branch half only, since
+/// this flow has no dropoff branch concept, only a dropoff *location*.
+///
+/// The dropoff/pickup **map location** picking below (`_buildBoundsFrom...`,
+/// `_getCenterFrom...`, `_pickLocation`) is the out-of-scope AREAS FEATURE
+/// (BD-1) and is preserved byte-for-byte in behaviour — only repointed at
+/// the new [Branch.polygon]/[Branch.center] and [Region.polygon], which
+/// carry the identical `{lat, lng}` shape the old `BranchModel`/`RegionModel`
+/// geometry did. The region used to bound the dropoff map picker is NOT a
+/// "region step" for branch filtering (delivery has none) — it is fetched
+/// directly from [LocationRepository] (bypassing the cubit, which never
+/// fetches regions for a direct filter) purely to keep this out-of-scope
+/// map feature working.
 class DeliveryRentBody extends StatefulWidget {
   const DeliveryRentBody({super.key});
 
@@ -41,23 +63,32 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
   double? dropoff_lat;
   double? dropoff_long;
 
-  BranchModel? _selectedBranch;
-  RegionModel? _selectedRegion;
+  Region? _selectedRegion;
   String? _selectedRegionCity;
+  List<Region> _boundsRegions = const [];
 
   String? _savedPickupAddress;
   String? _savedDropoffAddress;
-  String? _savedBranchName;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final searchCubit = context.read<SearchCubit>();
-      if (searchCubit.deliveryBranchesData.isEmpty) {
-        searchCubit.getDeliveryBranches();
-      }
-    });
+    _loadBoundsRegions();
+  }
+
+  /// Best-effort, out-of-scope areas-feature support only. A failure here
+  /// leaves `_boundsRegions` empty, which the region picker below already
+  /// renders as its own empty state — the branch list itself never depends
+  /// on this call.
+  Future<void> _loadBoundsRegions() async {
+    try {
+      final regions = await sl<LocationRepository>().getRegions();
+      final withPolygon =
+          regions.where((r) => r.polygon != null && r.polygon!.isNotEmpty).toList();
+      if (mounted) setState(() => _boundsRegions = withPolygon);
+    } catch (_) {
+      // Areas feature stays best-effort here, same as before this rewrite.
+    }
   }
 
   @override
@@ -93,8 +124,8 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
     return true;
   }
 
-  LocationBounds? _buildBoundsFromBranch() {
-    final polygon = _selectedBranch?.polygon;
+  LocationBounds? _buildBoundsFromBranch(Branch? branch) {
+    final polygon = branch?.polygon;
     if (polygon == null || polygon.isEmpty) return null;
     final validPoints =
         polygon.where((p) => p.lat != null && p.lng != null).toList();
@@ -130,8 +161,8 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
     );
   }
 
-  LatLng? _getCenterFromBranch() {
-    final c = _selectedBranch?.center;
+  LatLng? _getCenterFromBranch(Branch? branch) {
+    final c = branch?.center;
     if (c == null || c.lat == null || c.lng == null) return null;
     return LatLng(c.lat!, c.lng!);
   }
@@ -152,10 +183,10 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
     );
   }
 
-  Future<void> _pickLocation({required bool isPickup}) async {
+  Future<void> _pickLocation({required bool isPickup, required Branch? pickupBranch}) async {
     final locale = AppLocalizations.of(context)!;
 
-    if (isPickup && _selectedBranch == null) {
+    if (isPickup && pickupBranch == null) {
       _showSnackError(locale.selectDeliveryBranchFirst);
       return;
     }
@@ -165,7 +196,8 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
       return;
     }
 
-    final bounds = isPickup ? _buildBoundsFromBranch() : _buildBoundsFromRegion();
+    final bounds =
+        isPickup ? _buildBoundsFromBranch(pickupBranch) : _buildBoundsFromRegion();
 
     if (bounds == null) {
       bool hasPermission = await _checkLocationPermission();
@@ -177,7 +209,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
       extra: LocationPickerArgs(
         bounds: bounds,
         centerOverride:
-            isPickup ? _getCenterFromBranch() : _getCenterFromRegion(),
+            isPickup ? _getCenterFromBranch(pickupBranch) : _getCenterFromRegion(),
       ),
     );
 
@@ -230,66 +262,142 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
     return address;
   }
 
-  void _showBranchBottomSheet(
-      BuildContext context, SearchCubit searchCubit, AppLocalizations? locale) {
-    showModalBottomSheet(
-      useRootNavigator: true,
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      constraints: BoxConstraints(
-        maxWidth: double.infinity,
-        maxHeight: MediaQuery.of(context).size.height * 0.85,
+  Future<void> _pickBranch(
+    BuildContext context,
+    LocationSelectionCubit cubit,
+    List<Branch> options,
+    int? selectedId,
+  ) async {
+    // NOT PersistentNavBarNavigator.pushNewScreen<Branch>(...) — see
+    // contracts/navigation-contract.md: that helper throws at runtime for a
+    // typed generic. Pushing directly on the root Navigator keeps the same
+    // "outside the caller's provider subtree" placement Principle II
+    // requires.
+    final emptyMessage = AppLocalizations.of(context)!.noBranchesOfferService;
+    final picked = await Navigator.of(context, rootNavigator: true).push<Branch>(
+      CupertinoPageRoute<Branch>(
+        builder: (_) => BranchPickerScreen(
+          branches: options,
+          selectedId: selectedId,
+          emptyMessage: emptyMessage,
+        ),
       ),
-      builder: (context) => BranchSelectionBottomSheet(
-        branches: searchCubit.deliveryBranchesData,
-        selectedBranchName: searchCubit.selectedReceiveBranch,
-        locale: locale,
-        onBranchSelected: (branch) {
-          setState(() {
-            searchCubit.selectedReceiveBranch = branch.name;
-            _savedBranchName = branch.name;
-            _selectedBranch = branch;
-            pickupController.clear();
-            _savedPickupAddress = null;
-            pickup_lat = null;
-            pickup_long = null;
-          });
-        },
+    );
+    if (picked == null) return;
+    cubit.setPickupBranch(picked);
+    setState(() {
+      pickupController.clear();
+      _savedPickupAddress = null;
+      pickup_lat = null;
+      pickup_long = null;
+    });
+  }
+
+  Future<void> _showRegionPicker(BuildContext context) {
+    final locale = AppLocalizations.of(context)!;
+    return showModalBottomSheet(
+      useRootNavigator: true,
+      backgroundColor: backgroundColor(context),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
+      ),
+      isScrollControlled: true,
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 20.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 10.h),
+              Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: strokeGrayColor(sheetContext),
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              SizedBox(height: 12.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          locale.selectDropoffRegion,
+                          style: AppTypography.headingColor18(sheetContext),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(sheetContext),
+                      child: Container(
+                        width: 40.w,
+                        height: 40.w,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: bg2Color(sheetContext),
+                          borderRadius: BorderRadius.circular(24.r),
+                        ),
+                        child: Icon(Icons.close,
+                            size: 20.sp, color: headingColor(sheetContext)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 8.h),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: 420.h),
+                child: _boundsRegions.isEmpty
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.w, vertical: 24.h),
+                        child: Text(
+                          locale.noBranchesToShow,
+                          style: AppTypography.paragraphColor14(sheetContext),
+                        ),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _boundsRegions.length,
+                        itemBuilder: (context, index) {
+                          final region = _boundsRegions[index];
+                          final isSelected = region.id == _selectedRegion?.id;
+                          return ListTile(
+                            title: Text(
+                              region.city ?? region.name,
+                              style: AppTypography.paragraphColor16(sheetContext),
+                            ),
+                            trailing: isSelected
+                                ? Icon(Icons.check_circle,
+                                    color: mainTypographyColor(sheetContext))
+                                : null,
+                            onTap: () {
+                              setState(() {
+                                _selectedRegion = region;
+                                _selectedRegionCity = region.city;
+                                dropoffController.clear();
+                                _savedDropoffAddress = null;
+                                dropoff_lat = null;
+                                dropoff_long = null;
+                              });
+                              Navigator.pop(sheetContext);
+                            },
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  void _showRegionBottomSheet(
-      BuildContext context, SearchCubit searchCubit, AppLocalizations? locale) {
-    showModalBottomSheet(
-      useRootNavigator: true,
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      constraints: BoxConstraints(
-        maxWidth: double.infinity,
-        maxHeight: MediaQuery.of(context).size.height * 0.85,
-      ),
-      builder: (context) => RegionSelectionBottomSheet(
-        regions: searchCubit.regionsData ?? [],
-        selectedRegionName: _selectedRegionCity,
-        locale: locale,
-        onRegionSelected: (region) {
-          setState(() {
-            _selectedRegion = region;
-            _selectedRegionCity = region.city;
-            dropoffController.clear();
-            _savedDropoffAddress = null;
-            dropoff_lat = null;
-            dropoff_long = null;
-          });
-        },
-      ),
-    );
-  }
-
-  Future<bool> onTapValidation(BuildContext context) async {
+  Future<bool> onTapValidation(BuildContext context, Branch? pickupBranch) async {
     final locale = AppLocalizations.of(context)!;
     final searchCubit = BlocProvider.of<SearchCubit>(context);
 
@@ -301,21 +409,18 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
       _showErrorDialog(context, locale.selectDropoffLocation);
       return false;
     }
-    if (searchCubit.selectedReceiveBranch == null) {
+    if (pickupBranch == null) {
       _showErrorDialog(context, locale.selectDeliveryBranchMsg);
       return false;
     }
     try {
-      final triggeredBranchModel = searchCubit.deliveryBranchesData.firstWhere(
-        (element) => element.name == searchCubit.selectedReceiveBranch,
-        orElse: () => BranchModel(),
-      );
-      if (triggeredBranchModel.id == null) {
-        _showErrorDialog(context, locale.errorSelectingBranch);
-        return false;
-      }
-      searchCubit.selectedReceiveModel = triggeredBranchModel;
-      searchCubit.selectedDriveModel = triggeredBranchModel;
+      // Bridge into the legacy BranchModel the still-unconverted downstream
+      // flow (FilterModel, CarsInformation, ...) expects. Only `id`/`name`
+      // are ever read from it there — both come straight from the new
+      // Branch, never re-resolved by matching a name (Principle I).
+      final bridge = BranchModel(id: pickupBranch.id, name: pickupBranch.name);
+      searchCubit.selectedReceiveModel = bridge;
+      searchCubit.selectedDriveModel = bridge;
       searchCubit.dropoffLat ??= searchCubit.pickupLat;
       searchCubit.dropoffLong ??= searchCubit.pickupLong;
       await searchCubit.validateDelivery();
@@ -372,9 +477,6 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
 
     return BlocBuilder<SearchCubit, SearchState>(
       buildWhen: (previous, current) {
-        if (current is SearchLoading) {
-          return context.read<SearchCubit>().deliveryBranchesData.isEmpty;
-        }
         if (current is SearchSuccess ||
             current is SearchValidate ||
             current is SearchInvalid ||
@@ -383,31 +485,30 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
         }
         return false;
       },
-      builder: (context, state) {
-        final searchCubit = context.read<SearchCubit>();
-        final receiveDate = searchCubit.receiveDateValue;
-        final driveDate = searchCubit.driveDateValue;
+      builder: (context, searchState) {
+        return BlocBuilder<LocationSelectionCubit, LocationSelectionState>(
+          builder: (context, locState) {
+            final cubit = context.read<LocationSelectionCubit>();
+            final searchCubit = context.read<SearchCubit>();
+            final receiveDate = searchCubit.receiveDateValue;
+            final driveDate = searchCubit.driveDateValue;
 
-        searchCubit.updateDates(receiveDate, driveDate);
-        final differenceInDays = searchCubit.differenceInDays;
+            searchCubit.updateDates(receiveDate, driveDate);
+            final differenceInDays = searchCubit.differenceInDays;
 
-        if (_savedPickupAddress != null && pickupController.text.isEmpty) {
-          pickupController.text = _savedPickupAddress!;
-        }
-        if (_savedDropoffAddress != null && dropoffController.text.isEmpty) {
-          dropoffController.text = _savedDropoffAddress!;
-        }
-        if (_savedBranchName != null &&
-            searchCubit.selectedReceiveBranch == null) {
-          searchCubit.selectedReceiveBranch = _savedBranchName;
-        }
+            if (_savedPickupAddress != null && pickupController.text.isEmpty) {
+              pickupController.text = _savedPickupAddress!;
+            }
+            if (_savedDropoffAddress != null && dropoffController.text.isEmpty) {
+              dropoffController.text = _savedDropoffAddress!;
+            }
 
-        if (state is SearchLoading &&
-            searchCubit.deliveryBranchesData.isEmpty) {
-          return Center(child: LoadingIndicator());
-        }
+            if (locState.status == LocationSelectionStatus.loading &&
+                locState.pickupOptions.isEmpty) {
+              return Center(child: LoadingIndicator());
+            }
 
-        return SingleChildScrollView(
+            return SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 15.w),
             child: Column(
@@ -423,15 +524,30 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
                   style: AppTypography.paragraphColor18(context),
                 ),
                 SizedBox(height: 12.h),
+
+                // FR-038 failure UI, alongside the normal selection rows,
+                // never instead of them — the cubit never discards
+                // pickupBranch on fetch failure.
+                if (locState.status == LocationSelectionStatus.failure)
+                  _FailureBanner(
+                    message: locState.error ?? '',
+                    onRetry: cubit.retry,
+                  ),
+
                 _buildFloatingLabelField(
                   label: locale.selectCity,
-                  value: searchCubit.selectedReceiveBranch,
-                  onTap: () =>
-                      _showBranchBottomSheet(context, searchCubit, locale),
+                  value: locState.pickupBranch?.name,
+                  onTap: () => _pickBranch(
+                    context,
+                    cubit,
+                    locState.pickupOptions,
+                    locState.pickupBranch?.id,
+                  ),
                 ),
                 SizedBox(height: 12.h),
                 GestureDetector(
-                  onTap: () => _pickLocation(isPickup: true),
+                  onTap: () => _pickLocation(
+                      isPickup: true, pickupBranch: locState.pickupBranch),
                   child: _buildActionRow(
                     mainText: locale.whereToDeliver,
                     controller: pickupController,
@@ -441,12 +557,12 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
                 _buildFloatingLabelField(
                   label: locale.selectDropoffRegion,
                   value: _selectedRegionCity,
-                  onTap: () =>
-                      _showRegionBottomSheet(context, searchCubit, locale),
+                  onTap: () => _showRegionPicker(context),
                 ),
                 SizedBox(height: 12.h),
                 GestureDetector(
-                  onTap: () => _pickLocation(isPickup: false),
+                  onTap: () => _pickLocation(
+                      isPickup: false, pickupBranch: locState.pickupBranch),
                   child: _buildActionRow(
                     mainText: locale.whereToPickup,
                     controller: dropoffController,
@@ -468,7 +584,7 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
                     searchCubit.pickupLong = pickup_long;
                     searchCubit.dropoffLat = dropoff_lat;
                     searchCubit.dropoffLong = dropoff_long;
-                    await onTapValidation(context);
+                    await onTapValidation(context, locState.pickupBranch);
                     setState(() => isLoading = false);
                   },
                   child: isLoading
@@ -479,6 +595,8 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
               ],
             ),
           ),
+            );
+          },
         );
       },
     );
@@ -565,6 +683,44 @@ class _DeliveryRentBodyState extends State<DeliveryRentBody> {
                     mainText,
                     style: AppTypography.paragraphColor18(context),
                   ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// FR-038: shown alongside the normal selection UI, never instead of it.
+class _FailureBanner extends StatelessWidget {
+  final String message;
+  final VoidCallback onRetry;
+
+  const _FailureBanner({required this.message, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = AppLocalizations.of(context)!;
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: bg2Color(context),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: buttonRedColor(context)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(message, style: AppTypography.paragraphColor14(context)),
+          ),
+          SizedBox(width: 8.w),
+          GestureDetector(
+            onTap: onRetry,
+            child: Text(
+              locale.retry,
+              style: AppTypography.paragraphColor14(context)
+                  .copyWith(color: buttonBlueColor(context)),
+            ),
           ),
         ],
       ),

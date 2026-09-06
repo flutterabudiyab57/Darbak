@@ -153,6 +153,7 @@ Map<String, String> arabic() {
     'selectBranch': 'اختر فرع ',
     'availableToday': 'متاح اليوم',
     'noBranchesToShow': 'لا توجد فروع متاحة',
+    'noBranchesOfferService': 'لا توجد فروع تقدم هذه الخدمة',
     'searchCar': 'ابحث عن سيارتك',
     "signIn": "تسجيل الدخول",
     'confirmPassword': "تاكيد كلمة المرور",
