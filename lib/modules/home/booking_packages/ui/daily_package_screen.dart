@@ -12,6 +12,10 @@ import 'package:darbak/core/helpers/helper_fun.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter/material.dart';
 
+import 'package:darbak/service_locator.dart';
+import 'package:darbak/modules/location/data/location_filter.dart';
+import 'package:darbak/modules/location/presentaion/bloc/location_selection_cubit.dart';
+
 import '../../../../core/router/routes.dart';
 import '../../../../language/locale.dart';
 import '../../../widgets/components/appbar.dart';
@@ -20,9 +24,18 @@ import '../../cars/presentaion/bloc/cubit/cars_cubit.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
 
-
+/// Own entry point for [DailyRentBody] besides `/classic` (`Clasic`). Both
+/// parents provide a screen-scoped [LocationSelectionCubit] — `registerFactory`,
+/// never added to `lib/bloc_providers.dart` (FR-017: an app-wide singleton is
+/// the defect this rewrite exists to close).
 class DailyPackages extends StatefulWidget {
   const DailyPackages({super.key});
+
+  static Widget entry() => BlocProvider<LocationSelectionCubit>(
+        create: (_) => sl<LocationSelectionCubit>()
+          ..start(const LocationFilter.allRegions()),
+        child: const DailyPackages(),
+      );
 
   @override
   State<DailyPackages> createState() => _DailyPackagesState();

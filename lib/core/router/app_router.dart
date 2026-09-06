@@ -254,7 +254,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/daily-package',
       name: Routes.dailyPackage,
-      builder: (_, __) => const DailyPackages(),
+      builder: (_, __) => DailyPackages.entry(),
     ),
     GoRoute(
       path: '/monthly-package',

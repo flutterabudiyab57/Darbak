@@ -56,12 +56,19 @@ class CustomDateTimePickerSheet extends StatefulWidget {
   final String title;
   final Function(DateTime) onConfirm;
 
+  /// Optional per-slot guard: return false to DISABLE (never hide) a time
+  /// slot on the currently selected day. `null` (the default, used by every
+  /// caller that hasn't opted in) preserves this widget's original
+  /// behaviour exactly — only today's already-past slots are dimmed.
+  final bool Function(DateTime slot)? isSlotEnabled;
+
   const CustomDateTimePickerSheet({
     Key? key,
     required this.initialDateTime,
     required this.isRTL,
     required this.title,
     required this.onConfirm,
+    this.isSlotEnabled,
   }) : super(key: key);
 
   @override
@@ -127,18 +134,52 @@ class _CustomDateTimePickerSheetState
     return index < _currentMinSlot;
   }
 
-  void _handleTimeSlotChanged(int index) {
-    if (_isSlotPast(index)) {
-      final target = _currentMinSlot;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        _timeSlotCtrl.animateToItem(
-          target,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      });
+  DateTime _slotDateTime(int index) {
+    final totalMinutes = index * 30;
+    return DateTime(
+      _selectedDay.year,
+      _selectedDay.month,
+      _selectedDay.day,
+      totalMinutes ~/ 60,
+      totalMinutes % 60,
+    );
+  }
+
+  /// Disabled, never hidden (Constitution Principle IV / T038): the wheel
+  /// still renders and scrolls freely across a blocked slot, this only dims
+  /// it and — on settle — snaps forward off it, same treatment already-past
+  /// slots got before [isSlotEnabled] existed.
+  bool _isSlotBlocked(int index) {
+    if (_isSlotPast(index)) return true;
+    final guard = widget.isSlotEnabled;
+    if (guard == null) return false;
+    return !guard(_slotDateTime(index));
+  }
+
+  /// First index at or after [from] that isn't blocked, or `null` if the
+  /// rest of the day has nothing open — callers leave the wheel where it
+  /// landed rather than force it somewhere arbitrary.
+  int? _nextEnabledSlot(int from) {
+    for (var i = from; i < _timeSlots.length; i++) {
+      if (!_isSlotBlocked(i)) return i;
     }
+    return null;
+  }
+
+  void _handleTimeSlotChanged(int index) {
+    if (!_isSlotBlocked(index)) return;
+    final target = _isSlotPast(index)
+        ? _currentMinSlot
+        : _nextEnabledSlot(index + 1);
+    if (target == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _timeSlotCtrl.animateToItem(
+        target,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   void _prevMonth() {
@@ -362,7 +403,7 @@ class _CustomDateTimePickerSheetState
               styleBuilder: (index) => AppTypography.infoLabel16(context)
                   .copyWith(
                 color: paragraphNavyColor(context)
-                    .withValues(alpha: _isSlotPast(index) ? 0.3 : 1),
+                    .withValues(alpha: _isSlotBlocked(index) ? 0.3 : 1),
               ),
             ),
           ),

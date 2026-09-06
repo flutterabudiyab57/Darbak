@@ -5,9 +5,23 @@ import '../../core/constants/assets/app_colors.dart';
 import '../../core/style/style.dart';
 import '../../language/locale.dart';
 import '../home/search_screen/presentaion/widget/select_day_and_time.dart';
+import '../location/data/models/branch_work_time.dart';
 
 class TimeSelectTwoBox extends StatelessWidget {
-  const TimeSelectTwoBox({Key? key}) : super(key: key);
+  /// T038 guarding, opt-in. `false` (the default) keeps every pre-existing
+  /// call site — airport, delivery, monthly, book-from-car — byte-for-byte
+  /// on the old unrestricted-except-past-slots behaviour. Only daily rent
+  /// passes `true`.
+  final bool enableGuarding;
+  final BranchWorkTime? pickupWorkTime;
+  final BranchWorkTime? dropoffWorkTime;
+
+  const TimeSelectTwoBox({
+    Key? key,
+    this.enableGuarding = false,
+    this.pickupWorkTime,
+    this.dropoffWorkTime,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +51,21 @@ class TimeSelectTwoBox extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Expanded(child: SelectDayAndTimeWidget(isReceive: true)),
+              Expanded(
+                child: SelectDayAndTimeWidget(
+                  isReceive: true,
+                  enableGuarding: enableGuarding,
+                  workTime: pickupWorkTime,
+                ),
+              ),
               SizedBox(width: 6.w),
-              Expanded(child: SelectDayAndTimeWidget(isReceive: false)),
+              Expanded(
+                child: SelectDayAndTimeWidget(
+                  isReceive: false,
+                  enableGuarding: enableGuarding,
+                  workTime: dropoffWorkTime,
+                ),
+              ),
             ],
           ),
         ),

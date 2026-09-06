@@ -5,13 +5,31 @@ import 'package:intl/intl.dart';
 import '../../../../../core/constants/assets/app_colors.dart';
 import '../../../../../core/style/style.dart';
 import '../../../../../language/locale.dart';
+import '../../../../location/data/models/branch_work_time.dart';
 import '../../../../widgets/on_boarding/time_picker.dart';
 import '../../blocs/search_bloc/search_cubit.dart';
 import '../../blocs/search_bloc/search_state.dart';
 class SelectDayAndTimeWidget extends StatefulWidget {
   final bool isReceive;
-  const SelectDayAndTimeWidget({Key? key, required this.isReceive})
-      : super(key: key);
+
+  /// Opts this instance into time guarding (T038). `false` (the default) is
+  /// what every pre-existing call site keeps getting — unrestricted slot
+  /// picking except for today's already-past times, exactly as before this
+  /// parameter existed. Only the daily-rent flow currently passes `true`.
+  final bool enableGuarding;
+
+  /// The branch whose work_time bounds the enabled slots. Read only when
+  /// [enableGuarding] is true. `null` — including "not yet selected" — fails
+  /// open (Constitution Principle IV): every slot stays enabled except the
+  /// two-hours-away / dropoff-after-pickup rules below.
+  final BranchWorkTime? workTime;
+
+  const SelectDayAndTimeWidget({
+    Key? key,
+    required this.isReceive,
+    this.enableGuarding = false,
+    this.workTime,
+  }) : super(key: key);
 
   @override
   State<SelectDayAndTimeWidget> createState() => _SelectDayAndTimeWidgetState();
@@ -39,7 +57,27 @@ class _SelectDayAndTimeWidgetState extends State<SelectDayAndTimeWidget> {
     });
   }
 
+  /// T038: less than two hours away, outside the branch's open hours
+  /// (fails open when [SelectDayAndTimeWidget.workTime] is null — Principle
+  /// IV), and — for dropoff — at or before the pickup time. `null` when
+  /// [SelectDayAndTimeWidget.enableGuarding] is false, which leaves
+  /// [CustomDateTimePickerSheet] with no guard at all: identical to this
+  /// widget's behaviour before T038.
+  bool Function(DateTime)? _slotGuard(BuildContext context) {
+    if (!widget.enableGuarding) return null;
+    return (DateTime dt) {
+      final withinWorkTime = widget.workTime?.isOpenAt(dt) ?? true;
+      if (!withinWorkTime) return false;
+      if (widget.isReceive) {
+        return dt.isAfter(DateTime.now().add(const Duration(hours: 2)));
+      }
+      final pickup = BlocProvider.of<SearchCubit>(context).receiveDateValue;
+      return dt.isAfter(pickup);
+    };
+  }
+
   void _showPicker(BuildContext context, bool isRTL) {
+    final guard = _slotGuard(context);
     showModalBottomSheet(
       useRootNavigator: true,
       context: context,
@@ -52,6 +90,7 @@ class _SelectDayAndTimeWidgetState extends State<SelectDayAndTimeWidget> {
         title: widget.isReceive
             ? (isRTL ? 'تاريخ الاستلام' : 'Pick-up')
             : (isRTL ? 'تاريخ التسليم' : 'Drop-off'),
+        isSlotEnabled: guard,
         onConfirm: (dt) {
           setState(() => selectedDateTime = dt);
           final cubit = BlocProvider.of<SearchCubit>(context);

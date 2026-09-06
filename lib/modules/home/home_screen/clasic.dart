@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:darbak/service_locator.dart';
+import 'package:darbak/modules/location/data/location_filter.dart';
+import 'package:darbak/modules/location/presentaion/bloc/location_selection_cubit.dart';
 
 import '../../../core/constants/assets/app_colors.dart';
 import '../../../core/helpers/enums.dart';
@@ -20,12 +22,22 @@ import '../search_screen/blocs/search_bloc/search_cubit.dart';
 import '../search_screen/blocs/search_bloc/search_state.dart';
 import '../search_screen/data/models/filter_model.dart';
 
+/// The actual live entry point for daily rent — reached from
+/// `search_Screen.dart` via `context.pushNamed(Routes.classic)`. (Note:
+/// `daily_package_screen.dart`'s own `/daily-package` route, which task T034
+/// names, is not linked from anywhere in the app; both parents that can
+/// render [DailyRentBody] provide their own scoped [LocationSelectionCubit]
+/// so it works regardless of which route is actually used.)
 class Clasic extends StatefulWidget {
   const Clasic({super.key});
 
   static Widget entry() => MultiBlocProvider(
         providers: [
           BlocProvider<CarsCubit>(create: (_) => sl<CarsCubit>()),
+          BlocProvider<LocationSelectionCubit>(
+            create: (_) => sl<LocationSelectionCubit>()
+              ..start(const LocationFilter.allRegions()),
+          ),
         ],
         child: const Clasic(),
       );
@@ -60,17 +72,19 @@ class _ClasicState extends State<Clasic> {
                       body: state.props.first.toString(),
                     );
                   } else if (state is SearchValidate) {
-                    final matchingBranches = context
-                        .read<SearchCubit>()
-                        .branchesData
-                        .where((element) =>
-                            element.name ==
-                            context.read<SearchCubit>().selectedReceiveBranch)
-                        .toList();
+                    // Was: name-matching against `branchesData`
+                    // (`element.name == selectedReceiveBranch`), which the
+                    // new location flow never populates — DailyRentBody sets
+                    // only `selectedReceiveModel`/`selectedDriveModel` (the
+                    // id/name bridge built from LocationSelectionCubit's
+                    // Branch, Constitution Principle I). `validate()` already
+                    // requires `selectedReceiveModel != null` before it can
+                    // emit SearchValidate, so it is safe to read directly
+                    // here rather than re-deriving it by name.
+                    final triggeredBranchModel =
+                        context.read<SearchCubit>().selectedReceiveModel;
 
-                    if (matchingBranches.isNotEmpty) {
-                      final triggeredBranchModel = matchingBranches.first;
-
+                    if (triggeredBranchModel != null) {
                       final filterModel = FilterModel(
                         selectedBranch: triggeredBranchModel,
                         receiveTimeValue: context

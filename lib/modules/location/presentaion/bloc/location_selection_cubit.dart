@@ -23,6 +23,14 @@ class LocationSelectionCubit extends Cubit<LocationSelectionState> {
   List<Region> _regions = const [];
   Future<void> Function()? _retryAction;
 
+  /// The region list fetched by [start] (region flows) or [onLanguageChanged]
+  /// — the same list the cubit resolves [LocationSelectionState.pickupRegion]
+  /// / [LocationSelectionState.dropoffRegion] against. Not part of the state
+  /// object itself (only the *selected* region is): a screen renders this to
+  /// offer a region choice, then calls [selectPickupRegion] /
+  /// [selectDropoffRegion] with one of its entries.
+  List<Region> get regions => _regions;
+
   bool _isDirect(LocationFilter f) => f.homeDelivery || f.airport || f.carId != null;
 
   /// Called once, on screen mount. `f` is the flow's base filter —

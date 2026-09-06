@@ -218,15 +218,103 @@ matches the server's reported total, select pickup and a different-region dropof
 and confirm nothing stale is submitted, and confirm the submitted branch id is identical in Arabic
 and English.
 
-- [ ] T034 [US1] Provide `LocationSelectionCubit` from GetIt at the daily-rent screen in `lib/modules/home/booking_packages/ui/daily_package_screen.dart` via a `BlocProvider` scoped to that screen, and call `start(LocationFilter.allRegions())` once on mount. **Do not add it to `lib/bloc_providers.dart`.**
-- [ ] T035 [US1] Replace region selection in `lib/modules/home/booking_packages/widgets/daily_rent_body.dart` with `selectPickupRegion(region)` driven by the cubit's region list, removing this screen's use of the `SearchCubit`/`AllBranchCubit` location fields. Leave `SearchCubit`'s date, package and search logic untouched — it is out of scope.
-- [ ] T036 [US1] [US2] Replace both branch pickers in `daily_rent_body.dart` with the `PersistentNavBarNavigator.pushNewScreen<Branch>(context, screen: BranchPickerScreen(branches: options, selectedId: …), withNavBar: false)` call from the navigation contract, passing the result to **`setPickupBranch`** or **`setDropoffBranch`** at the call site. **The caller's choice of setter is the only thing that distinguishes pickup from dropoff** — no flag travels into the screen. Do not use `BranchesListView` here any more.
-- [ ] T037 [US2] Wire the separate-dropoff toggle in `daily_rent_body.dart` to `setSeparateDropoff(bool)` and the dropoff region to `selectDropoffRegion`. Confirm at the call site that **nothing clears a sibling field in the widget** — all clearing is the cubit's.
-- [ ] T038 [US3] Wire time guarding in the daily-rent date/time picker from `state.pickupBranch?.workTime` — disable (**not hide**) times less than two hours away, times where `isOpenAt` is false, and dropoff times at or before pickup. A `null` `workTime` leaves every time enabled (Principle IV). Keep `POST /available/time` in place as the final authority and surface its message on rejection.
-- [ ] T039 [US1] [US7] Trigger `onLanguageChanged()` from the daily-rent screen when the app locale changes (`LanguageCubit`), so names refresh while the selection survives by id.
-- [ ] T040 [US1] Add the FR-038 failure UI to `daily_rent_body.dart` — on `status: failure`, show `state.error` with a retry that calls `cubit.retry()`, without discarding selections already made.
-- [ ] T041 Run `scripts/flutter_analyze_filtered.ps1`; report against the 78 baseline. **No commit.**
+- [x] T034 [US1] Provide `LocationSelectionCubit` from GetIt at the daily-rent screen in `lib/modules/home/booking_packages/ui/daily_package_screen.dart` via a `BlocProvider` scoped to that screen, and call `start(LocationFilter.allRegions())` once on mount. **Do not add it to `lib/bloc_providers.dart`.**
+
+  > **Routing discrepancy found and worked around, not silently.** `daily_package_screen.dart`'s
+  > own route (`/daily-package`, `Routes.dailyPackage`) is not linked from anywhere in the live
+  > app — `grep`ing for `Routes.dailyPackage` outside `app_router.dart`/`routes.dart` finds
+  > nothing. The real, reachable daily-rent entry point is `/classic` → `Clasic.entry()`
+  > (`lib/modules/home/home_screen/clasic.dart`), pushed from
+  > `search_Screen.dart:439`. Both screens render the same `DailyRentBody`, so both need their
+  > own scoped `LocationSelectionCubit` for it to work regardless of which route is hit. Provided
+  > it at **both**: `DailyPackages.entry()` (new, mirroring `Clasic`'s existing `static Widget
+  > entry()` convention; `app_router.dart`'s `/daily-package` route updated to call it) and inside
+  > `Clasic.entry()`'s existing `MultiBlocProvider`. Each is `registerFactory` via `sl<...>()`,
+  > `..start(const LocationFilter.allRegions())` on creation — not added to `bloc_providers.dart`.
+  > Also added a `List<Region> get regions => _regions;` getter to `LocationSelectionCubit` (not
+  > in the original contract's public surface) — the UI has no other way to render a region list;
+  > the state intentionally holds only the *selected* region, not the fetchable list.
+- [x] T035 [US1] Replace region selection in `lib/modules/home/booking_packages/widgets/daily_rent_body.dart` with `selectPickupRegion(region)` driven by the cubit's region list, removing this screen's use of the `SearchCubit`/`AllBranchCubit` location fields. Leave `SearchCubit`'s date, package and search logic untouched — it is out of scope.
+
+  > `RegionTile` (old, `SearchCubit.regionsData`/`.selectedRegion` name-matching) and
+  > `MapListSelectionViewTile` (old, `AllBranchCubit`) are no longer used by `daily_rent_body.dart`
+  > at all. Replaced with a small in-file modal (`_showRegionPicker`) driven by
+  > `cubit.regions`/`state.pickupRegion`, calling `selectPickupRegion`/`selectDropoffRegion`. Kept
+  > local, not shared, since it's specific to this screen and touching a shared picker file would
+  > have risked the other flows. `SearchCubit.getRegions()`/`AllBranchCubit.getAllBranch()` calls
+  > were only ever in `daily_rent_body.dart`'s own `initState` — both removed since nothing in this
+  > widget reads either cubit's location fields any more (see the AllBranchCubit finding below).
+- [x] T036 [US1] [US2] Replace both branch pickers in `daily_rent_body.dart` with the `PersistentNavBarNavigator.pushNewScreen<Branch>(context, screen: BranchPickerScreen(branches: options, selectedId: …), withNavBar: false)` call from the navigation contract, passing the result to **`setPickupBranch`** or **`setDropoffBranch`** at the call site. **The caller's choice of setter is the only thing that distinguishes pickup from dropoff** — no flag travels into the screen. Do not use `BranchesListView` here any more.
+
+  > Done via a private `_pickBranch(..., isDropoff: bool)` helper — `isDropoff` selects which
+  > setter the CALLER invokes on the result; it never reaches `BranchPickerScreen`'s constructor.
+  > `BranchesListView`/`MapListSelectionViewTile` are no longer referenced anywhere in this file.
+- [x] T037 [US2] Wire the separate-dropoff toggle in `daily_rent_body.dart` to `setSeparateDropoff(bool)` and the dropoff region to `selectDropoffRegion`. Confirm at the call site that **nothing clears a sibling field in the widget** — all clearing is the cubit's.
+
+  > `Switch.adaptive(value: locState.separateDropoff, onChanged: (v) => cubit.setSeparateDropoff(v))`
+  > — the `onChanged` body is exactly that one call, nothing else. No local `_switchValue` state
+  > remains (the old widget's own bool has been deleted); `separateDropoff`, `dropoffRegion` and
+  > `dropoffBranch` are all read from `LocationSelectionState`. No transformer was missing.
+- [x] T038 [US3] Wire time guarding in the daily-rent date/time picker from `state.pickupBranch?.workTime` — disable (**not hide**) times less than two hours away, times where `isOpenAt` is false, and dropoff times at or before pickup. A `null` `workTime` leaves every time enabled (Principle IV). Keep `POST /available/time` in place as the final authority and surface its message on rejection.
+
+  > The date/time picker (`TimeSelectTwoBox` → `SelectDayAndTimeWidget` → `CustomDateTimePickerSheet`)
+  > is SHARED by airport/delivery/monthly/book-from-car, all out of scope this phase. Added
+  > optional, default-`false`/`null` guarding parameters to all three (`enableGuarding`,
+  > `workTime`/`pickupWorkTime`/`dropoffWorkTime`, `isSlotEnabled`) — every pre-existing call site
+  > (`grep`-confirmed: airport, delivery, monthly, car all call `TimeSelectTwoBox()` with zero
+  > args) is byte-for-byte unaffected, still `const`-constructible. Only `daily_rent_body.dart`
+  > passes `enableGuarding: true`. Slots are disabled (dimmed, still scrollable — never removed
+  > from the wheel) and, on settle, auto-snap forward to the next enabled slot, extending the
+  > sheet's existing past-slot-snapping behaviour rather than replacing it. `POST /available/time`
+  > (`SearchCubit.validate()`) and its message surfacing (`SearchInvalid` → `HelperFunctions.dialog`
+  > in the parent screens) were already in place and are untouched.
+- [x] T039 [US1] [US7] Trigger `onLanguageChanged()` from the daily-rent screen when the app locale changes (`LanguageCubit`), so names refresh while the selection survives by id.
+
+  > `BlocListener<LanguageCubit, Locale>` wraps the widget's build, `listenWhen` on
+  > `languageCode` change, calling `context.read<LocationSelectionCubit>().onLanguageChanged()`.
+- [x] T040 [US1] Add the FR-038 failure UI to `daily_rent_body.dart` — on `status: failure`, show `state.error` with a retry that calls `cubit.retry()`, without discarding selections already made.
+
+  > `_FailureBanner` renders ABOVE the normal region/branch rows, never instead of them — the
+  > cubit's failure path never clears `pickupBranch`/`dropoffBranch`/`pickupRegion`/`dropoffRegion`,
+  > so those rows keep showing whatever was already selected while the banner is up.
+- [x] T041 Run `scripts/flutter_analyze_filtered.ps1`; report against the 78 baseline. **No commit.**
+
+  > **78 — exactly at baseline, zero new.** `test/modules/location` also re-run as a regression
+  > check: **104 passed, 0 failed**, unchanged from before this phase (only an additive
+  > `LocationSelectionCubit.regions` getter was touched there, no behavior/emission change).
 - [ ] T042 [US1] [US2] [US3] [US7] **Device-verify daily rent** against the Phase 4 checklist in [quickstart.md](./quickstart.md): full branch count for the largest region; pickup then dropoff in a different region; changing pickup region clears the pickup branch; disabling dropoff submits nothing stale; every tap gives feedback; time guard disables the right slots; language switch keeps the selection and changes the names. **Expect time guarding to become stricter than today** — the old `Mon` class parsed only `lock` for six of eight day keys ([R7](./research.md)), so real morning/afternoon windows now apply. That is the fix landing, not a regression. **STOP.**
+
+  > Two real bugs found and fixed during this device-verification pass (developer testing on a
+  > physical Android device, 2026-09-06):
+  >
+  > 1. **"اختر فرع" tap did nothing** — `daily_rent_body.dart`'s `_pickBranch` called
+  >    `PersistentNavBarNavigator.pushNewScreen<Branch>(...)`. That helper's internal
+  >    `_getPageRoute()` always builds an untyped `CupertinoPageRoute<dynamic>` and then does
+  >    `as Route<T>` on it — which throws `type 'CupertinoPageRoute<dynamic>' is not a subtype of
+  >    type 'Route<Branch>'` at runtime whenever `T` is a concrete type. Every other call site in
+  >    the app uses the helper without a generic argument (fire-and-forget, no return value), so
+  >    this is the first place that ever exercised the bug — a `persistent_bottom_nav_bar` 6.2.1
+  >    library defect, not a Principle II violation. Confirmed via a temporary debug print +
+  >    try/catch around the call, which surfaced the exact cast exception (removed once diagnosed).
+  >    **Fix**: push directly via `Navigator.of(context, rootNavigator: true).push<Branch>(
+  >    CupertinoPageRoute<Branch>(builder: ...))`, bypassing the helper's buggy generic path while
+  >    keeping the identical root-navigator placement Principle II requires (`withNavBar: false` in
+  >    the helper resolves to this exact same `rootNavigator: true`).
+  > 2. **"Search" always printed "No matching branch found" and never navigated** —
+  >    `clasic.dart`'s `SearchValidate` listener still matched by name against the OLD
+  >    `branchesData`/`selectedReceiveBranch` fields, which the new `LocationSelectionCubit`-driven
+  >    `DailyRentBody` never populates (by design — T035 stopped reading them). The bridge
+  >    `DailyRentBody.onTap` already builds — `searchCubit.selectedReceiveModel`/`selectedDriveModel`
+  >    (the id/name-only `BranchModel`, Principle I) — was sitting right there unused by the
+  >    listener. `validate()` itself requires `selectedReceiveModel != null` before it can emit
+  >    `SearchValidate`, so reading it directly is safe. **Fix**: the listener now reads
+  >    `context.read<SearchCubit>().selectedReceiveModel` directly instead of re-deriving it by
+  >    name from `branchesData`.
+  >
+  > Both fixes verified end-to-end on-device by the developer: full daily-rent flow (region →
+  > branch → separate dropoff → time → search → cars list) now works. `flutter analyze` stayed at
+  > 78 (baseline, zero new) after both fixes. **T042 itself is left unchecked — device verification
+  > against the full Phase 4 checklist above is the developer's to confirm and check off.**
 
 **Checkpoint**: US1, US2, US3 and US7 are complete and device-verified in the daily-rent flow. Every
 other flow is still on the old code and still works.

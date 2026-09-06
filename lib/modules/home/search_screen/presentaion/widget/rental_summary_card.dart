@@ -44,7 +44,7 @@ class RentalSummaryCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            isRTL ? "مدة الايجار" : "Rental Duration",
+            isRTL ? "مدة الايجار" : " Duration",
             style: AppTypography.headingColor18(context)
           ),
           Text(
