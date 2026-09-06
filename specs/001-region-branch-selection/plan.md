@@ -556,12 +556,17 @@ here rather than merely good practice.
   silently by design (fail open, Principle IV). Intended — but it means **a partial branch never
   blocks a time**, and `POST /available/time` is the only thing standing between the renter and an
   unserviceable slot in that flow.
-- **The current `WorkTime` model discards most of the schedule.** `Mon` (used for `sat`, `sun`,
-  `mon`, `tue`, `wed`, `thu`) parses **only `lock`** — morning and afternoon windows for six of the
-  eight day keys are thrown away today (`branch_model.dart:244-256`). The new `BranchWorkTime`
-  parses them, so **time guarding will become stricter than the app currently is** on those days.
-  Expect behaviour change at Phase 4 device verification; it is a fix, not a regression, but it
-  will look like one.
+- **Corrected 2026-09-06 — the claim below did not hold against a real production `/branches`
+  response.** `Mon` (used for `sat`, `sun`, `mon`, `tue`, `wed`, `thu`) does parse only `lock`
+  (`branch_model.dart:244-256`), but in production those six keys never carry `morning`/`afternoon`
+  in the first place — they arrive as empty `{"lock": "0"}` shells, with real hours living in
+  `alldays` and `fri`. There was nothing on those keys for the old parser to discard, so time
+  guarding does **not** become stricter there. The real defect found instead was in `isOpenAt`
+  itself: it resolved a weekday's fields as a unit, so a present-but-empty shell short-circuited the
+  `allDays` fallback and returned `true` unconditionally — making the guard a no-op Sat-Thu
+  regardless of `alldays`'s real hours. Fixed by resolving `lock` and windows independently and
+  falling through to `allDays` when the weekday's own entry yields no usable window; see
+  [data-model.md](./data-model.md#isopenatdatetime-dt--resolution-order) for the corrected order.
 - **`langCode` is a mutable global defaulting to `''`** (`lib/core/constants/langCode.dart:1`), set
   by `LanguageCubit`. The shared Dio interceptor sends it raw, so an early request can carry an
   empty `Accept-Language`. The cache key and the request header **must** be derived from one

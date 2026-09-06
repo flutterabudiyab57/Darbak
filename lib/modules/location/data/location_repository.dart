@@ -21,6 +21,23 @@ class LocationRepository {
 
   String get _lang => currentLocationLanguage();
 
+  /// Completes a partial branch (from the car flow, [Branch.fromCarBranchesApi])
+  /// by id against a full branch list. Equality is on `id` (Constitution
+  /// Principle I), so this swaps detail, never identity —
+  /// `completeBranch(p, full) == p` always holds.
+  ///
+  /// An unmatched partial is returned UNCHANGED, never dropped and never
+  /// substituted. That is intended (Principle IV): a still-partial branch
+  /// carries no `workTime`, so a time guard run against it has nothing to
+  /// check and stays permissive, leaving `POST /available/time` as the only
+  /// remaining check. See data-model.md#completing-a-partial-branch-phase-7.
+  static Branch completeBranch(Branch partial, List<Branch> full) {
+    for (final candidate in full) {
+      if (candidate.id == partial.id) return candidate;
+    }
+    return partial;
+  }
+
   Future<List<Region>> getRegions({bool forceRefresh = false}) async {
     final key = 'regions:$_lang';
 

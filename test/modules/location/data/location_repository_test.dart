@@ -167,4 +167,49 @@ void main() {
       expect(deliveryKey, isNot(airportKey));
     });
   });
+
+  group('completeBranch (T056/T057)', () {
+    test('a matched partial gains workTime and geometry from the full branch', () {
+      final partial = Branch.fromCarBranchesApi({'id': 5, 'text': 'Car Branch'});
+      final full = Branch.fromBranchesApi({
+        'id': 5,
+        'name': 'Full Branch',
+        'work_time': {'openAllDays': '1'},
+        'polygon': [
+          {'lat': 24.7, 'lng': 46.7},
+        ],
+      });
+
+      final completed = LocationRepository.completeBranch(partial, [full]);
+
+      expect(completed.workTime, isNotNull);
+      expect(completed.polygon, isNotNull);
+      expect(completed.id, 5);
+    });
+
+    test('an unmatched partial is returned unchanged and the time guard then fails open', () {
+      final partial = Branch.fromCarBranchesApi({'id': 99, 'text': 'Car Branch'});
+      final full = Branch.fromBranchesApi({'id': 1, 'name': 'Unrelated Branch'});
+
+      final completed = LocationRepository.completeBranch(partial, [full]);
+
+      expect(completed, same(partial));
+      expect(completed.workTime, isNull);
+      // Principle IV: no workTime means every time stays available.
+      expect(completed.workTime?.isOpenAt(DateTime.now()) ?? true, isTrue);
+    });
+
+    test('complete(p, full) == p holds because equality is on id', () {
+      final partial = Branch.fromCarBranchesApi({'id': 5, 'text': 'Car Branch'});
+      final full = Branch.fromBranchesApi({
+        'id': 5,
+        'name': 'Full Branch',
+        'work_time': {'openAllDays': '1'},
+      });
+
+      final completed = LocationRepository.completeBranch(partial, [full]);
+
+      expect(completed, equals(partial));
+    });
+  });
 }

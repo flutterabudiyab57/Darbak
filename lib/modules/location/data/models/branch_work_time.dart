@@ -143,21 +143,48 @@ class BranchWorkTime {
     return json;
   }
 
-  /// Resolution order (data-model.md#branchworktime):
+  /// Resolution order (data-model.md#branchworktime) — corrected 2026-09-06
+  /// against a real production `/branches` response. A day entry's fields
+  /// are resolved INDEPENDENTLY, not as a unit:
   /// 1. workTime == null -> true
-  /// 2. resolve the day (byWeekday, falling back to allDays); no entry -> true
-  /// 3. day locked -> false
-  /// 4. collect usable windows; discard null/unparseable halves
-  /// 5. no usable window -> true (fail open, regardless of openAllDays)
-  /// 6. otherwise -> true iff dt's time-of-day falls inside a surviving window
+  /// 2. no entry for this weekday at all -> resolve against allDays (steps
+  ///    3-5 below, applied to allDays instead of the missing day)
+  /// 3. the weekday's OWN entry has lock == "1" -> false. Lock is
+  ///    authoritative even when windows are also present.
+  /// 4. collect the weekday's OWN usable windows (discarding null/
+  ///    unparseable halves) — if any exist, resolve against THEM ONLY,
+  ///    never allDays: true iff dt's time-of-day falls inside one.
+  /// 5. the weekday's own entry yields NO usable windows -> its mere
+  ///    PRESENCE is not a schedule (production sends every non-Friday
+  ///    weekday as an empty `{"lock": "0"}` shell — see data-model.md).
+  ///    Fall through and resolve against allDays instead, recursing into
+  ///    this same locked/windows check one level down.
+  /// 6. neither the weekday nor allDays yields a usable window -> true
+  ///    (fail open — Principle IV; genuinely absent data, not merely an
+  ///    empty shell, is what this step covers).
   bool isOpenAt(DateTime dt) {
-    final day = byWeekday[dt.weekday] ?? allDays;
+    final day = byWeekday[dt.weekday];
+    if (day == null) return _resolveAgainst(allDays, dt);
+
+    if (day.locked) return false;
+    final dayWindows = day.usableWindows;
+    if (dayWindows.isNotEmpty) return _matchesAny(dayWindows, dt);
+
+    // The weekday entry exists but carries no schedule of its own — fall
+    // through to allDays rather than treating "no windows here" as "no
+    // restriction here" (the defect this resolution order fixes).
+    return _resolveAgainst(allDays, dt);
+  }
+
+  bool _resolveAgainst(BranchWorkDay? day, DateTime dt) {
     if (day == null) return true;
     if (day.locked) return false;
-
     final windows = day.usableWindows;
     if (windows.isEmpty) return true;
+    return _matchesAny(windows, dt);
+  }
 
+  bool _matchesAny(List<TimeWindow> windows, DateTime dt) {
     final minuteOfDay = dt.hour * 60 + dt.minute;
     return windows.any((w) => w.contains(minuteOfDay));
   }

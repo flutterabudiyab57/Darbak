@@ -225,22 +225,27 @@ codegen.
 **Asked because**: `BranchWorkTime` replaces an existing `WorkTime`, and the plan needs to know
 whether the new behaviour is a like-for-like port or a behaviour change.
 
-**Decision**: it is a **behaviour change**, and a stricter one. Record it as a risk so the Phase 4
-device verification does not read it as a regression.
+**Corrected 2026-09-06, against a real PRODUCTION `/branches` response** (abudiyab-soft.com, not
+stage): the original decision below was wrong on its premise. In every branch in that response, the
+`sat`/`sun`/`mon`/`tue`/`wed`/`thu` keys contain **only** `{"lock": "0"}` — no `morning`, no
+`afternone` — with real hours living in `alldays` and `fri` (the only key that carries its own
+windows). **There was nothing for the old `Mon` class to discard on those six keys: they never
+carry windows on the wire.** The static code comparison below (`Mon` parses `lock` only) is still
+accurate as a description of the old parser, but the conclusion drawn from it — that real hours
+exist on those keys today and get thrown away — does not hold against actual data. Do not read this
+as evidence that `BranchWorkTime` changes observable behaviour on those six days; see the isOpenAt
+resolution-order finding recorded against T054–T059 for what actually does (and does not) change.
 
-**Finding**: in `lib/modules/home/all_branching/data/models/branch_model.dart`:
+**Original finding** (kept for the record, static-code-only): in
+`lib/modules/home/all_branching/data/models/branch_model.dart`:
 
 - `Alldays` (line 172) parses `period`, `morning`, `afternone` — but **no `lock`**.
 - `Fri` (line 196) parses `period`, `morning`, `afternone`, `lock` — the complete shape.
 - `Mon` (line 244) parses **`lock` only** — and `Mon` is the type used for `sat`, `sun`, `mon`,
   `tue`, `wed`, and `thu` (lines 150–155).
 
-So today, for six of the eight day keys, the morning and afternoon windows are **discarded at
-parse time**. Only Friday and the all-days entry carry real hours. Any current time-guarding on
-those six days is running on absent data — i.e. failing open by accident rather than by design.
-
-The new `BranchWorkTime` parses one uniform day shape for all keys, so Sunday-to-Thursday hours
-start being enforced for the first time.
+This is a correct description of what the old parser is *capable* of losing if the API ever sent
+windows under those keys. Against real production data, it never does.
 
 Also noted while reading: `branch_model.dart:275-276` carries a **duplicated
 `@HiveType(typeId: 7)`** annotation on `BranchCenter`. Pre-existing, unrelated, and plausibly one
@@ -263,5 +268,5 @@ Every `NEEDS CLARIFICATION` from the Technical Context is closed:
 | Whether `polygon`/`center` may be dropped | R4 — **escalated as BD-1**, not silently decided |
 | Language source for header and cache key | R5 — one module-local resolver, defaulting to `ar` |
 | Test tooling and layout | R6 — `bloc_test` + `mocktail`, `test/modules/location/` |
-| Whether new work-time parsing changes behaviour | R7 — yes, stricter on six day keys |
+| Whether new work-time parsing changes behaviour | R7 — corrected: not on those six keys against real data |
 | Whether `package:http` can be dropped in Phase 9 | R1 — no, 10 other importers remain |

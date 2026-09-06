@@ -249,7 +249,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/branch-with-car',
       name: Routes.branchWithCar,
-      builder: (_, s) => BranchWithCarScreen(carModel: s.extra as DataCars),
+      builder: (_, s) => BranchWithCarScreen.entry(carModel: s.extra as DataCars),
     ),
     GoRoute(
       path: '/daily-package',

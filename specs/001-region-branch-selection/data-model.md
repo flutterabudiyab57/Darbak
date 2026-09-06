@@ -192,18 +192,35 @@ six of the eight keys ([R7](./research.md)), so this is a deliberate widening.
 
 ### `isOpenAt(DateTime dt)` — resolution order
 
+**Corrected 2026-09-06** against a real production `/branches` response: the order below originally
+resolved a weekday's fields **as a unit** — find `byWeekday[dt.weekday]`, and if that key exists at
+all, fall back to `allDays` only when the *key itself* was absent. That assumed a present day entry
+carries a schedule. On the wire it does not: every branch in the production response sends
+`sat`/`sun`/`mon`/`tue`/`wed`/`thu` as an empty `{"lock": "0"}` shell with no `morning`/`afternoon`,
+and real hours live in `alldays` (with `fri` the one weekday that carries its own). Under the old
+order, `byWeekday[dt.weekday]` always found that shell, so the `allDays` fallback never ran on those
+six days — `isOpenAt` returned `true` unconditionally, ignoring `alldays`'s real hours entirely,
+every day except Friday. **Key presence is not schedule presence.** The corrected order resolves a
+day's `lock` and its windows independently, and falls through to `allDays` when the day's own entry
+yields no usable window — regardless of whether the key existed:
+
 1. If the object failed to parse at all (`workTime == null`) → **`true`**.
-2. Resolve the day: `byWeekday[dt.weekday]`, falling back to `allDays`.
-   - If neither exists → **`true`** (no data for this day; fail open).
-3. If the resolved day is `locked` → **`false`**. This is the one case where absence of doubt
-   produces a block: `lock: "1"` is an explicit statement that the branch is closed (FR-025).
-4. Collect the day's windows (`morning`, `afternoon`). Discard any window whose `open` or `close`
-   is null or unparseable — **that window contributes nothing; the other window on the same day
-   still applies.**
-5. If no usable window survives:
-   - `openAllDays == true` → **`true`**
-   - otherwise → **`true`** (unparseable hours; fail open, Principle IV)
-6. Otherwise → `true` if `dt`'s time-of-day falls inside any surviving window.
+2. If `byWeekday[dt.weekday]` has no entry at all → resolve steps 3–5 against `allDays` instead, and
+   stop (this is the one case where "no entry" and "an entry with no schedule" are handled by the
+   same fallback, because there is truly nothing of the day's own to check first).
+3. Otherwise, if the weekday's own entry is `locked` → **`false`**, unconditionally — even if it also
+   carries `morning`/`afternoon` windows. `lock: "1"` is an explicit statement that the branch is
+   closed (FR-025) and is authoritative over any windows on the same entry.
+4. Collect the weekday's own windows (`morning`, `afternoon`). Discard any window whose `open` or
+   `close` is null or unparseable — **that window contributes nothing; the other window on the same
+   day still applies.**
+5. If the weekday's own entry yields at least one usable window → resolve against **those windows
+   only**; `allDays` is never consulted (Friday's own hours override `alldays`, they don't merge
+   with it).
+6. If the weekday's own entry yields **no** usable window (the empty-shell case) → fall through and
+   resolve `allDays` the same way: `locked` → `false`; usable windows → check against them; no
+   usable windows → **`true`** (fail open, Principle IV — this is the case where the data is
+   genuinely absent, not merely a shell for a day that defers to `alldays`).
 
 ### Midnight-crossing windows
 
