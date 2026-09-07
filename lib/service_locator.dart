@@ -13,12 +13,9 @@ import 'modules/auth/register/presentaion/bloc/register_cubit.dart';
 import 'modules/auth/signin/presentation/bloc/signin_bloc.dart';
 import 'modules/home/all_bookings/data/datasources/booking_data_sources.dart';
 import 'modules/home/all_bookings/data/datasources/cancel_booking_data_sources.dart';
-import 'modules/home/all_branching/bloc/all_branching_cubit.dart';
 import 'modules/home/all_branching/data/BranchRepository.dart';
 import 'modules/home/all_branching/data/all_branching_remote_datasource.dart';
 import 'modules/home/all_branching/data/local/branch_local_datasource.dart';
-import 'modules/home/booking_from_cars/datasources/booking_cars_remote_datasource.dart';
-import 'modules/home/booking_from_cars/presentaion/bloc/booking_cars_cubit.dart';
 import 'modules/home/selectLanguage/languageCubit.dart';
 import 'modules/auth/blocs/auth_bloc/onboarding_cubt_cubit.dart';
 import 'modules/auth/blocs/auth_status_cubit.dart';
@@ -87,10 +84,6 @@ Future<void> setup() async {
   sl.registerFactory(() => ProfileCubit(sl()));
   sl.registerFactory(() => InvoiceCubit(sl(), sl(), sl(), sl()));
 
-  // ✅ UPDATED: Branch Cubit with Repository
-  sl.registerLazySingleton(() => AllBranchCubit(sl<BranchRepository>()));
-
-  sl.registerFactory(() => BookingFromCarsCubit(sl()));
   sl.registerFactory(() => AllCarsCubit(sl()));
 
   // Notifications: factory cubit (per-screen), DI Dio for the datasource.
@@ -136,7 +129,6 @@ Future<void> setup() async {
   sl.registerLazySingleton<AllBranchRemoteDataSource>(
     () => AllBranchRemoteDataSource(sl<Dio>()),
   );
-  sl.registerLazySingleton(() => BookingFromCarsRemoteDataSource());
   sl.registerLazySingleton(() => CancelBookingDataSources(sl(), sl()));
   sl.registerLazySingleton(() => CouponRemoteDatasource(sl()));
   sl.registerLazySingleton(() => AreasRemoteDatasource(sl()));

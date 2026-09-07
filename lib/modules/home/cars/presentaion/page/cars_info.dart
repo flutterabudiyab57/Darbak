@@ -22,7 +22,6 @@ import '../../../../widgets/components/car_photos_slider.dart';
  import '../../../../widgets/strike_through_text.dart';
 import '../../../../../core/router/app_router.dart';
 import '../../../../../core/router/routes.dart';
-import '../../../search_screen/blocs/search_bloc/search_cubit.dart';
 import '../../../search_screen/presentaion/widget/monthly_package_widget.dart';
 import '../../../../location/data/models/booking_draft.dart';
 
@@ -584,7 +583,6 @@ class _CarsInformationState extends State<CarsInformation> {
                                           if (context.mounted) {
                                             final newState = BlocProvider.of<AdditionsCubit>(context).state;
                                             if (widget.filterModel == null && lookLike == true) {
-                                              BlocProvider.of<SearchCubit>(context).resetBranches();
                                               if (context.mounted) {
                                                 context.pushNamed(Routes.branchWithCar,
                                                     extra: widget.datum!);

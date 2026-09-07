@@ -273,7 +273,6 @@ class PolygonPoint {
 }
 
 @HiveType(typeId: 7)
-@HiveType(typeId: 7)
 class BranchCenter {
   @HiveField(0)
   double? lat;

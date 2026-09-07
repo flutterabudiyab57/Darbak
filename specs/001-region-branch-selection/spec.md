@@ -474,6 +474,27 @@ logic and the monthly months grid, which are explicitly out of scope below.
   regression of a bug previously fixed with an `onManualDateChanged` callback, so the earlier fix
   either did not hold or did not address the real cause. A future fix should establish why before
   repeating that approach.
+- **FOLLOW-UP A — `SearchCubit` branch-identity remnant.** `SearchCubit.selectedReceiveModel` /
+  `selectedDriveModel` are the last place branch identity passes through global state. Every
+  writer is a converted screen (daily, monthly, delivery, airport, book-from-car) that already
+  holds the same branch in its screen-scoped `LocationSelectionCubit`; every reader is either
+  `SearchCubit.validate()`/`validateDelivery()` (two lines later, to build the id params for
+  `POST /available/time`) or that same screen's own `SearchValidate` listener. The round trip
+  through the app-wide `SearchCubit` singleton is redundant — it survives only because
+  `validate()`'s signature takes its ids from these fields. Two possible fixes: change
+  `validate()`'s signature to take branch ids as parameters, or read the ids from
+  `LocationSelectionCubit` at each call site instead of stashing them on `SearchCubit` first.
+  Left deliberately, because `SearchCubit`'s validate/search logic is explicitly out of scope for
+  this rewrite (see Out of Scope).
+- **FOLLOW-UP B — orphaned branch cache chain.** `BranchRepository`, `AllBranchRemoteDataSource`,
+  `BranchLocalDataSource`, and their three `service_locator.dart` registrations have zero
+  consumers now that `AllBranchCubit` is deleted. `BranchLocalDataSource` opens the Hive box
+  `branches_box`, which is opened at every app boot (`CacheHelper.init()`) and never read or
+  written at runtime. Deleting the three files and their registrations is self-contained and
+  breaks nothing that compiles. Removing the `Hive.openBox` call for `branches_box` itself needs
+  a separate check that nothing depends on the box being pre-opened. Found during the Phase 8
+  deletion sweep but deliberately not acted on — it was outside that phase's task list and the
+  phase is irreversible.
 
 ## Out of Scope
 

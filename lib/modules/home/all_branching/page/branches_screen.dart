@@ -1,11 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:darbak/core/style/style.dart';
 import 'package:darbak/language/locale.dart';
-import 'package:darbak/modules/home/all_branching/bloc/all_branching_cubit.dart';
-import 'package:darbak/modules/home/all_branching/bloc/all_branching_state.dart';
 import 'package:darbak/modules/home/all_branching/page/view_location.dart';
+import 'package:darbak/modules/location/data/location_filter.dart';
+import 'package:darbak/modules/location/data/location_repository.dart';
+import 'package:darbak/modules/location/data/models/branch.dart';
+import 'package:darbak/service_locator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
@@ -16,7 +17,9 @@ import '../../../widgets/components/ad_gradient_btn.dart';
 import '../../../widgets/components/ad_prim_text_form/ad_prim_text_form.dart';
 import '../../../widgets/components/appbar.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
-import '../data/models/branch_model.dart';
+
+enum _LoadState { loading, loaded, error }
+
 class BranchesScreen extends StatefulWidget {
   const BranchesScreen({Key? key}) : super(key: key);
 
@@ -28,26 +31,38 @@ class BranchesScreen extends StatefulWidget {
 
 class _BranchesScreenState extends State<BranchesScreen> {
   TextEditingController _searchController = TextEditingController();
-  List<BranchModel> _filteredBranches = [];
-  List<BranchModel> _allBranches = [];
+  List<Branch> _filteredBranches = [];
+  List<Branch> _allBranches = [];
+  _LoadState _loadState = _LoadState.loading;
+  String _error = '';
 
   @override
   void initState() {
     super.initState();
-    final allBranchCubit = BlocProvider.of<AllBranchCubit>(context);
-
-    // Seed from whatever the (possibly shared) cubit already holds, since
-    // BlocConsumer.listener only fires for emissions AFTER this widget
-    // subscribes — not for a state the cubit was already sitting in.
-    final currentState = allBranchCubit.state;
-    if (currentState is AllBranchLoaded) {
-      _allBranches = currentState.branchModel;
-    }
-
-    allBranchCubit.getAllBranch();
-
-    _filteredBranches = _allBranches;
+    _loadBranches();
     _searchController.addListener(_filterBranches);
+  }
+
+  Future<void> _loadBranches({bool forceRefresh = false}) async {
+    setState(() {
+      _loadState = _LoadState.loading;
+    });
+    try {
+      final branches = await sl<LocationRepository>()
+          .getBranches(const LocationFilter.allRegions(), forceRefresh: forceRefresh);
+      if (!mounted) return;
+      setState(() {
+        _allBranches = branches;
+        _filterBranches();
+        _loadState = _LoadState.loaded;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = e.toString();
+        _loadState = _LoadState.error;
+      });
+    }
   }
 
   void _filterBranches() {
@@ -57,7 +72,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
         _filteredBranches = _allBranches;
       } else {
         _filteredBranches = _allBranches
-            .where((branch) => branch.name!.toLowerCase().contains(query))
+            .where((branch) => branch.name.toLowerCase().contains(query))
             .toList();
       }
     });
@@ -83,56 +98,43 @@ class _BranchesScreenState extends State<BranchesScreen> {
           // showThemeToggle: true,
         ),
         body: RefreshIndicator(
-          onRefresh: () async {
-            // Force refresh from server
-            await BlocProvider.of<AllBranchCubit>(context).refreshBranches();
-          },
-          child: BlocConsumer<AllBranchCubit, AllBranchState>(
-            listener: (context, state) {
-              if (state is AllBranchLoaded) {
-                _allBranches = state.branchModel;
-                _filteredBranches = _allBranches;
-              }
-            },
-            builder: (context, state) {
-              if (state is AllBranchLoading) {
+          onRefresh: () => _loadBranches(forceRefresh: true),
+          child: Builder(
+            builder: (context) {
+              if (_loadState == _LoadState.loading) {
                 return ShimmerLoadingList();
               }
 
-              if (state is AllBranchError) {
-                return _buildErrorState(context, state.error, locale);
+              if (_loadState == _LoadState.error) {
+                return _buildErrorState(context, _error, locale);
               }
 
-              if (state is AllBranchLoaded) {
-                return Column(
-                  children: [
-                    // Search bar
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-                      child: ADPrimTextForm(
+              return Column(
+                children: [
+                  // Search bar
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                    child: ADPrimTextForm(
 
-                        auth: true,
-                        controller: _searchController,
-                        type: TextInputType.name,
-                        label: locale.exploreOurBranches,
-                        pIcon: Icons.search_outlined,
-                        fillColor: bg2Color(context),
-                        borderColor: Colors.transparent,
-                      ),
+                      auth: true,
+                      controller: _searchController,
+                      type: TextInputType.name,
+                      label: locale.exploreOurBranches,
+                      pIcon: Icons.search_outlined,
+                      fillColor: bg2Color(context),
+                      borderColor: Colors.transparent,
                     ),
+                  ),
 
-                    // Branches list
-                    Expanded(
-                      child: _filteredBranches.isEmpty
-                          ? _buildEmptyState(locale, context)
-                          : _buildBranchesList(state, locale, context),
-                    ),
-                  ],
-                );
-              }
-
-              return Container();
+                  // Branches list
+                  Expanded(
+                    child: _filteredBranches.isEmpty
+                        ? _buildEmptyState(locale, context)
+                        : _buildBranchesList(locale, context),
+                  ),
+                ],
+              );
             },
           ),
         ),
@@ -154,9 +156,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
           ),
           SizedBox(height: 24.h),
           ElevatedButton(
-            onPressed: () {
-              BlocProvider.of<AllBranchCubit>(context).getAllBranch();
-            },
+            onPressed: () => _loadBranches(),
             child: Text(
                 locale.retry),
           ),
@@ -185,7 +185,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
   }
 
   Widget _buildBranchesList(
-      AllBranchState state, AppLocalizations locale, BuildContext context) {
+      AppLocalizations locale, BuildContext context) {
     return ListView.builder(
       physics: BouncingScrollPhysics(),
       itemCount: _filteredBranches.length,
@@ -193,7 +193,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
         final branch = _filteredBranches[index];
         final isRTL = locale.isDirectionRTL(context);
 
-        final int? period = branch.workTime?.alldays?.period;
+        final int? period = branch.workTime?.allDays?.period;
         final bool hasAfternoon = (period ?? 0) != 0;
 
         return Container(
@@ -216,17 +216,17 @@ class _BranchesScreenState extends State<BranchesScreen> {
                 children: [
                   Flexible(
                     child: AutoSizeText(
-                      branch.name ?? '',
+                      branch.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.mainTypographyColor15(context),
                       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
                     ),
                   ),
-                  if ((branch.region ?? '').isNotEmpty) ...[
+                  if ((branch.regionName ?? '').isNotEmpty) ...[
                     SizedBox(width: 3.w,),
                     AutoSizeText(
-                      "( ${branch.region!} )",
+                      "( ${branch.regionName!} )",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.paragraphColor12(context),
@@ -299,7 +299,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                             Column(
                               spacing: 6.h,
                               children: [
-                                if (branch.workTime?.openAllDays == 1)
+                                if (branch.workTime?.openAllDays == true)
                                   Text.rich(
                                     TextSpan(
                                       children: [
@@ -324,7 +324,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                                           style: AppTypography.headingColor12Bold(context),
                                         ),
                                         TextSpan(
-                                          text: "${branch.workTime?.alldays?.morning?.timeopen ?? ''} - ${branch.workTime?.alldays?.morning?.timeclose ?? ''}",
+                                          text: "${branch.workTime?.allDays?.morning?.open ?? ''} - ${branch.workTime?.allDays?.morning?.close ?? ''}",
                                           style: AppTypography.headingColor12(context),
                                         ),
                                       ],
@@ -340,7 +340,7 @@ class _BranchesScreenState extends State<BranchesScreen> {
                                             style: AppTypography.headingColor12Bold(context),
                                           ),
                                           TextSpan(
-                                            text: "${branch.workTime?.alldays?.afternone?.timeopen ?? ''} ${locale.toTime} ${branch.workTime?.alldays?.afternone?.timeclose ?? ''}",
+                                            text: "${branch.workTime?.allDays?.afternoon?.open ?? ''} ${locale.toTime} ${branch.workTime?.allDays?.afternoon?.close ?? ''}",
                                             style: AppTypography.headingColor12(context),
                                           ),
                                         ],
@@ -421,9 +421,9 @@ class _BranchesScreenState extends State<BranchesScreen> {
                             context,
                             screen: ViewLocation(
                               url: locationUrl,
-                              title: branch.name ?? locale.LocationOnMap.toString(),
-                              lat: branch.lat,
-                              long: branch.long,
+                              title: branch.name.isNotEmpty ? branch.name : locale.LocationOnMap.toString(),
+                              lat: branch.lat?.toString(),
+                              long: branch.lng?.toString(),
                             ),
                             withNavBar: false,
                             pageTransitionAnimation: PageTransitionAnimation.cupertino,

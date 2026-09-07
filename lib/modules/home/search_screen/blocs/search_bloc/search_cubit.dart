@@ -3,7 +3,6 @@ import 'package:darbak/core/helpers/enums.dart';
 import 'package:darbak/modules/home/all_branching/data/models/branch_model.dart';
 import 'package:darbak/modules/home/search_screen/blocs/search_bloc/search_state.dart';
 import 'package:darbak/modules/home/search_screen/data/datasources/remote/areas_remote_datasource.dart';
-import 'package:darbak/modules/home/search_screen/data/datasources/remote/branchs_service.dart';
 import 'package:darbak/modules/home/search_screen/data/datasources/remote/check_date_remote.dart';
 import 'package:darbak/modules/home/search_screen/data/datasources/remote/regions_remote_datasource.dart';
 import 'package:darbak/modules/home/search_screen/data/models/areas_model.dart';
@@ -12,7 +11,6 @@ import 'package:darbak/modules/home/search_screen/data/models/regions_model.dart
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../data/datasources/remote/offers_remte_datasource.dart';
 
@@ -33,10 +31,6 @@ class SearchCubit extends Cubit<SearchState> {
 
   bool isAutomated() => rentType == RentType.automated;
 
-  String? selectedReceiveBranch;
-  String? selectedDriveBranch;
-  String? selectedRegion;
-
   String? selectedReceiveArea;
   String? selectedDriveArea;
 
@@ -46,7 +40,17 @@ class SearchCubit extends Cubit<SearchState> {
   late TimeOfDay receiveTimeValue = TimeOfDay.now();
   late TimeOfDay driveTimeValue = TimeOfDay.now();
 
-  RegionModel? selectedRegionModel;
+  // These two fields are a remnant, not a design. Every writer is a
+  // converted screen that already holds the same branch in
+  // LocationSelectionCubit, and every reader is either validate() (two
+  // lines later) or that same screen's own listener. The round trip
+  // through this app-wide singleton is redundant — it survives only
+  // because validate()'s signature takes its ids from here. Removing it
+  // means changing validate()'s signature or reading the ids from
+  // LocationSelectionCubit at the call site. That is SearchCubit's search
+  // logic, explicitly out of scope for the location rewrite, so it was
+  // left deliberately. It is the last place branch identity passes
+  // through global state.
   BranchModel? selectedReceiveModel;
   BranchModel? selectedDriveModel;
 
@@ -54,18 +58,8 @@ class SearchCubit extends Cubit<SearchState> {
   AreasModel? selectedAreaDriveModel;
 
   List<RegionModel>? regionsData = [];
-  List<BranchModel> branchesData = [];
-  List<BranchModel> deliveryBranchesData = [];
-  List<BranchModel> airportBranchesData = [];
   List<AreasModel>? areasData = [];
-  LatLng? selectedDriveBranchOnMap;
   int differenceInDays = 0;
-
-
-  void setDriveBranchLocation(LatLng location) {
-    selectedDriveBranchOnMap = location;
-    emit(SearchUpdatedState());
-  }
 
   getRegions() async {
     emit(SearchLoading());
@@ -78,16 +72,7 @@ class SearchCubit extends Cubit<SearchState> {
     }
   }
 
-  void selectBranch(String branchName) {
-    selectedDriveBranch = branchName;
-    selectedReceiveBranch = branchName;
-    emit(SearchUpdatedState());
-  }
-
   void clearAllDataSearched() {
-    selectedRegion = null;
-    selectedReceiveBranch = null;
-    selectedDriveBranch = null;
     receiveDateValue = DateTime.now();
     driveDateValue = DateTime.now();
 
@@ -97,11 +82,6 @@ class SearchCubit extends Cubit<SearchState> {
     pickupLong = null;
     dropoffLat = null;
     dropoffLong = null;
-  }
-
-  void resetBranches() {
-    selectedReceiveBranch = null;
-    selectedDriveBranch = null;
   }
 
   void updateDates(DateTime receiveDate, DateTime driveDate) {
@@ -131,58 +111,6 @@ class SearchCubit extends Cubit<SearchState> {
       if (pageNumber <= 3 && regionId == null) {
         getAreas(pageNumber: pageNumber);
       }
-    } catch (error) {
-      emit(SearchFailed(error.toString()));
-    }
-  }
-
-  Future getBranches({int? regionId}) async {
-    emit(SearchLoading());
-    try {
-      final branches = await BranchesService.getBranches(
-        regionId: regionId,
-      );
-      branchesData = branches;
-      emit(SearchSuccess(branches));
-    } catch (error) {
-      emit(SearchFailed(error.toString()));
-    }
-  }
-
-  Future<void> getDeliveryBranches() async {
-    emit(SearchLoading());
-    try {
-      final deliveryBranches = await BranchesService.getDeliveryBranches();
-      deliveryBranchesData = deliveryBranches;
-
-      print("Delivery Branches cubit: $deliveryBranches");
-
-      emit(SearchSuccess(deliveryBranches));
-    } catch (error) {
-      emit(SearchFailed(error.toString()));
-    }
-  }
-
-  Future<void> getAirPortBranches() async {
-    emit(SearchLoading());
-    try {
-      final airportBranches = await BranchesService.getAirportBranches();
-      airportBranchesData = airportBranches;
-
-      print("airport Branches cubit: $airportBranches");
-
-      emit(SearchSuccess(airportBranches));
-    } catch (error) {
-      emit(SearchFailed(error.toString()));
-    }
-  }
-
-  Future getAllBranches({int? regionId}) async {
-    emit(SearchLoading());
-    try {
-      final branches = await BranchesService.getBranches();
-      branchesData = branches;
-      emit(SearchSuccess(branches));
     } catch (error) {
       emit(SearchFailed(error.toString()));
     }

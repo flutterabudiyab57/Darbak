@@ -25,8 +25,8 @@ import 'package:darbak/modules/location/presentaion/bloc/location_selection_cubi
 /// (`registerFactory`, never added to `lib/bloc_providers.dart`), mirroring
 /// `Clasic`/`DailyPackages`'s existing convention. `/monthly-package` is a
 /// live route (pushed from `search_Screen.dart`), so — unlike the dead
-/// `/daily-package` route — this screen's `AllBranchCubit` usage is removed
-/// outright rather than left in place.
+/// `/daily-package` route — this screen's old branch-cubit usage was
+/// removed outright rather than left in place.
 class MonthlyPackageScreen extends StatefulWidget {
   const MonthlyPackageScreen({super.key});
 

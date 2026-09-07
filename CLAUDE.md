@@ -49,7 +49,7 @@ The app follows a **feature-module + clean-architecture-lite** layout. Each feat
 1. `WidgetsFlutterBinding.ensureInitialized()` and orientation lock to portrait.
 2. `initializeHive()` — opens Hive, calls the generated `Hive.registerAdapters()` (from `lib/hive_registrar.g.dart`, produced by `build_runner`), then calls `CacheHelper.init()` which opens boxes `branches_box`, `cars_box`, `cache_meta_box`. **Any new `@HiveType` class must be re-generated** (`dart run build_runner build --delete-conflicting-outputs`) for its adapter to appear in `hive_registrar.g.dart` and be registered here.
 3. `di.setup()` — `service_locator.dart` (GetIt) registers all blocs/cubits, repositories, remote/local datasources, and shared singletons (`Dio`, `SharedPreferencesHelper`, `DateHandler`). The setup function early-returns if `SignInBloc` is already registered, so it is safe to call more than once but will silently skip re-wiring — clear GetIt if you need a true reset.
-4. `runApp(App())` → `ScreenUtilInit` → `CreateBlocProviders(context)` mounts a `MultiBlocProvider` with the global blocs (`AuthStatusCubit`, `BookingCubit`, `LanguageCubit`, `ProfileCubit`, `AdditionsCubit`, `InvoiceCubit`, `SearchCubit`, `AllBookingCubit`, `ThemeCubit`) wrapped in `BlocBuilder<LanguageCubit>` + `BlocBuilder<ThemeCubit>` + `AppLifeCycleManager` + **`MaterialApp.router(routerConfig: appRouter)`** (see the Routing section). Other cubits (Cars, Filter, AllBranch, AllCars, ForgetPassword, etc.) live in GetIt only and are provided closer to the screen that uses them.
+4. `runApp(App())` → `ScreenUtilInit` → `CreateBlocProviders(context)` mounts a `MultiBlocProvider` with the global blocs (`AuthStatusCubit`, `BookingCubit`, `LanguageCubit`, `ProfileCubit`, `AdditionsCubit`, `InvoiceCubit`, `SearchCubit`, `AllBookingCubit`, `ThemeCubit`) wrapped in `BlocBuilder<LanguageCubit>` + `BlocBuilder<ThemeCubit>` + `AppLifeCycleManager` + **`MaterialApp.router(routerConfig: appRouter)`** (see the Routing section). Other cubits (Cars, Filter, AllCars, ForgetPassword, LocationSelection, etc.) live in GetIt only and are provided closer to the screen that uses them.
 5. `MaterialApp.router`'s `builder` wraps every page with `MediaQuery(... textScaler: MediaQuery.textScalerOf(context).clamp(minScaleFactor: 0.8, maxScaleFactor: 1.2))` — the system font scale is **clamped to 0.8–1.2**, not fully locked. Don't widen this range; layouts depend on `flutter_screenutil`'s fixed 390×844 design and break under arbitrary scaling. (The text-scale-aware `.hs`/`.ws`/`.sps` helpers rely on this clamp — see Theming.)
 
 The `try` block now also runs `Firebase.initializeApp()` (first) and `sl<PushNotificationService>().init()` (after `di.setup()`) — see the Push notifications section. **The whole block is wrapped in `try { ... } catch (e) { }`, and the catch only logs under `kDebugMode`** (a single `[FCM] boot init failed` line). In release the catch is silent, so a corrupted Hive box, a missing GetIt registration, or a Firebase init failure will silently boot the app into a broken state. When investigating startup mysteries (blank screen, missing data, "X not registered" errors deep in a feature), add logging in that catch block first.
@@ -60,7 +60,7 @@ If you add a feature-level cubit that should be globally available, register it 
 
 `flutter_bloc` (Bloc + Cubit). Per-feature cubits are resolved from GetIt (`sl<X>()`) inside `BlocProvider.create`. Some cubits are `registerFactory` (new instance per request — e.g. `SignInBloc`, most form cubits), others are `registerLazySingleton` (shared instance — e.g. `BookingCubit`, `LanguageCubit`, `FilterCubit`, `SearchCubit`). Match this distinction when adding new cubits: stateful cross-screen state → singleton; per-screen form/flow state → factory.
 
-**Selection Persistence Across Screens** — `SearchCubit` is a `registerLazySingleton`, so the same instance is shared app-wide. User selections (branch, dates, times, pickup/dropoff coords) stay in that singleton throughout the booking flow:
+**Selection Persistence Across Screens** — `SearchCubit` is a `registerLazySingleton`, so the same instance is shared app-wide. Date/time/rent-type selections still live there for the lifetime of a booking attempt. **Branch/region selection itself does not** — that responsibility moved to the `location` module (see below); `SearchCubit` only keeps a small `selectedReceiveModel`/`selectedDriveModel` bridge (id + display name only, never a full branch) that downstream screens read before it's superseded by a `BookingDraft`.
 
 - **CarsInformation:** User views car details (clearAllDataSearched NOT called here)
 - **BranchWithCarScreen:** User picks branch and dates (clearAllDataSearched called once on first entry)
@@ -69,10 +69,56 @@ If you add a feature-level cubit that should be globally available, register it 
 
 If the entire screen is replaced/popped (e.g., navigating back to /home), selections are lost. But for modal-overlay patterns (`requireAuth()`), selections persist because the screen never unmounts.
 
+### Location & branch selection module (`lib/modules/location/`)
+
+Region and branch selection was rewritten (spec-kit feature `specs/001-region-branch-selection/`,
+governed by `.specify/memory/constitution.md`) to fix three structural bugs in the old system: split
+identity (a display string plus a model, resolved by name-matching), branch state split across two
+cubits with different provider scopes, and branches arriving from three endpoints kept in separate
+parallel lists. **This is now the authoritative model for anything touching regions or branches** —
+consult `specs/001-region-branch-selection/data-model.md` and `contracts/navigation-contract.md`
+before extending it, rather than re-deriving conventions from older feature code.
+
+- **`Branch`/`Region`/`BranchWorkTime`** (`data/models/`) — the current domain models. Equality is on
+  `id` only (never a name — server-localized display names differ by `Accept-Language` and by
+  endpoint, e.g. `name` from `/branches` vs `text` from `/available/branches`). Note there are
+  **three other, unrelated `Branch` classes** elsewhere in the codebase (`cars_model.dart`'s
+  `DataCars.availableBranches` flag type, `favourites.dart`, `offer_model.dart`) — import with
+  `hide Branch` when both are needed in one file.
+- **`LocationRepository`** — cache-first (Hive box `location_cache`, keyed with the language code so
+  a locale switch is a natural cache miss; 24h TTL for regions, 6h for branches), network on miss,
+  falls back to stale cache only if the network call itself fails.
+- **`LocationSelectionCubit`** — screen-scoped (`registerFactory`, **not** in `bloc_providers.dart`
+  — an app-wide singleton here is exactly the bug this rewrite closes). Each booking flow provides
+  its own instance and starts it with a `LocationFilter` (`.region(id)`, `.allRegions()`,
+  `.delivery()`, `.airport()`, or `.car(carId)` for the book-from-car flow, which skips the region
+  step and returns partial branches needing completion by id).
+- **`BranchPickerScreen`** — pushed via `Navigator.of(context, rootNavigator: true).push<Branch>(...)`,
+  **never** `PersistentNavBarNavigator.pushNewScreen<Branch>` (that helper's internal
+  `CupertinoPageRoute<dynamic>` cast throws for a typed return value — a `persistent_bottom_nav_bar`
+  6.2.1 defect). The picker reads **no cubit** and receives its branch list purely via constructor
+  parameter — reading a scoped cubit from a screen pushed on the root navigator throws
+  `ProviderNotFoundException` inside the tap handler, aborting silently. This governs any future
+  screen pushed the same way, not just this one.
+- **`BookingDraft`** (`data/models/booking_draft.dart`) — the immutable value (pickup/dropoff
+  branch, dates, car) each booking flow builds once selection completes and passes forward as a
+  constructor parameter through `Routes.additions`/`Routes.paymentMethods`'s `extra:` args. Additions
+  and payment read it; nothing can write back into it, and navigating back destroys it along with
+  the screen-scoped cubit — no `clear()` call exists anywhere for this. For the four flows that don't
+  know the car yet at branch-selection time (daily/monthly/delivery/airport), the draft is built
+  later, in `cars/presentaion/page/cars_info.dart`, once the car is chosen — not at the booking
+  screen itself.
+- **Status**: the old parallel system (`AllBranchCubit`, `BranchesListView`, `branchs_service.dart`,
+  `BookingFromCarsCubit`) has been deleted; all five booking flows (daily, monthly, delivery,
+  airport, book-from-car) now run on this module. Phase 8 (deletion) is done; T077 (final on-device
+  regression sweep) and Phase 9 (polish) are still open — check
+  `specs/001-region-branch-selection/tasks.md` for current status before assuming the migration is
+  fully closed out.
+
 ### Networking
 
 - A single `Dio` is registered as a lazy singleton in `service_locator.dart`. **`AppInterceptors`** (in `lib/core/helpers/interceptors/app_interceptor.dart`) is attached to that `Dio` once at the end of `setup()` — so every `sl<Dio>()` call inherits `baseUrl = mainApi`, the `Accept-Language` header, and the `Authorization: Bearer <token>` header (token pulled from `SharedPreferencesHelper` on every request). Do **not** call `sl<Dio>().interceptors.add(AppInterceptors(...))` again from feature code — it would double-fire the request hook.
-- All endpoints are constants in `lib/core/constants/api_path.dart`. Active base URL is `productionApi = "https://api.daraksonksa.com/api"` (controlled by the `mainApi` const). Many endpoint constants are pre-prefixed with `mainApi`, so do not double-prefix when composing requests.
+- All endpoints are constants in `lib/core/constants/api_path.dart`. **`mainApi` (the const actually used everywhere) is set to `productionApi_darakson = "https://api.daraksonksa.com/api"`** — not the `productionApi` constant one line above it (`"https://api.darbakksa.com/api"`, a different domain, defined but unused). Read `mainApi`'s own assignment before assuming which literal is active. Many endpoint constants are pre-prefixed with `mainApi`, so do not double-prefix when composing requests.
 
 **⚠️ Authentication & API Error Handling:**
 - **Token requirement:** Most endpoints return 401 "Not Authenticated" if the Bearer token is missing or null. When the token is null (e.g., guest users or logout), requests must omit the Authorization header entirely (never send `"Bearer null"`).
@@ -493,7 +539,7 @@ This regenerates `*.g.dart` adapters and `lib/hive_registrar.g.dart` (the aggreg
 
 ### Dio interceptor is firing twice or not at all
 
-The Dio interceptor is added once in `service_locator.dart:151` at the end of `setup()`. Do NOT add it again from feature code:
+The Dio interceptor is added once in `service_locator.dart` at the end of `setup()`. Do NOT add it again from feature code:
 ```dart
 // ❌ WRONG — will double-fire
 sl<Dio>().interceptors.add(AppInterceptors(...));

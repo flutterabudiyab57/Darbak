@@ -23,7 +23,9 @@ import '../../../widgets/components/gradient_hero_panel.dart';
 import '../../booking_from_cars/presentaion/view/widget/branches_card.dart';
 import '../../../../core/constants/api_path.dart';
 import '../../../../core/constants/langCode.dart';
-import '../../all_branching/bloc/all_branching_cubit.dart';
+import 'package:darbak/modules/location/data/location_filter.dart';
+import 'package:darbak/modules/location/data/location_repository.dart';
+import 'package:darbak/service_locator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../shell/app_shell.dart';
 import '../../../shell/tab_jump.dart';
@@ -55,7 +57,9 @@ class _SearchState extends State<SearchScreen>
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<AllBranchCubit>(context).getAllBranch();
+    // Warms the shared branch-list cache so branches_screen.dart's own fetch
+    // is fast; nothing here reads the result.
+    unawaited(_warmBranchCache());
     _getRegions();
     BlocProvider.of<SearchCubit>(context).getOffers();
 
@@ -122,6 +126,14 @@ class _SearchState extends State<SearchScreen>
 
   Future<void> _getRegions() async {
     await BlocProvider.of<SearchCubit>(context).getRegions();
+  }
+
+  Future<void> _warmBranchCache() async {
+    try {
+      await sl<LocationRepository>().getBranches(const LocationFilter.allRegions());
+    } catch (_) {
+      // Best-effort warm-up only; a failure here is not user-visible.
+    }
   }
 
   Future<void> _fetchPointsData({required String idNumber}) async {
@@ -445,7 +457,6 @@ class _SearchState extends State<SearchScreen>
               icon: Icons.airplane_ticket_outlined,
               onTap: () {
                 BlocProvider.of<SearchCubit>(context).clearAllDataSearched();
-                BlocProvider.of<SearchCubit>(context).getAirPortBranches();
                 context.pushNamed(Routes.airportPackage);
               },
             ),

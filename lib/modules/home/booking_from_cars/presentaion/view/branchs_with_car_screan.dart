@@ -38,10 +38,9 @@ import '../../../../location/data/models/booking_draft.dart';
 /// T054: `LocationSelectionCubit` is provided here, screen-scoped
 /// (`registerFactory`), started with `LocationFilter.car(carId)` — this
 /// flow has no region step, so `start()` fetches the car's partial branch
-/// list directly. This replaces `BookingFromCarsCubit`'s only
-/// responsibility (fetching that same branch list for selection); nothing
-/// else in the app reads `BookingFromCarsCubit`, so it is no longer
-/// provided here at all (not deleted — Phase 8 deletes).
+/// list directly. This replaces the old car-flow cubit's only
+/// responsibility (fetching that same branch list for selection); that
+/// cubit was deleted in Phase 8.
 ///
 /// `/branch-with-car` is a live route (`app_router.dart`), reached whenever
 /// a renter books starting from a specific car.

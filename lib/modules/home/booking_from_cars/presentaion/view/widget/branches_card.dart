@@ -20,7 +20,6 @@ class Branches_Card extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         BlocProvider.of<SearchCubit>(context).clearAllDataSearched();
-        BlocProvider.of<SearchCubit>(context).getAirPortBranches();
         context.pushNamed(Routes.deliveryPackage);
       },
       child: Container(

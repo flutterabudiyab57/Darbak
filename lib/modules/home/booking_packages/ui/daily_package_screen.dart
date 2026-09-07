@@ -19,7 +19,6 @@ import 'package:darbak/modules/location/presentaion/bloc/location_selection_cubi
 import '../../../../core/router/routes.dart';
 import '../../../../language/locale.dart';
 import '../../../widgets/components/appbar.dart';
-import '../../all_branching/bloc/all_branching_cubit.dart';
 import '../../cars/presentaion/bloc/cubit/cars_cubit.dart';
 import '../../profile/blocs/profile_cubit/profile_cubit.dart';
 import '../../search_screen/presentaion/widget/shimmer_list.dart';
@@ -49,7 +48,6 @@ class _DailyPackagesState extends State<DailyPackages> {
   void initState() {
     super.initState();
     isAlertBoxOpened = true;
-    BlocProvider.of<AllBranchCubit>(context).getAllBranch();
     BlocProvider.of<ProfileCubit>(context).getProfile();
     _getRegions();
   }
@@ -84,34 +82,22 @@ class _DailyPackagesState extends State<DailyPackages> {
                   body: state.props.first.toString(),
                 );
               } else if (state is SearchValidate) {
-                final matchingBranches = context.read<SearchCubit>().branchesData.where((element) =>
-                element.name == context.read<SearchCubit>().selectedReceiveBranch).toList();
-      
-                if (matchingBranches.isNotEmpty) {
-                  final triggeredBranchModel = matchingBranches.first;
-      
-                  final filterModel = FilterModel(
+                // Was: name-matching against `branchesData`
+                // (`element.name == selectedReceiveBranch`), which no longer
+                // exists on SearchCubit after T068. Same fix already applied
+                // to the live daily-rent path (`clasic.dart`, T042) — this
+                // file (`/daily-package`) is not linked from anywhere in the
+                // app (see the class doc comment), but must still compile.
+                final triggeredBranchModel =
+                    context.read<SearchCubit>().selectedReceiveModel;
+
+                if (triggeredBranchModel != null) {
+                  final filterModel = FilterModel.fromSelection(
                     selectedBranch: triggeredBranchModel,
-                    receiveTimeValue: context
-                        .read<SearchCubit>()
-                        .receiveTimeValue
-                        .hour
-                        .toString(),
-                    driveTimeValue: context
-                        .read<SearchCubit>()
-                        .driveTimeValue
-                        .hour
-                        .toString(),
-                    receiveDateValue: context
-                        .read<SearchCubit>()
-                        .receiveDateValue
-                        .toString(),
-                    driveDateValue: context
-                        .read<SearchCubit>()
-                        .driveDateValue
-                        .toString(),
+                    locationCubit: context.read<LocationSelectionCubit>(),
+                    searchCubit: context.read<SearchCubit>(),
                   );
-      
+
                   await BlocProvider.of<CarsCubit>(context)
                       .getAllCars(1,
                       branchId: triggeredBranchModel.id,
