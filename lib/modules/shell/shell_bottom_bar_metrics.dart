@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,15 +17,23 @@ class ShellBottomBarMetrics {
   /// `.h`.
   static double height(BuildContext context) => 55.hs(context);
 
-  static double get horizontalMargin => 16.w;
+  static double get horizontalMargin => 21.w;
 
-  static double get bottomMargin => 12.h;
+  /// Minimum distance from the screen bottom; the bar uses the larger of this
+  /// and the device's own safe-area inset.
+  static double get bottomMargin => 20.h;
+
+  /// Space between the bar's edge and the icon-slot cluster.
+  static double get contentInset => 23.5.w;
 }
 
-/// Total vertical space the floating bar occupies above the safe area:
-/// bar height + its bottom margin + the device's own safe-area inset.
+/// Total vertical space the floating bar occupies from the screen bottom:
+/// bar height + the larger of its bottom margin and the device's own
+/// safe-area inset (matching the bar's `SafeArea(minimum: ...)`).
 /// A function (not a const) because the safe-area inset is device-dependent.
 double shellBottomInset(BuildContext context) =>
     ShellBottomBarMetrics.height(context) +
-    ShellBottomBarMetrics.bottomMargin +
-    MediaQuery.of(context).padding.bottom;
+    math.max(
+      ShellBottomBarMetrics.bottomMargin,
+      MediaQuery.of(context).padding.bottom,
+    );
