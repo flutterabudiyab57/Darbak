@@ -1,8 +1,8 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/cars/presentaion/widget/build_empty_car.dart';
 import 'package:darbak/modules/home/cars/presentaion/widget/filter_widget.dart';
 import 'package:darbak/modules/home/search_screen/data/models/filter_model.dart';
+import 'package:darbak/modules/widgets/components/appbar.dart';
 import 'package:darbak/modules/widgets/components/error_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -120,28 +120,23 @@ class _AllCarsScreenState extends State<AllCarsScreen>
     final locale = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: backgroundColor(context),
-      appBar: AppBar(
-        backgroundColor: backgroundColor(context),
-        toolbarHeight: 80.hs(context),
-        title: AutoSizeText(
-          widget.filterModel?.selectedBranch?.name ?? locale.allCar.toString(),
-          style: AppTypography.mainTypographyColor22(context),
-        ),
-        elevation: 0.0,
+      appBar: CustomAppBar(
+        title: widget.filterModel?.selectedBranch?.name ??
+            (widget.fromFilter ? locale.allCar.toString() : locale.fleet!),
+        showBackButton: context.canPop(),
         actions: [
-          widget.fromFilter
-              ? SizedBox()
-              : IconButton(
-            onPressed: () {
-              context.pushNamed(Routes.filterCars);
-            },
-            icon: Image.asset(
-              "assets/icons/filter_new.png",
-              width: 37.w,
-              height: 34.h,
-              color: iconDefaultColor(context),
+          if (!widget.fromFilter)
+            IconButton(
+              onPressed: () {
+                context.pushNamed(Routes.filterCars);
+              },
+              icon: Image.asset(
+                "assets/icons/filter_new.png",
+                width: 37.w,
+                height: 34.w,
+                color: iconDefaultColor(context),
+              ),
             ),
-          ),
         ],
       ),
       key: _scaffoldKey,
@@ -205,17 +200,14 @@ class _AllCarsScreenState extends State<AllCarsScreen>
                           },
                           child: Column(
                             children: [
-                              SizedBox(height: 8.h),
+                              SizedBox(height: 21.h),
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 8.w),
-                                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                height: 50.h,
+                                margin: EdgeInsets.symmetric(horizontal: 20.w),
+                                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                                height: 50.hs(context),
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15.r),
-                                  border: Border.all(
-                                    color: strokeGrayColor(context),
-                                    width: 2.w,
-                                  ),
+                                  color: bg2Color(context),
+                                  borderRadius: BorderRadius.circular(40.r),
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
@@ -227,7 +219,7 @@ class _AllCarsScreenState extends State<AllCarsScreen>
                                     ),
                                     Icon(
                                       Icons.search,
-                                      size: 25.sp,
+                                      size: 20.w,
                                       color: iconDefaultColor(context),
 
                                     )
@@ -237,7 +229,7 @@ class _AllCarsScreenState extends State<AllCarsScreen>
                             ],
                           ),
                         ),
-                        SizedBox(height: 10.h),
+                        SizedBox(height: 8.h),
                         Expanded(
                           child: ListView.builder(
                               controller: _scrollController,

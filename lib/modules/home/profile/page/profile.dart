@@ -37,7 +37,7 @@ class MyProfile extends StatelessWidget {
         child: Stack(
           children: [
             CustomAppBar(
-              title: locale.myAccount,
+              title: locale.more,
               showThemeToggle: true,
               showBackButton: showBackButton,
 
@@ -127,7 +127,7 @@ class _ProfileContentState extends State<_ProfileContent> {
         spacing: 15.h,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: 12.h),
+          SizedBox(height: 6.h),
           CardTileWidget(
             title: locale.editProfile.toString(),
             icon: Assets.prooff,
@@ -192,7 +192,7 @@ class _ProfileContentState extends State<_ProfileContent> {
               _showLogoutDialog(context, locale);
             },
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.w,vertical: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -202,19 +202,14 @@ class _ProfileContentState extends State<_ProfileContent> {
                   children: [
                     SvgPicture.asset(
                       Assets.logout,
-                      width: 30.w,
-                      height: 30.h,
-                      color: Color(0xffFF0004),
+                      width: 17.w,
+                      height: 17.w,
+                      color: buttonRedColor(context),
                     ),
-                    SizedBox(width: 8.w),
+                    SizedBox(width: 7.w),
                     Text(
                       locale.logout.toString(),
-                      style: TextStyle(
-                        fontFamily: 'ThmanyahSans',
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xffFF0004),
-                      ),
+                      style: AppTypography.buttonRed18(context),
                     ),
                   ],
                 ),

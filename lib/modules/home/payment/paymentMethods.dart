@@ -5,6 +5,7 @@ import 'package:darbak/modules/home/payment/widget/copouns_bottom_sheet.dart';
 import 'package:darbak/modules/home/payment/widget/coupon_tile.dart';
 import 'package:darbak/modules/home/payment/widget/invoice_bottom_sheet.dart';
 import 'package:dio/dio.dart';
+
 // import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,6 +45,7 @@ class PaymentMethodsScreen extends StatefulWidget {
   final DataCars? datum;
   final String? orderId;
   final CreditCardModel? cardModel;
+
   /// FR-018/FR-019: readable here, never mutated. T064 confirmed this
   /// screen has no existing write path into location state to remove —
   /// this param only makes the (already-true) read-only relationship
@@ -151,7 +153,9 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${AppLocalizations.of(context)!.errorFetchingCoupons}: $e')),
+        SnackBar(
+            content: Text(
+                '${AppLocalizations.of(context)!.errorFetchingCoupons}: $e')),
       );
     }
   }
@@ -437,7 +441,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                       ? Icon(
                                           Icons.check,
                                           size: 18.sp,
-                                    color: Colors.white,
+                                          color: Colors.white,
                                         )
                                       : null,
                                 ),
@@ -695,9 +699,11 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                                 context);
                                         if (invoiceCubit.data == null) {
                                           Fluttertoast.showToast(
-                                              msg:
-                                                  "Invoice data is not available.", textColor: Colors.red,
-                                            fontSize: 14.sp,);
+                                            msg:
+                                                "Invoice data is not available.",
+                                            textColor: Colors.red,
+                                            fontSize: 14.sp,
+                                          );
 
                                           return;
                                         }

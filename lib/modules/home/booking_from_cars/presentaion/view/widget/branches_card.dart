@@ -40,14 +40,14 @@ class Branches_Card extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Flexible(
-                  child: Text(
+                  child: AutoSizeText(
                     locale!.deliveryTitle.toString(),
                     textAlign: TextAlign.end,
                     style: AppTypography.headingColor20(context).copyWith(
                       fontWeight: FontWeight.w700,
                     ),
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    minFontSize: 12,
                   ),
                 ),
                 Container(
@@ -80,11 +80,12 @@ class Branches_Card extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Subtitle
-                      Text(
+                      AutoSizeText(
                         locale.deliverySubtitle.toString(),
                         textAlign: TextAlign.start,
                         style: AppTypography.paragraphColor12(context),
-                        maxLines: 2,
+                        maxLines: 3,
+                        minFontSize: 9,
                         overflow: TextOverflow.ellipsis,
                       ),
 

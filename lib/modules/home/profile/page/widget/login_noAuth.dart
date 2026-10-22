@@ -40,6 +40,7 @@ class LoginNoAuth extends StatelessWidget {
                 child: Lottie.asset("assets/anim/password.json",
                     width: 240.w, fit: BoxFit.cover)),
              CardTileWidget(
+               margin: EdgeInsets.zero,
               title: locale.signIn.toString(),
               icon: Assets.icon_login,
               ontap: () {
@@ -62,6 +63,7 @@ class LoginNoAuth extends StatelessWidget {
             ),
 
             CardTileWidget(
+              margin: EdgeInsets.zero,
               title: locale.createAccount,
               icon: Assets.icon_addAccount,
               ontap: () {
@@ -183,6 +185,7 @@ class LoginNoAuth extends StatelessWidget {
             //   ),
             // ),
             CardTileWidget(
+              margin: EdgeInsets.zero,
                 title: locale.changeLanguage.toString(),
                 icon: Assets.profile_language,
                 trailing: const ActiveLanguageFlag(),
@@ -190,12 +193,14 @@ class LoginNoAuth extends StatelessWidget {
                   showLanguageDialog(context);
                 }),
              CardTileWidget(
+               margin: EdgeInsets.zero,
                 title: locale.privacyPolicy.toString(),
                 icon: Assets.profile_privacy,
                 ontap: () {
                   context.pushNamed(Routes.privacyPolicy);
                 }),
             CardTileWidget(
+              margin: EdgeInsets.zero,
               title: locale.complaint!,
               ontap: () {
                 context.pushNamed(Routes.complaints);

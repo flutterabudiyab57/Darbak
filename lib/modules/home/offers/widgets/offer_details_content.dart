@@ -133,6 +133,7 @@ class OfferDetailsContent extends StatelessWidget {
                   (entry) => CarTile(
                     index: entry.key,
                     datum: entry.value,
+                    margin: EdgeInsets.symmetric(vertical: 8.h),
                   ),
                 ),
           SizedBox(height: 20.h),

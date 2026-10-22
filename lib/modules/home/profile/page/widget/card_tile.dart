@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../core/constants/assets/app_colors.dart';
+import '../../../../../core/helpers/text_scale_sizing.dart';
 import '../../../../../core/style/style.dart';
 
 class CardTileWidget extends StatelessWidget {
@@ -15,6 +16,7 @@ class CardTileWidget extends StatelessWidget {
     this.isLogout = false,
     this.isBorder = true,
     this.trailing,
+    this.margin,
   }) : super(key: key);
 
   final String title;
@@ -28,18 +30,22 @@ class CardTileWidget extends StatelessWidget {
   /// value inline instead of navigating to a page that owns that value.
   final Widget? trailing;
 
+  /// Outer spacing. Defaults to the Figma 20 side margin; pass
+  /// `EdgeInsets.zero` when the parent already pads.
+  final EdgeInsetsGeometry? margin;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      padding: margin ?? EdgeInsets.symmetric(horizontal: 20.w),
       child: GestureDetector(
         onTap: ontap,
         child: Container(
-          height: 55.h,
-          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          height: 50.hs(context),
+          padding: EdgeInsets.symmetric(horizontal: 14.w),
           decoration: BoxDecoration(
             color: bg2Color(context),
-            borderRadius: BorderRadius.circular(16.r),
+            borderRadius: BorderRadius.circular(40.r),
             // border: isBorder
             //     ? Border.all(
             //   color: Colors.grey,
@@ -51,18 +57,18 @@ class CardTileWidget extends StatelessWidget {
             children: [
               if (icon != null)
                 SizedBox(
-                  width: 24.w,
-                  height: 24.h,
+                  width: 18.w,
+                  height: 18.w,
                   child: SvgPicture.asset(
                     icon!,
                     color: textcolor ?? iconDefaultColor(context),
                   ),
                 ),
-              if (icon != null) SizedBox(width: 12.w),
+              if (icon != null) SizedBox(width: 5.w),
               Expanded(
                 child: Text(
                   title,
-                  style: AppTypography.headingColor18(context),
+                  style: AppTypography.headingColor16(context),
                 ),
               ),
               if (trailing != null)
@@ -71,7 +77,7 @@ class CardTileWidget extends StatelessWidget {
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: textcolor ?? mainTypographyColor(context),
-                  size: 28.sp,
+                  size: 16.sp,
                 ),
             ],
           ),

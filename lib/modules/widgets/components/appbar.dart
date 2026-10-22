@@ -21,6 +21,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBackButton;
   final bool showThemeToggle;
+
+  /// Extra trailing widgets (the filter button on the fleet tab). They sit on
+  /// the same side as the theme toggle and replace nothing.
+  final List<Widget>? actions;
   final VoidCallback? onBackPressed;
   final VoidCallback? onThemeToggle;
 
@@ -29,6 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     this.showBackButton = false,
     this.showThemeToggle = false,
+    this.actions,
     this.onBackPressed,
     this.onThemeToggle,
   });
@@ -69,6 +74,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               size: 23.sp,
             ),
           ),
+        ...?actions,
       ],
     );
   }

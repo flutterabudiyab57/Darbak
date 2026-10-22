@@ -241,7 +241,7 @@ Map<String, String> english() {
     'airports': 'Airports',
     'automatic': 'Automatic',
     'bags': 'Bags',
-    'branchs': 'Branchs',
+    'branchs': 'Branches',
     'carDetails': 'Car Details',
     'chooseLoginMethod': 'Choose login method:',
     'close': 'Close',

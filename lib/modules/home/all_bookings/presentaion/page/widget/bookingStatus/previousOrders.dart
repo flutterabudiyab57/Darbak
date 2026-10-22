@@ -206,7 +206,7 @@ class _PreviousOrdersState extends State<PreviousOrders> {
         } else if (BlocProvider.of<AllBookingCubit>(context).booking != null &&
             state is AllBookingLoaded) {
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
             child: ListView.builder(
               padding: EdgeInsets.only(bottom: shellBottomInset(context)),
               itemCount: BlocProvider.of<AllBookingCubit>(context)
@@ -228,11 +228,12 @@ class _PreviousOrdersState extends State<PreviousOrders> {
                     },
                     child: Container(
                       width: size.width,
+                      clipBehavior: Clip.antiAlias,
                       decoration: ShapeDecoration(
                         color: backgroundColor(context),
                         shape: RoundedRectangleBorder(
                           side: BorderSide(
-                            width: 1.5.w,
+                            width: 0.5.w,
                             color: strokeGrayColor(context),
                           ),
                           borderRadius: BorderRadius.circular(15.r),
@@ -241,19 +242,16 @@ class _PreviousOrdersState extends State<PreviousOrders> {
                       child: Column(
                         children: [
                           Container(
-                            margin: EdgeInsets.all(6.w),
-                            decoration: ShapeDecoration(
-                              color: buttonWhiteColor(context),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                            ),
+                            width: double.infinity,
+                            height: 122.h,
+                            margin: EdgeInsets.only(bottom: 6.h),
+                            color: bg2Color(context),
                             child: Center(
                               child: WidgetZoom(
                                 heroAnimationTag: 'hero-${bookingData.id}',
                                 zoomWidget: Image.network(
                                   carData.photo,
-                                  height: 126.h,
+                                  height: 103.h,
                                   fit: BoxFit.contain,
                                 ),
                               ),

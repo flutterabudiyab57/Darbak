@@ -327,7 +327,7 @@ class _SearchState extends State<SearchScreen>
               Bounce(
                 onTap: onAvatarTap,
                 child: CircleAvatar(
-                  radius: 30.sp,
+                  radius: 22.5.w,
                   backgroundImage: avatar,
                   backgroundColor: onHeroPrimary.withValues(alpha: 0.15),
                 ),

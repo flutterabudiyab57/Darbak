@@ -27,6 +27,10 @@ class CarTile extends StatefulWidget {
   final DataCars? datum;
   final bool isFavouritePage;
 
+  /// Outer spacing. Defaults to the Figma list spacing (20 side margin, 16
+  /// between cards); pass a vertical-only margin when the parent already pads.
+  final EdgeInsetsGeometry? margin;
+
   const CarTile({
     Key? key,
     required this.index,
@@ -35,6 +39,7 @@ class CarTile extends StatefulWidget {
     this.state,
     this.datum,
     this.isFavouritePage = false,
+    this.margin,
   }) : super(key: key);
 
   @override
@@ -63,7 +68,8 @@ class _CarTileState extends State<CarTile> {
     return BlocProvider<FavouriteCubit>(
       create: (_) => FavouriteCubit(sl(), sl()),
       child: Container(
-        margin: EdgeInsets.all(4.h),
+        margin: widget.margin ??
+            EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: backgroundColor(context),
           borderRadius: BorderRadius.circular(15.r),
@@ -73,8 +79,8 @@ class _CarTileState extends State<CarTile> {
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0x28000000),
-              blurRadius: 8,
+              color: const Color(0x29000000),
+              blurRadius: 4,
               offset: const Offset(0, 2),
             ),
           ],
@@ -144,8 +150,8 @@ class _CarTileState extends State<CarTile> {
                   ),
                   // Favorite heart
                   PositionedDirectional(
-                    start: 0,
-                    top: 0,
+                    start: 12.w,
+                    top: 11.h,
                     child: Builder(
                       builder: (context) {
                         return IconButton(
@@ -162,7 +168,7 @@ class _CarTileState extends State<CarTile> {
                             Icons.favorite,
                             color:
                                 isFavorite ? Colors.red : const Color(0xff999999),
-                            size: 36.sp,
+                            size: 24.w,
                           ),
                         );
                       },
@@ -174,7 +180,7 @@ class _CarTileState extends State<CarTile> {
 
             // [B] CONTENT SECTION
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 11.h),
+              padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 11.h),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

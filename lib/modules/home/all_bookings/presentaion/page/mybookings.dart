@@ -1,5 +1,6 @@
 import 'package:darbak/core/constants/assets/app_colors.dart';
 import 'package:darbak/core/style/style.dart';
+import 'package:darbak/core/helpers/text_scale_sizing.dart';
 import 'package:darbak/language/locale.dart';
 import 'package:darbak/modules/home/all_bookings/presentaion/page/widget/bookingStatus/previousOrders.dart';
 import 'package:darbak/modules/home/all_bookings/presentaion/page/widget/bookingStatus/running_now.dart';
@@ -36,18 +37,11 @@ class _MyBookingsState extends State<MyBookings>
 
     return Column(
       children: [
-        SizedBox(height: 8.h),
+        SizedBox(height: 21.h),
         Padding(
-          padding: EdgeInsets.only(bottom: size.height * 0.03),
+          padding: EdgeInsets.only(bottom: 16.h),
           child: Container(
-            height: 60.h,
-            padding: EdgeInsets.all(4.sp),
-            decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? backgroundColor(context)
-                  : backgroundColor(context),
-              borderRadius: BorderRadius.circular(6),
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: TabBar(
               controller: tabController,
               indicator: const BoxDecoration(),
@@ -94,25 +88,24 @@ class _MyBookingsState extends State<MyBookings>
   }) {
     final bool isSelected = currentIndex == index;
 
+    // Figma: text tabs with an underline on the active one, not filled pills.
     return Container(
-      margin:EdgeInsetsGeometry.symmetric(horizontal: 6.w) ,
-      height: 50.h,
+      height: 40.hs(context),
       decoration: BoxDecoration(
-        color: isSelected ? buttonPrimaryBgColor(context) : null,
-        borderRadius: BorderRadius.circular(15.sp),
-        border: isSelected
-            ? null
-            : Border.all(
-                color: iconGrayColor(context),
-                width:2.w,
-              ),
+        border: Border(
+          bottom: BorderSide(
+            width: 2.w,
+            color: isSelected ? headingColor(context) : Colors.transparent,
+          ),
+        ),
       ),
       child: Center(
         child: Text(
           text,
           style: isSelected
-              ? AppTypography.buttonText18(context)
+              ? AppTypography.headingColor18(context)
               : AppTypography.headingColor18(context)
+                  .copyWith(color: iconGrayColor(context)),
         ),
       ),
     );

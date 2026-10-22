@@ -131,7 +131,7 @@ Map<String, String> arabic() {
     'memberShip': 'العضوية',
     'favorite': 'المفضلة',
     'error': 'خطأ',
-    'fleet': "الاسطول",
+    'fleet': "الأسطول",
     'noCarsInBranch': "لا توجد سيارات متاحه حاليا في هذا الفرع",
     'finish': "الحجوزات",
     "editProfile": 'تعديل الملف الشخصي',
