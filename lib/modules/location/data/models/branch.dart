@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 
 import 'branch_work_time.dart';
@@ -112,6 +114,28 @@ class Branch extends Equatable {
       bookToday: _asBoolFlag(json['can_book_today']),
       isPartial: true,
     );
+  }
+
+  /// Returns null when the record has no usable integer id — mirrors
+  /// [Region.tryParse]: a branch without identity cannot be selected, and
+  /// dropping it silently (Constitution Principle I) is preferable to a
+  /// list entry that defaults to id 0 and can collide with another dropped
+  /// entry under the same fallback id.
+  static Branch? tryParseBranchesApi(Map<String, dynamic> json) {
+    if (_asInt(json['id']) == null) {
+      log('⚠️ Branch.tryParseBranchesApi: dropping entry with unusable id: ${json['id']}');
+      return null;
+    }
+    return Branch.fromBranchesApi(json);
+  }
+
+  /// See [tryParseBranchesApi].
+  static Branch? tryParseCarBranchesApi(Map<String, dynamic> json) {
+    if (_asInt(json['id']) == null) {
+      log('⚠️ Branch.tryParseCarBranchesApi: dropping entry with unusable id: ${json['id']}');
+      return null;
+    }
+    return Branch.fromCarBranchesApi(json);
   }
 
   @override

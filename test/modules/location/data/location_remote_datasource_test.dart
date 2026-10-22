@@ -231,6 +231,24 @@ void main() {
 
       expect(branches.length, 1);
     });
+
+    test('an entry with a malformed id is dropped; valid entries in the same '
+        'response survive', () async {
+      when(() => dio.get<dynamic>(
+            any(),
+            queryParameters: any(named: 'queryParameters'),
+            options: any(named: 'options'),
+          )).thenAnswer((_) async => _resp(_paginatedEnvelope([
+                _branchJson(1),
+                {'id': 'not-an-id', 'name': 'Malformed Branch'},
+                _branchJson(2),
+              ], 1, 1)));
+
+      final branches = await ds.getBranches(const LocationFilter.allRegions());
+
+      expect(branches.length, 2);
+      expect(branches.map((b) => b.id), containsAll([1, 2]));
+    });
   });
 
   group('getBranches response shape tolerance', () {

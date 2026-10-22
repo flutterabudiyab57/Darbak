@@ -93,7 +93,21 @@ class _EditProfileContentState extends State<_EditProfileContent> {
         }
 
         if (profileState is ProfileFailed) {
-          return NetworkErrorWidget(onRetry: _loadProfileData);
+          final error = (profileState.error ?? '').toLowerCase();
+          final isNetworkError = error.contains('socketexception') ||
+              error.contains('clientexception') ||
+              error.contains('failed host lookup') ||
+              error.contains('connection') ||
+              error.contains('timeout');
+          if (isNetworkError) {
+            return NetworkErrorWidget(onRetry: _loadProfileData);
+          }
+          final message = AppLocalizations.of(context)!.somethingWentWrong;
+          return NetworkErrorWidget(
+            onRetry: _loadProfileData,
+            descriptionAr: message,
+            descriptionEn: message,
+          );
         }
 
         return Center(

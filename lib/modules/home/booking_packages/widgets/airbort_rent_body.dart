@@ -117,7 +117,11 @@ class _AirPortRentBodyState extends State<AirPortRentBody> {
                         locale.selectAirport,
                   ),
                 ),
-                const TimeSelectTwoBox(),
+                TimeSelectTwoBox(
+                  enableGuarding: true,
+                  pickupWorkTime: locState.pickupBranch?.workTime,
+                  dropoffWorkTime: locState.pickupBranch?.workTime,
+                ),
                 Center(child: RentalSummaryCard(differenceInDays: differenceInDays,)),
                 dashedDivider(context),
 

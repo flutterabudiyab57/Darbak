@@ -84,6 +84,44 @@ void main() {
     });
   });
 
+  group('Branch.tryParseBranchesApi', () {
+    test('returns null when id is non-numeric', () {
+      expect(Branch.tryParseBranchesApi({'id': 'abc', 'name': 'A'}), isNull);
+    });
+
+    test('returns null when id is missing/null', () {
+      expect(Branch.tryParseBranchesApi({'name': 'A'}), isNull);
+      expect(Branch.tryParseBranchesApi({'id': null, 'name': 'A'}), isNull);
+    });
+
+    test('returns a valid Branch for a well-formed id', () {
+      final branch = Branch.tryParseBranchesApi({'id': 1, 'name': 'A'});
+      expect(branch, isNotNull);
+      expect(branch!.id, 1);
+      expect(branch.name, 'A');
+      expect(branch.isPartial, isFalse);
+    });
+  });
+
+  group('Branch.tryParseCarBranchesApi', () {
+    test('returns null when id is non-numeric', () {
+      expect(Branch.tryParseCarBranchesApi({'id': 'abc', 'text': 'A'}), isNull);
+    });
+
+    test('returns null when id is missing/null', () {
+      expect(Branch.tryParseCarBranchesApi({'text': 'A'}), isNull);
+      expect(Branch.tryParseCarBranchesApi({'id': null, 'text': 'A'}), isNull);
+    });
+
+    test('returns a valid Branch for a well-formed id', () {
+      final branch = Branch.tryParseCarBranchesApi({'id': 5, 'text': 'Car Branch'});
+      expect(branch, isNotNull);
+      expect(branch!.id, 5);
+      expect(branch.name, 'Car Branch');
+      expect(branch.isPartial, isTrue);
+    });
+  });
+
   group('Branch identity', () {
     test('two branches with the same id but different names, languages and '
         'geometry are equal with equal hashCode', () {

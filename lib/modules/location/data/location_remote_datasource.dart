@@ -62,8 +62,8 @@ class LocationRemoteDataSource {
       options: Options(headers: _headers),
     );
 
-    final paginated = Paginated<Branch>.fromJson(response.data, Branch.fromCarBranchesApi);
-    return paginated.data;
+    final paginated = Paginated<Branch?>.fromJson(response.data, Branch.tryParseCarBranchesApi);
+    return paginated.data.whereType<Branch>().toList();
   }
 
   /// Pagination driven by `meta.last_page` read from page 1. Hard cap of 10
@@ -76,8 +76,8 @@ class LocationRemoteDataSource {
       options: Options(headers: _headers),
     );
 
-    final firstPage = Paginated<Branch>.fromJson(firstResponse.data, Branch.fromBranchesApi);
-    final collected = <int, Branch>{for (final b in firstPage.data) b.id: b};
+    final firstPage = Paginated<Branch?>.fromJson(firstResponse.data, Branch.tryParseBranchesApi);
+    final collected = <int, Branch>{for (final b in firstPage.data.whereType<Branch>()) b.id: b};
 
     final lastPage = firstPage.lastPage.clamp(1, _hardPageCap);
     for (var page = 2; page <= lastPage; page++) {
@@ -86,8 +86,8 @@ class LocationRemoteDataSource {
         queryParameters: {...baseQuery, 'page': page},
         options: Options(headers: _headers),
       );
-      final paginated = Paginated<Branch>.fromJson(response.data, Branch.fromBranchesApi);
-      for (final b in paginated.data) {
+      final paginated = Paginated<Branch?>.fromJson(response.data, Branch.tryParseBranchesApi);
+      for (final b in paginated.data.whereType<Branch>()) {
         collected[b.id] = b;
       }
     }

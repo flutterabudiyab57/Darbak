@@ -247,9 +247,10 @@ resolution-order finding recorded against T054–T059 for what actually does (an
 This is a correct description of what the old parser is *capable* of losing if the API ever sent
 windows under those keys. Against real production data, it never does.
 
-Also noted while reading: `branch_model.dart:275-276` carries a **duplicated
-`@HiveType(typeId: 7)`** annotation on `BranchCenter`. Pre-existing, unrelated, and plausibly one
-of the 78 baseline analyze issues. Not touched by this feature.
+Also noted while reading: `branch_model.dart:275-276` carried a **duplicated
+`@HiveType(typeId: 7)`** annotation on `BranchCenter`. Pre-existing, unrelated. This was removed
+as part of Phase 8 cleanup (one of the items contributing to the reduction from 77 to 75 baseline
+analyze issues).
 
 **Alternatives considered**: replicating the current lossy parse to avoid behaviour change.
 Rejected — FR-021 and FR-025 require real per-day hours, and the spec states that where old

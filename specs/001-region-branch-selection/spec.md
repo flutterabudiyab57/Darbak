@@ -415,7 +415,7 @@ while the selected branch stays selected.
 These are process and quality gates rather than user-facing outcomes. They are drawn from the project
 constitution and the feature request.
 
-- **DG-001**: `flutter analyze` stays at or below the 78-issue baseline; any increase is explained.
+- **DG-001**: `flutter analyze` stays at or below the 75-issue baseline (as of Phase 8); any increase is explained.
 - **DG-002**: Each flow is verified on a real device before the next flow is converted
   (Principle V) — compiling and a clean analyze do not constitute completion.
 - **DG-003**: Every phase leaves the app in a working state, with the new implementation built

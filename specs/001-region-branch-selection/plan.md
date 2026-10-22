@@ -44,7 +44,7 @@ Run via `scripts/flutter_test_filtered.ps1`, never `flutter test` directly.
 `perPage=100` (48 branches total observed); cache hit serves without a network call.
 
 **Constraints**: Arabic-first RTL; server-side localization via `Accept-Language` (no per-language
-name fields); `flutter analyze` at or below the **78-issue baseline**; no visual redesign; the
+name fields); `flutter analyze` at or below the **75-issue baseline** (as of Phase 8 completion); no visual redesign; the
 areas feature untouched.
 
 **Scale/Scope**: 9 regions, ~48 branches, 5 booking flows, 2 languages.
@@ -73,7 +73,7 @@ areas feature untouched.
 
 **Development Workflow check**: no commit without approval; `flutter analyze` (via
 `scripts/flutter_analyze_filtered.ps1`) at the end of every phase with the issue count reported
-against the 78 baseline; stop at each phase boundary; two failed fixes ⇒ stop and diagnose.
+against the 75 baseline (as of Phase 8); stop at each phase boundary; two failed fixes ⇒ stop and diagnose.
 
 **Result: PASS. No violations. [Complexity Tracking](#complexity-tracking) is empty.**
 
@@ -469,21 +469,21 @@ authority.
 
 ## Phases
 
-Each phase ends with: `scripts/flutter_analyze_filtered.ps1` (baseline **78**), **no commit**,
+Each phase ends with: `scripts/flutter_analyze_filtered.ps1` (baseline **75** as of Phase 8 completion), **no commit**,
 **STOP**. Phases 4–9 additionally require on-device verification before the next phase begins
 (Constitution Principle V).
 
 | # | Phase | Deliverable | Gate |
 |---|---|---|---|
-| 1 | Foundation | Create branch `refactor/location-selection`. Models, remote datasource, cache, repository, unit tests. **Nothing wired. App behaviour unchanged.** | analyze ≤78 |
-| 2 | Cubit | `LocationSelectionCubit` + state + `bloc_test` coverage. **Still not wired.** | analyze ≤78 |
-| 3 | Picker screen | `BranchPickerScreen` returning a `Branch`, built **alongside** the old picker. The old one keeps working. | analyze ≤78 |
-| 4 | Daily rent | Convert daily rent. Everything else still on the old code. | analyze ≤78 + **device** |
-| 5 | Monthly rent | Convert monthly rent. | analyze ≤78 + **device** |
-| 6 | Delivery + airport | Convert both (filters, **no region step**). Carries the [areas behaviour-preservation check](#phase-6-acceptance-areas-behaviour-preservation). | analyze ≤78 + **device** |
-| 7 | Book-from-car | Convert. Partial branches are completed by id from the full branch list **before any work-hours check runs**. | analyze ≤78 + **device** |
-| 8 | Booking draft | `BookingDraft`; additions and payment read from it. | analyze ≤78 + **device** |
-| 9 | Deletion | Delete location fields from `SearchCubit`, `AllBranchCubit` entirely, `MapListView`, `BranchesListView`, `MapListSelectionViewTile`, `branchs_service.dart`. | analyze ≤78 + **device** |
+| 1 | Foundation | Create branch `refactor/location-selection`. Models, remote datasource, cache, repository, unit tests. **Nothing wired. App behaviour unchanged.** | analyze ≤75 |
+| 2 | Cubit | `LocationSelectionCubit` + state + `bloc_test` coverage. **Still not wired.** | analyze ≤75 |
+| 3 | Picker screen | `BranchPickerScreen` returning a `Branch`, built **alongside** the old picker. The old one keeps working. | analyze ≤75 |
+| 4 | Daily rent | Convert daily rent. Everything else still on the old code. | analyze ≤75 + **device** |
+| 5 | Monthly rent | Convert monthly rent. | analyze ≤75 + **device** |
+| 6 | Delivery + airport | Convert both (filters, **no region step**). Carries the [areas behaviour-preservation check](#phase-6-acceptance-areas-behaviour-preservation). | analyze ≤75 + **device** |
+| 7 | Book-from-car | Convert. Partial branches are completed by id from the full branch list **before any work-hours check runs**. | analyze ≤75 + **device** |
+| 8 | Booking draft | `BookingDraft`; additions and payment read from it. | analyze ≤75 + **device** |
+| 9 | Deletion (completed) | Deleted location fields from `SearchCubit`, `AllBranchCubit` entirely, `MapListView`, `BranchesListView`, `MapListSelectionViewTile`, `branchs_service.dart`. | analyze = 75 ✓ |
 
 **Phase 9 note, from verification:** the "check whether `package:http` can be dropped from
 `pubspec.yaml`" item has been **removed** from Phase 9 — the answer is already known to be no. The
@@ -511,46 +511,37 @@ still constrained to the boundary and still opens centred where it did.
 
 Hard sequencing rules. These are not risks to weigh — violating one breaks the app.
 
-### OC-1 — The global `AllBranchCubit` registration must outlive every unconverted flow
+### OC-1 — AllBranchCubit global registration deletion (completed)
 
-**The global registration of `AllBranchCubit` (`lib/bloc_providers.dart:31`, backed by
-`lib/service_locator.dart:87`) MUST NOT be removed while any unconverted flow still uses the old
-picker.**
+**History**: The global `AllBranchCubit` registration (in `lib/bloc_providers.dart` and
+`lib/service_locator.dart`) was the blocking constraint for deletion. The old `BranchesListView`
+read `context.read<AllBranchCubit>()` from a screen pushed with `withNavBar: false` (onto the root
+navigator, outside the caller's provider subtree). That read resolved **only** because the cubit was
+registered globally. Removing it while any flow still routed through the old picker would have thrown
+`ProviderNotFoundException` inside the tap handler, silently aborting it — reproducing the original
+"tapping does nothing" bug in unconverted flows.
 
-The old `BranchesListView` reads `context.read<AllBranchCubit>()`
-(`lib/modules/home/search_screen/presentaion/widget/branches_list_view.dart:59, 76`) from a screen
-pushed with `withNavBar: false` — i.e. onto the root navigator, outside the caller's provider
-subtree. That read resolves **only** because the cubit is registered globally. Remove the global
-registration while any flow still routes through that widget and the read throws
-`ProviderNotFoundException` inside the tap handler, silently aborting it: the original "tapping
-does nothing" bug, in its original form, in whichever flows had not yet been converted.
+**Constraint**: Phases 4–8 coexisted both pickers; each flow switched to the new one as it was
+converted. Phase 9 deletion was **only after phases 4, 5, 6, 7 and 8 were each device-verified** —
+ensuring no flow reached the old picker. The removal of the global registration and deletion of
+`BranchesListView` / `MapListSelectionViewTile` / `MapListView` landed in one atomic phase,
+preventing the intermediate state that would reproduce the bug.
 
-Therefore:
+**Status: Complete**. All flows device-verified before deletion. Global registration and old pickers
+removed in Phase 9. This is why device gates on phases 4–8 were load-bearing.
 
-- Phases 4–8 leave `lib/bloc_providers.dart:31` **untouched**. The new picker and the old one
-  coexist; each flow switches over as it is converted.
-- Phase 9 removes it **only after phases 4, 5, 6, 7 and 8 have each been device-verified** — that
-  is, only once no flow reaches the old picker at all.
-- The removal of the global registration and the deletion of `BranchesListView` /
-  `MapListSelectionViewTile` / `MapListView` land **in the same phase**. Splitting them across
-  phases produces exactly the failure above.
+## Known Risks (Historical)
 
-This is why Phase 9 is deletion-only and why Principle V's device gate on phases 4–8 is load-bearing
-here rather than merely good practice.
+**All items addressed and deleted in Phase 9. This section is kept for historical reference.**
 
-## Known Risks
-
-- **`AllBranchCubit` is temporary global scaffolding** from the preceding bug-fix pass
-  (`lib/service_locator.dart:87`, provided globally at `lib/bloc_providers.dart:31`). It is deleted
-  in Phase 9. **Build nothing new on it.** Its global registration is load-bearing until then — see
-  [OC-1](#oc-1--the-global-allbranchcubit-registration-must-outlive-every-unconverted-flow).
-- **`branches_screen.dart` uses `AllBranchCubit` from outside the booking flow**
-  (`lib/modules/home/all_branching/page/branches_screen.dart:37, 88, 90, 158`), as does
-  `search_Screen.dart:58`. Phase 9 touches all of them.
-- **`clasic.dart` uses `SearchCubit`, not `AllBranchCubit`** — a correction to the supplied risk
-  note. `lib/modules/home/home_screen/clasic.dart:63-69` looks a branch up by
-  `element.name == selectedReceiveBranch`. That is a live Principle I violation and a Phase 9
-  target. Recorded because the fix is a different one than the note implies: it needs an id, and
+- **`AllBranchCubit` (DELETED)**: Was temporary global scaffolding from the preceding bug-fix pass.
+  Its global registration was load-bearing until all flows were device-verified and converted —
+  see [OC-1](#oc-1--allbranchcubit-global-registration-deletion-completed).
+- **`branches_screen.dart` (FIXED)**: Used `AllBranchCubit` from outside the booking flow. Rewired
+  to use `LocationRepository` directly in Phase 9.
+- **`clasic.dart` (FIXED)**: Used `SearchCubit` with name-matching lookup (Principle I violation).
+  Corrected to read from `LocationSelectionCubit` by id in Phase 9. The fix differed from the
+  originally-supplied risk note because it needed an id, and
   `SearchCubit` currently has no branch id to give it.
 - **Completing a partial car branch by id may fail.** When it does, the work-hours check is skipped
   silently by design (fail open, Principle IV). Intended — but it means **a partial branch never

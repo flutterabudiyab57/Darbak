@@ -147,7 +147,11 @@ class LocationRepository {
   List<Branch>? _tryDecodeBranches(String raw) {
     try {
       final list = json.decode(raw) as List;
-      return list.whereType<Map<String, dynamic>>().map(_branchFromCacheJson).toList();
+      return list
+          .whereType<Map<String, dynamic>>()
+          .map(_branchFromCacheJson)
+          .whereType<Branch>()
+          .toList();
     } catch (e) {
       log('⚠️ LocationRepository: cached branches payload failed to decode: $e');
       return null;
@@ -184,8 +188,8 @@ class LocationRepository {
     'center': b.center != null ? {'lat': b.center!.lat, 'lng': b.center!.lng} : null,
   };
 
-  Branch _branchFromCacheJson(Map<String, dynamic> json) {
+  Branch? _branchFromCacheJson(Map<String, dynamic> json) {
     final isPartial = json['is_partial'] == true;
-    return isPartial ? Branch.fromCarBranchesApi(json) : Branch.fromBranchesApi(json);
+    return isPartial ? Branch.tryParseCarBranchesApi(json) : Branch.tryParseBranchesApi(json);
   }
 }
