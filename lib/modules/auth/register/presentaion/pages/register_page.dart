@@ -561,7 +561,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   Theme.of(context).colorScheme.onPrimary,
                                 ),
                                 child: Transform.scale(
-                                  scale: 0.8,
+                                  scale: .8.sp,
                                   child: Checkbox(
                                     value: _isAgreeTerms,
                                     onChanged: (value) {
